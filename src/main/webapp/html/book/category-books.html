@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과 - 우도도서관</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="Index.html">우도도서관</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">자료검색</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">이용안내</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">문화행사</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">도서관소개</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Header -->
+    <header class="search-header">
+        <div class="container">
+            <form class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <select class="form-select" id="mainCategory">
+                                <option value="">대분류 선택</option>
+                                <option value="000">총류</option>
+                                <option value="100">철학</option>
+                                <option value="200">종교</option>
+                                <option value="300">사회과학</option>
+                                <option value="400">자연과학</option>
+                                <option value="500">기술과학</option>
+                                <option value="600">예술</option>
+                                <option value="700">언어</option>
+                                <option value="800">문학</option>
+                                <option value="900">역사</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="subCategory">
+                                <option value="">소분류 선택</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="search" class="form-control form-control-lg" placeholder="검색어를 입력하세요">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> 검색
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <!-- Search Results -->
+    <main class="container py-4">
+        <div class="row">
+            <!-- Results -->
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="m-0">"파이썬" 검색결과 <strong>127</strong>건</p>
+                    <select class="form-select" style="width: auto;">
+                        <option>최신순</option>
+                        <option>제목순</option>
+                        <option>인기순</option>
+                    </select>
+                </div>
+
+                <!-- Result Items -->
+                <div class="search-results">
+                    <div class="search-result-item">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <img src="https://via.placeholder.com/120x160" alt="책 표지" class="img-fluid">
+                            </div>
+                            <div class="col-md-10">
+                                <h5 class="mb-2">
+                                    <a href="#" class="text-decoration-none">파이썬 프로그래밍 입문</a>
+                                </h5>
+                                <p class="book-meta mb-2">
+                                    저자: 김철수 | 출판사: 코딩출판사 | 발행년도: 2024
+                                </p>
+                                <p class="mb-2">파이썬 프로그래밍의 기초부터 실전까지 다루는 입문서입니다.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="book-status status-available">대출가능</span>
+                                    <button class="btn btn-sm btn-outline-primary">예약하기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-result-item">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <img src="https://via.placeholder.com/120x160" alt="책 표지" class="img-fluid">
+                            </div>
+                            <div class="col-md-10">
+                                <h5 class="mb-2">
+                                    <a href="#" class="text-decoration-none">실전 파이썬 머신러닝</a>
+                                </h5>
+                                <p class="book-meta mb-2">
+                                    저자: 이영희 | 출판사: AI출판사 | 발행년도: 2023
+                                </p>
+                                <p class="mb-2">파이썬을 활용한 머신러닝 프로젝트 실습 가이드북입니다.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="book-status status-unavailable">대출중</span>
+                                    <button class="btn btn-sm btn-outline-secondary">예약불가</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-result-item">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <img src="https://via.placeholder.com/120x160" alt="책 표지" class="img-fluid">
+                            </div>
+                            <div class="col-md-10">
+                                <h5 class="mb-2">
+                                    <a href="#" class="text-decoration-none">파이썬 데이터 분석</a>
+                                </h5>
+                                <p class="book-meta mb-2">
+                                    저자: 박지민 | 출판사: 데이터출판사 | 발행년도: 2023
+                                </p>
+                                <p class="mb-2">파이썬을 이용한 데이터 분석의 기초와 응용을 다룹니다.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="book-status status-available">대출가능</span>
+                                    <button class="btn btn-sm btn-outline-primary">예약하기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">이전</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">다음</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light mt-5 py-4">
+        <div class="container">
+            <div class="text-center">
+                <small class="text-muted">&copy; 2024 우도도서관. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // 도서 분류 데이터
+        const categoryData = {
+            '000': ['총류일반', '도서관/정보과학', '백과사전', '연속간행물', '학회/단체/기관/단체', '잡지', '신문', '일반전집/총서'],
+            '100': ['철학일반', '형이상학', '인식론/철학이론', '철학의 세계', '동양철학', '서양철학', '심리학', '윤리학/도덕철학', '종교철학'],
+            '200': ['종교일반', '불교', '기독교', '도교', '천주교', '이슬람교', '기타종교'],
+            '300': ['사회과학일반', '통계학', '경제학', '사회학/사회문제', '정치학', '행정학', '법학', '교육학', '풍속/예절/민속학'],
+            '400': ['자연과학일반', '수학', '물리학', '화학', '천문학/지학', '생물학', '식물학', '동물학', '의학'],
+            '500': ['기술과학일반', '의학', '농학', '공학일반', '건축공학', '기계공학', '전기/전자공학', '화학공학', '재료공학'],
+            '600': ['예술일반', '건축예술', '조각/조형예술', '회화/서예', '사진예술', '음악', '공연예술', '스포츠/레크리에이션'],
+            '700': ['언어일반', '한국어', '중국어', '일본어', '영어', '독일어', '프랑스어', '스페인어', '기타언어'],
+            '800': ['문학일반', '한국문학', '중국문학', '일본문학', '영미문학', '독일문학', '프랑스문학', '기타문학'],
+            '900': ['역사일반', '아시아역사', '유럽역사', '아프리카역사', '북미역사', '남미역사', '오세아니아역사', '지리/풍속']
+        };
+
+        // 대분류 선택 시 소분류 업데이트
+        document.getElementById('mainCategory').addEventListener('change', function() {
+            const mainCategory = this.value;
+            const subCategorySelect = document.getElementById('subCategory');
+            
+            // 소분류 옵션 초기화
+            subCategorySelect.innerHTML = '<option value="">소분류 선택</option>';
+            
+            // 선택된 대분류에 해당하는 소분류 옵션 추가
+            if (mainCategory && categoryData[mainCategory]) {
+                categoryData[mainCategory].forEach(subCategory => {
+                    const option = document.createElement('option');
+                    option.value = subCategory;
+                    option.textContent = subCategory;
+                    subCategorySelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

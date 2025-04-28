@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - 우도도서관</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">우도도서관</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">자료검색</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">이용안내</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">문화행사</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">도서관소개</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">로그아웃</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- My Page Content -->
+    <div class="mypage-container">
+        <!-- Profile Section -->
+        <div class="profile-section text-center">
+            <h3>홍길동님</h3>
+            <p class="text-muted">hong@example.com</p>
+            <p>회원 등급: <span class="badge bg-primary">일반회원</span></p>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">
+                    <i class="fas fa-user me-1"></i> 내 정보 수정
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rental-tab" data-bs-toggle="tab" data-bs-target="#rental" type="button" role="tab" aria-controls="rental" aria-selected="false">
+                    <i class="fas fa-book me-1"></i> 대여 내역
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="return-tab" data-bs-toggle="tab" data-bs-target="#return" type="button" role="tab" aria-controls="return" aria-selected="false">
+                    <i class="fas fa-undo me-1"></i> 반납 처리
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button" role="tab" aria-controls="wishlist" aria-selected="false">
+                    <i class="fas fa-heart me-1"></i> 찜 목록
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
+                    <i class="fas fa-comment me-1"></i> 내 리뷰/게시글
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
+                    <i class="fas fa-user-times me-1"></i> 회원탈퇴
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Profile Tab -->
+            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <h4 class="mb-4">내 정보 수정</h4>
+                <form>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fullName" class="form-label required">이름</label>
+                            <input type="text" class="form-control" id="fullName" value="홍길동" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label required">이메일</label>
+                            <input type="email" class="form-control" id="email" value="hong@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label required">휴대폰 번호</label>
+                        <input type="tel" class="form-control" id="phone" value="010-1234-5678" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">주소</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="zipcode" placeholder="우편번호" value="12345" readonly>
+                            <button class="btn btn-outline-secondary" type="button">우편번호 검색</button>
+                        </div>
+                        <input type="text" class="form-control" id="address" placeholder="기본주소" value="서울특별시 강남구 테헤란로 123" readonly>
+                        <input type="text" class="form-control mt-2" id="addressDetail" placeholder="상세주소" value="123-45">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">현재 비밀번호</label>
+                        <input type="password" class="form-control" id="currentPassword">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">새 비밀번호</label>
+                        <input type="password" class="form-control" id="newPassword">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">새 비밀번호 확인</label>
+                        <input type="password" class="form-control" id="confirmPassword">
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">정보 수정</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Rental Tab -->
+            <div class="tab-pane fade" id="rental" role="tabpanel" aria-labelledby="rental-tab">
+                <h4 class="mb-4">대여 내역</h4>
+                
+                <!-- Active Rentals -->
+                <h5 class="mb-3">현재 대여중</h5>
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0">대여일: 2024-03-15</p>
+                            <p class="mb-0">반납일: 2024-03-29</p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-success status-badge">대여중</span>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-primary me-1">반납하기</button>
+                            <button class="btn btn-sm btn-outline-primary">연장하기</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Past Rentals -->
+                <h5 class="mt-4 mb-3">과거 대여 내역</h5>
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0">대여일: 2024-03-15</p>
+                            <p class="mb-0">반납일: 2024-03-29</p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-secondary status-badge">반납완료</span>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-outline-secondary" disabled>반납완료</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Return Tab -->
+            <div class="tab-pane fade" id="return" role="tabpanel" aria-labelledby="return-tab">
+                <h4 class="mb-4">반납 처리</h4>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> 반납 예정일을 지난 도서가 있습니다. 빠른 반납 부탁드립니다.
+                </div>
+                
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0">대여일: 2024-03-15</p>
+                            <p class="mb-0">반납일: 2024-03-29</p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-danger status-badge">연체중</span>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-primary me-1">반납하기</button>
+                            <button class="btn btn-sm btn-outline-primary">연장하기</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5 class="mt-4 mb-3">반납 완료 내역</h5>
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0">대여일: 2024-03-15</p>
+                            <p class="mb-0">반납일: 2024-03-29</p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-secondary status-badge">반납완료</span>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="text-muted">2024-03-29 반납</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>파이썬 데이터 분석</h5>
+                            <p class="text-muted mb-0">저자: 박지민 | 출판사: 데이터출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0">대여일: 2024-02-01</p>
+                            <p class="mb-0">반납일: 2024-02-15</p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-secondary status-badge">반납완료</span>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="text-muted">2024-02-15 반납</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wishlist Tab -->
+            <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+                <h4 class="mb-4">찜 목록</h4>
+                
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0"></p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-success status-badge">대출가능</span>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-primary">대출하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-5">
+                            <h5>파이썬 데이터 분석</h5>
+                            <p class="text-muted mb-0">저자: 박지민 | 출판사: 데이터출판사</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-0"></p>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-danger status-badge">대출중</span>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-outline-secondary" disabled>대출중</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Review Tab -->
+            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <h4 class="mb-4">내 리뷰/게시글</h4>
+                
+                <!-- Reviews -->
+                <h5 class="mb-3">도서 리뷰</h5>
+                <div class="review-item">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                        </div>
+                        <div class="col-md-11">
+                            <h5>실전 파이썬 머신러닝</h5>
+                            <p class="text-muted mb-2">저자: 이영희 | 출판사: AI출판사</p>
+                            <div class="mb-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <p>머신러닝을 배우고 싶은 분들에게 추천합니다. 실습 예제가 많아 실제로 적용하기 좋습니다.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">작성일: 2024-03-15</small>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
+                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Posts -->
+                <h5 class="mt-4 mb-3">게시글</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>조회수</th>
+                                <th>댓글수</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>도서관 이용 시간 변경 제안</td>
+                                <td>2024-03-10</td>
+                                <td>45</td>
+                                <td>12</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
+                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>새로운 도서 구매 요청</td>
+                                <td>2024-02-28</td>
+                                <td>32</td>
+                                <td>8</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
+                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Delete Account Tab -->
+            <div class="tab-pane fade" id="delete" role="tabpanel" aria-labelledby="delete-tab">
+                <h4 class="mb-4">회원 탈퇴</h4>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> 회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.
+                </div>
+                
+                <form>
+                    <div class="mb-3">
+                        <label for="deletePassword" class="form-label">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="deletePassword" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <label class="form-check-label" for="confirmDelete">
+                                회원 탈퇴에 동의합니다.
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-danger">회원 탈퇴</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="text-center">
+                <small class="text-muted">&copy; 2024 우도도서관. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
