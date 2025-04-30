@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.BookReviewMapper">
+
+
+	<!-- 
+		void insertBookReview(BookReview bookreview);
+	 -->
+	 <insert id="insertBookReview" parameterType="BookReview">
+	 	insert into bookhub_reviews
+	 	(review_no
+	 	, review_content
+	 	, review_star
+	 	, review_title
+	 	, user_id
+	 	, book_no)
+	 	values
+	 	(BOOKSTORE_REVIEWS_SEQ.nextval
+	 	, #{content}
+	 	, #{star}
+	 	, #{title}
+	 	, #{writer.id}
+	 	, #{book.no})
+	 </insert>
+	 
+	 <!-- 
+	 	int getTotalRows(int bookNo);
+	  -->
+	  <select id="getTotalRows" resultType="int">
+	  		select
+	  			count(*)
+	  		from
+	  			bookhub_book_reviews
+	  		where
+	  			book_no = #{bookNo}
+	  </select>
+	  
+	  <!-- 
+	  	List<BookReview> getBookReviewsByBookNo(int bookNo, int offset, int rows)
+	   -->
+	   <select id="getBookReviewsByBookNo" resultType="BookReview">
+		   	select
+		   			R.review_no				as no
+		   		  , R.review_content		as content
+		   		  , R.review_likes			as likes
+		   		  , R.review_title			as title
+		   		  , R.review_created_date	as createdDate
+		   		  , R.review_updated_date	as updatedDate
+		   		  , U.user_id				as "writer.id"
+		   		  , U.user_name				as "writer.name"
+		   	from
+		   		bookhub_reviews R, bookhub_Users U
+		   	where
+		   		R.book_no = #{bookNo}
+		   		and R.user_id = U.user_id
+		   	order by
+		   		R.review_no asc
+		   	offset #{offset} rows
+		   	fetch next #{rows} rows only
+	   </select>
+	   
+	   <!-- 
+	   		List<BookReview> getAllBookReviewsByUserId(String userId);
+	    -->
+</mapper>
