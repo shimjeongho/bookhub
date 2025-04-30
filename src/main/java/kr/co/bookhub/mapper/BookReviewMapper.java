@@ -14,9 +14,7 @@ public interface BookReviewMapper {
 	
 	List<BookReview> getAllBookReviewsByUserId(String userId);
 	
-	List<BookReview> getBookReviewsByBookNo(@Param("bookNo") int bookNo,
-											@Param("offset") int offset,
-											@Param("rows") int rows);
+	List<BookReview> getBookReviewsByBookNo(@Param("bookNo") int bookNo);
 	
 	
 }

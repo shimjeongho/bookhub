@@ -39,12 +39,13 @@
 	  </select>
 	  
 	  <!-- 
-	  	List<BookReview> getBookReviewsByBookNo(int bookNo, int offset, int rows)
+	  	List<BookReview> getBookReviewsByBookNo(int bookNo)
 	   -->
 	   <select id="getBookReviewsByBookNo" resultType="BookReview">
 		   	select
 		   			R.review_no				as no
 		   		  , R.review_content		as content
+		   		  , R.review_star			as star
 		   		  , R.review_likes			as likes
 		   		  , R.review_title			as title
 		   		  , R.review_created_date	as createdDate
@@ -58,8 +59,6 @@
 		   		and R.user_id = U.user_id
 		   	order by
 		   		R.review_no asc
-		   	offset #{offset} rows
-		   	fetch next #{rows} rows only
 	   </select>
 	   
 	   <!-- 

@@ -1,3 +1,4 @@
+<%@page import="kr.co.bookhub.vo.Category"%>
 <%@page import="kr.co.bookhub.vo.BookReview"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.bookhub.vo.Book"%>
@@ -14,16 +15,12 @@
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
 	
 	Book book = bookMapper.getBookByNo(bookNo);
-
 	
 	
 	// int totalRows = bookReviewMapper.getTotalRows(bookNo);
 	
-	//Pagination pagination = new Pagination(pageNo, totalRows);
 	
-	//int offset = pagination.getOffset();
-	//int rows = pagination.getRows();
-	//List<BookReview> bookReviews = bookReviewMapper.getBookReviewsByBookNo(bookNo, offset, rows);
+	List<BookReview> bookReviews = bookReviewMapper.getBookReviewsByBookNo(bookNo);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -92,7 +89,7 @@
                         <p><strong>출판사:</strong> <%=book.getPublisher() %></p>
                         <p><strong>출판년도:</strong> <%=book.getPubDate() %></p>
                         <p><strong>ISBN:</strong> <%=book.getIsbn() %></p>
-                        <p><strong>분류:</strong> <%=book.getCategory()%></p>
+                        <p><strong>분류:</strong> <%=book.getCategory().getName() %></p>
                         <p class="d-flex align-items-center">
                             <strong class="me-2">평균 평점:</strong>
                             <span class="text-warning me-2">
@@ -213,11 +210,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="reviewTitle" class="form-label">제목</label>
-                        <input type="text" class="form-control" id="reviewTitle" placeholder="리뷰 제목을 입력하세요">
+                        <input type="text" class="form-control" name="content" id="reviewTitle" placeholder="리뷰 제목을 입력하세요">
                     </div>
                     <div class="mb-3">
                         <label for="reviewContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="reviewContent" rows="4" placeholder="이 책에 대한 의견을 자유롭게 작성해주세요"></textarea>
+                        <textarea class="form-control" name="title" id="reviewContent" rows="4" placeholder="이 책에 대한 의견을 자유롭게 작성해주세요"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">리뷰 등록</button>
                 </form>
@@ -227,28 +224,31 @@
             <div class="review-list" id="review-list">
                 <h4>최신 리뷰 (<%=StringUtils.commaWithNumber(book.getReviewCount()) %> 개)</h4>
 <%
-//	for (BookReview review : bookReviews) {
-//%>   
+	for (BookReview review : bookReviews) {
+%>   
                 <div class="review-item border-bottom py-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
                             <span class="text-warning">
+                                <%=StringUtils.toStar(review.getStar()) %>
+                                <!-- 
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
-                            </span>
-                            <span class="ms-2 fw-bold">정말 좋은 책이에요!</span>
+                                 -->
+                            </span>	
+                            <span class="ms-2 fw-bold"><%=review.getTitle() %></span>
                         </div>
-                        <small class="text-muted">2024.03.15</small>
+                        <small class="text-muted"><%=StringUtils.detailDate(review.getCreatedDate()) %></small>
                     </div>
-                    <p class="mb-1">이 책은 정말 읽을 가치가 있는 책입니다. 특히 중반부의 전개가 매우 흥미롭고...</p>
+                    <p class="mb-1"><%=review.getContent() %></p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">작성자: r</small>
+                        <small class="text-muted">작성자: <%=review.getWriter().getName() %></small>
                         <div>
                             <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="far fa-thumbs-up"></i> 15
+                                <i class="far fa-thumbs-up"></i> <%=review.getLikes() %>
                             </button>
                             <button class="btn btn-sm btn-outline-secondary">
                                 <i class="far fa-comment"></i> 답글
@@ -256,37 +256,9 @@
                         </div>
                     </div>
                 </div>
-<%
-//	}
-//%>
-                <div class="review-item border-bottom py-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div>
-                            <span class="text-warning">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </span>
-                            <span class="ms-2 fw-bold">흥미로운 내용</span>
-                        </div>
-                        <small class="text-muted">2024.03.14</small>
-                    </div>
-                    <p class="mb-1">전반적으로 만족스러운 책이었습니다. 다만 마지막 부분이 조금 아쉬웠어요.</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">작성자: 이독자</small>
-                        <div>
-                            <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="far fa-thumbs-up"></i> 8
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="far fa-comment"></i> 답글
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+<%	
+	}
+%>
                 <div class="text-center mt-4">
                     <button id="btn-load-more-reviews" class="btn btn-outline-primary">더 많은 리뷰 보기</button>
                 </div>

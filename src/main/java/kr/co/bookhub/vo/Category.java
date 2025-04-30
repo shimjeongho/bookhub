@@ -14,5 +14,5 @@ public class Category {
 
 	private int no;
 	private String name;
-	private int parentsNO;
+	private Category parentsNO;
 }
