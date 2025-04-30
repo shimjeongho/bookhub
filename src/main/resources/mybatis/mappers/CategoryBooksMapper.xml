@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.CategoryBooksMapper">
+
+	<!-- 카테고리 -->
+	<resultMap type="Category" id="CategoryResultMap">
+		<id				column="CATEGORY_NO"			property="no"/>
+		<result			column="CATEGORY_NAME"			property="name"/>
+	</resultMap>
+	
+	<!-- 도서 -->
+	<resultMap type="Book" id="BookResultMap">
+		<id				column="BOOK_NO"				property="no"/>
+		<result			column="BOOK_TITLE"				property="title"/>
+		<result			column="BOOK_AUTHOR"			property="author"/>
+		<result			column="BOOK_PUBLISHER"			property="publisher"/>
+		<result			column="BOOK_DESCRIPTION"		property="description"/>
+		<result			column="BOOK_PUB_DATE"			property="pubDate"/>
+		<result			column="BOOK_REVIEW_COUNT"		property="reviewCount"/>
+		<result			column="REVIEW_AVG"				property="reviewAvg"/>
+		<result			column="BOOK_COVER_IMAGE_PATH"	property="coverImagePath"/>
+		<result			column="BOOK_CREATED_DATE"		property="createdDate"/>
+		<result			column="BOOK_UPDATED_DATE"		property="updatedDate"/>
+		<result			column="BOOK_ISBN"				property="isbn"/>
+	</resultMap>
+
+	<!-- 대분류 목록 가져오기
+	List<Category> getMainCategory() -->
+	<select id="getMainCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_PARENTS_NO IS NULL OR CATEGORY_PARENTS_NO = ''
+		ORDER BY
+			CATEGORY_NAME ASC
+	</select>
+	
+	<!-- 대분류 번호를 전달받아 대분류에 속한 하위 분류 목록 가져오기
+	List<Category> getSubCategory(int categoryNo) -->	
+	<select id="getSubCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_PARENTS_NO IS NOT NULL
+		AND 
+			CATEGORY_PARENTS_NO = #{categoryNo}
+		ORDER BY
+			CATEGORY_NAME ASC
+	</select>
+	
+	<!-- 대분류에 속한 하위분류 번호로 도서 목록 가져오기
+	List<Book> getBooksByCategory(int mainCateNo, int subCateNo) -->
+	<select id="getBooksByCategory" resultMap="BookResultMap">
+		SELECT
+			B.BOOK_NO
+			, B.BOOK_TITLE
+			, B.BOOK_AUTHOR
+			, B.BOOK_PUBLISHER
+			, B.BOOK_DESCRIPTION
+			, B.BOOK_PUB_DATE
+			, B.BOOK_REVIEW_COUNT
+			, B.REVIEW_AVG
+			, B.BOOK_COVER_IMAGE_PATH
+			, B.BOOK_CREATED_DATE
+			, B.BOOK_UPDATED_DATE
+			, B.BOOK_ISBN
+			, B.CATEGORY_NO
+		FROM
+			BOOKHUB_BOOKS B, BOOKHUB_CATEGORIES C
+		WHERE
+			B.CATEGORY_NO = C.CATEGORY_NO
+		AND
+		<choose>
+			<when test="subCateNo != 0">
+				C.CATEGORY_NO = #{subCateNo}
+			</when>
+			<otherwise>
+				C.CATEGORY_PARENTS_NO = #{mainCateNo}
+			</otherwise>
+		</choose>
+		ORDER BY B.BOOK_NO DESC
+	</select>
+	
+</mapper>
