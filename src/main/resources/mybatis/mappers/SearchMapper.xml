@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.SearchMapper">
+	
+	<!--  
+		검색 조건에 맞는 행 개수 조회
+		int getTotalRows(Map<String, Object> condition);
+	-->
+	<select id="getTotalRows" parameterType="map" resultType="int">
+		SELECT
+			COUNT(DISTINCT B.BOOK_NO)
+		FROM BOOKHUB_BOOKS B, BOOKHUB_KEYWORDS K
+		WHERE B.BOOK_NO = K.BOOK_NO
+	    AND
+	        <choose>
+	        	<when test="category == 'title'">
+		            (UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{search}) || '%'
+		            <if test="keywords != null and !keywords.isEmpty()">
+		            OR
+		            <foreach collection="keywords" item="kw" separator=" OR ">
+		                UPPER(K.KEYWORD) LIKE '%' || UPPER(#{kw}) || '%'
+		            </foreach>
+		            </if>
+		            )
+	            </when>
+	            <when test="category == 'author'">
+					UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%'
+				</when>
+	            <when test="category == 'publisher'">
+	            	UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{search}) || '%'
+	            </when>
+	            <when test="category == 'isbn'">
+	            	UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{search}) || '%'
+	            </when>
+	        </choose>
+	</select>
+	
+	<!--  
+		// 검색 조건에 맞는 책 조회
+		List<Book> searchBooks(Map<String, Object> condition)
+	-->
+	<select id="searchBooks" parameterType="map" resultType="Book">
+		SELECT 
+	        B.BOOK_NO 				as no,
+	        B.BOOK_TITLE 			as title,
+	        B.BOOK_AUTHOR 			as author,
+	        B.BOOK_PUBLISHER 		as publisher,
+	        B.BOOK_DESCRIPTION 		as description,
+	        B.BOOK_PUB_DATE 		as pubDate,
+	        B.BOOK_REVIEW_COUNT 	as reviewCount,
+	        B.BOOK_REVIEW_AVG 			as reviewAvg,
+	        B.BOOK_COVER_IMAGE_PATH as coverImagePath,
+	        B.BOOK_CREATED_DATE 	as createdDate,
+	        B.BOOK_UPDATED_DATE 	as updatedDate,
+	        B.BOOK_ISBN 			as isbn,
+	        B.CATEGORY_NO 			as "category.no",
+	        SUM(
+	            CASE
+	            <choose>
+	            	<when test="category == 'title'">
+		                WHEN UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{search}) || '%' THEN 100
+		                <foreach collection="keywords" item="kw">
+		                    WHEN UPPER(K.KEYWORD) LIKE '%' || UPPER(#{kw}) || '%' THEN 1
+		                </foreach>
+		                ELSE 0
+	                </when>
+	                <when test="category == 'author'">
+	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	                <when test="category == 'publisher'">
+	                	WHEN UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	                <when test="category == 'isbn'">
+	                	WHEN UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	            </choose>
+	            END
+	        ) AS MATCH_POINT
+	    FROM BOOKHUB_BOOKS B, BOOKHUB_KEYWORDS K
+	    WHERE B.BOOK_NO = K.BOOK_NO
+	    GROUP BY
+	        B.BOOK_NO,
+	        B.BOOK_TITLE,
+	        B.BOOK_AUTHOR,
+	        B.BOOK_PUBLISHER,
+	        B.BOOK_DESCRIPTION,
+	        B.BOOK_PUB_DATE,
+	        B.BOOK_REVIEW_COUNT,
+	        B.BOOK_REVIEW_AVG,
+	        B.BOOK_COVER_IMAGE_PATH,
+	        B.BOOK_CREATED_DATE,
+	        B.BOOK_UPDATED_DATE,
+	        B.BOOK_ISBN,
+	        B.CATEGORY_NO
+	    HAVING 
+	        SUM(
+	            CASE
+	            <choose>
+	            	<when test="category == 'title'">
+		                WHEN UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{search}) || '%' THEN 100
+		                <foreach collection="keywords" item="kw">
+		                    WHEN UPPER(K.KEYWORD) LIKE '%' || UPPER(#{kw}) || '%' THEN 1
+		                </foreach>
+		                ELSE 0
+	                </when>
+	                <when test="category == 'author'">
+	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	                <when test="category == 'publisher'">
+	                	WHEN UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	                <when test="category == 'isbn'">
+	                	WHEN UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+		                ELSE 0
+	                </when>
+	            </choose>
+	            END
+	        ) > 0
+	 	<choose>
+		    <when test="sort == 'accuracy'">
+	 			ORDER BY MATCH_POINT DESC
+	 		</when>
+	 		<when test="sort == 'newest'">
+	 			ORDER BY BOOK_PUB_DATE DESC
+	 		</when>
+	 		<when test="sort == 'alphabetical'">
+	 			ORDER BY BOOK_TITLE ASC
+	 		</when>
+	 		<when test="sort == 'popular'">
+	 			ORDER BY BOOK_REVIEW_COUNT DESC
+	 		</when>
+	 	</choose>
+		OFFSET #{offset} ROWS FETCH NEXT #{rows} ROWS ONLY
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
