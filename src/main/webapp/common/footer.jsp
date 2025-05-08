@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<!-- Footer -->
 <footer class="footer">
     <div class="text-center" style="margin-bottom: 10px;">
         © 2025 BOOK HUB. All rights reserved.

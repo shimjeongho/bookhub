@@ -1,10 +1,20 @@
+<%@page import="kr.co.bookhub.vo.Category"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.bookhub.util.MybatisUtils"%>
+<%@page import="kr.co.bookhub.mapper.CategoryBooksMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+	CategoryBooksMapper categoryMapper = MybatisUtils.getMapper(CategoryBooksMapper.class);
+	List<Category> categories = categoryMapper.getMainCategory();
+%>
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="../home.html">BOOK HUB</a>
+        <a class="navbar-brand" href="../home.html">BOOKHUB</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,15 +39,28 @@
                 <li class="nav-item">
                     <a class="nav-link" href="../mypage.html">마이페이지</a>
                 </li>
-                
+<%
+	if (!categories.isEmpty()) {
+%>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" id="boardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         카테고리
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="boardDropdown">
-                        <li><a class="dropdown-item" href="../board.html?type=book">li태그 반복문 사용하세요</a></li>
+<%
+		for (Category cate : categories) {
+%>
+						<li>
+                        	<a class="dropdown-item" href="/bookhub/category/category-books.jsp?cateNo=<%=cate.getNo() %>"><%=cate.getName() %></a>
+                        </li>
+<%
+		}
+%>
                     </ul>
                 </li>
+<%
+	}
+%>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">

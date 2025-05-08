@@ -11,7 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("Category")
 public class Category {
+	
 	private int no;
 	private String name;
-	private Category parents;
+	private transient Category parents;
+	
 }
