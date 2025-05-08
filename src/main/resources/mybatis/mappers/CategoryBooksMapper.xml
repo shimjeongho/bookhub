@@ -20,7 +20,7 @@
 		<result			column="BOOK_DESCRIPTION"		property="description"/>
 		<result			column="BOOK_PUB_DATE"			property="pubDate"/>
 		<result			column="BOOK_REVIEW_COUNT"		property="reviewCount"/>
-		<result			column="REVIEW_AVG"				property="reviewAvg"/>
+		<result			column="BOOK_REVIEW_AVG"		property="reviewAvg"/>
 		<result			column="BOOK_COVER_IMAGE_PATH"	property="coverImagePath"/>
 		<result			column="BOOK_CREATED_DATE"		property="createdDate"/>
 		<result			column="BOOK_UPDATED_DATE"		property="updatedDate"/>
@@ -41,8 +41,23 @@
 			CATEGORY_NAME ASC
 	</select>
 	
+	
+	<!-- 특정 대분류 정보 가져오기
+	 * @param cateNo 대분류 번호
+	 * @return 카테고리 정보
+	Category getCategory(int cateNo) -->
+	<select id="getCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_NO = #{cateNo}
+	</select>
+	
 	<!-- 대분류 번호를 전달받아 대분류에 속한 하위 분류 목록 가져오기
-	List<Category> getSubCategory(int categoryNo) -->	
+	List<Category> getSubCategory(int cateNo) -->	
 	<select id="getSubCategory" resultMap="CategoryResultMap">
 		SELECT 
 			CATEGORY_NO				
@@ -52,14 +67,42 @@
 		WHERE
 			CATEGORY_PARENTS_NO IS NOT NULL
 		AND 
-			CATEGORY_PARENTS_NO = #{categoryNo}
+			CATEGORY_PARENTS_NO = #{cateNo}
 		ORDER BY
 			CATEGORY_NAME ASC
 	</select>
 	
+	<!-- 조건에 맞는 모든 데이터 개수 가져오기
+	 * @param condition.cateNo 대분류 번호
+	 * @param condition.subCateNo 대분류에 속한 하위 분류 번호(선택하지 않으면 0)
+	 * @return 조회된 모든 데이터 개수
+	int getTotalRows(Map<String, Object> condition) -->
+	<select id="getTotalRows" parameterType="map">
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOOKHUB_BOOKS B, BOOKHUB_CATEGORIES C
+		WHERE
+			B.CATEGORY_NO = C.CATEGORY_NO
+		AND
+		<choose>
+			<when test="subCateNo != 0">
+				C.CATEGORY_NO = #{subCateNo}
+			</when>
+			<otherwise>
+				C.CATEGORY_PARENTS_NO = #{cateNo}
+			</otherwise>
+		</choose>
+	</select>
+	
 	<!-- 대분류에 속한 하위분류 번호로 도서 목록 가져오기
-	List<Book> getBooksByCategory(int mainCateNo, int subCateNo) -->
-	<select id="getBooksByCategory" resultMap="BookResultMap">
+	 * @param condition.cateNo 대분류 번호
+	 * @param condition.subCateNo 대분류에 속한 하위 분류 번호(선택하지 않으면 0)
+	 * @param condition.offset 요청페이지 offset 값 
+	 * @param condition.rows 요청페이지의 데이서 개수 
+	 * @param condition.sort 정렬조건
+	List<Book> getBooksByCategory(Map<String, Object> condition) -->
+	<select id="getBooksByCategory" parameterType="map" resultMap="BookResultMap">
 		SELECT
 			B.BOOK_NO
 			, B.BOOK_TITLE
@@ -68,12 +111,11 @@
 			, B.BOOK_DESCRIPTION
 			, B.BOOK_PUB_DATE
 			, B.BOOK_REVIEW_COUNT
-			, B.REVIEW_AVG
+			, B.BOOK_REVIEW_AVG
 			, B.BOOK_COVER_IMAGE_PATH
 			, B.BOOK_CREATED_DATE
 			, B.BOOK_UPDATED_DATE
 			, B.BOOK_ISBN
-			, B.CATEGORY_NO
 		FROM
 			BOOKHUB_BOOKS B, BOOKHUB_CATEGORIES C
 		WHERE
@@ -84,10 +126,22 @@
 				C.CATEGORY_NO = #{subCateNo}
 			</when>
 			<otherwise>
-				C.CATEGORY_PARENTS_NO = #{mainCateNo}
+				C.CATEGORY_PARENTS_NO = #{cateNo}
 			</otherwise>
 		</choose>
-		ORDER BY B.BOOK_NO DESC
+		<choose>
+			<when test="sort == 'newest'">
+				ORDER BY B.BOOK_PUB_DATE DESC
+			</when>
+			<when test="sort == 'title'">
+				ORDER BY B.BOOK_TITLE ASC
+			</when>
+			<when test="sort == 'rating'">
+				ORDER BY B.BOOK_REVIEW_AVG DESC
+			</when>
+		</choose>
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{rows} ROWS ONLY
 	</select>
 	
 </mapper>
