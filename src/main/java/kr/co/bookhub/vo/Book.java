@@ -27,5 +27,5 @@ public class Book {
  	private Date updatedDate; 
  	private String isbn; 
  	private Category category;
-	
+  
 }

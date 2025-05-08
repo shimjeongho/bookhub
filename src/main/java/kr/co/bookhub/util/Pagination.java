@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Pagination {
-   private int rows = 10;		// 노출될 데이터 행의 개수
+   private int rows = 20;		// 노출될 데이터 행의 개수
    private int pages = 5;   	// 한 블럭에 표시될 페이지 개수
    private int currentPage;		// 현재 페이지
    private int offset;			// 페이지별 데이터를 가져올 첫번째 행의 인덱스
@@ -20,7 +20,7 @@ public class Pagination {
    private boolean isLast;		// 마지막 페이지 여부
    private int prevPage;		// 이전 페이지
    private int nextPage;		// 다음 페이지
-   
+  
    /**
     * 요청한 페이지번호, 총 데이터갯수를 전달받아서 Pagination을 초기화한다.
     * @param pageNo 요청한 페이지번호
