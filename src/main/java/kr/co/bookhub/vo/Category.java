@@ -8,10 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor 
+@NoArgsConstructor
 @Alias("Category")
 public class Category {
-	private int no; 
-	private String name; 
-	private Category parentsNo; 
+	
+	private int no;
+	private String name;
+	private transient Category parents;
+	
 }

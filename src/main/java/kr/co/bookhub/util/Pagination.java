@@ -6,49 +6,22 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Pagination {
-	
-	// 한 페이지당 표시할 게시글 개수 - 10개를 보여준다. 
-   private int rows = 20; 
 
-   // 한 페이지당 보여줄 블록의 개수 - 1~5번까지 보여준다.
-   private int pages = 5;
-   
-   // 현재 사용자가 요청한 페이지 번호
-   private int currentPage;
-   
-   // DB에서 게시글의 시작 위치값.
-   private int offset; 
-   
-   // 전체 게시글 개수
-   private int totalRows;
-   
-   // 전체 페이지 개수
-   private int totalPages;
-   
-   // 전체 블록 개수
-   private int totalBlocks;
-   
-   // 현재 페이지의 블록 번호
-   private int currentBlock;
-   
-   // 현재 페이지에서 첫번째 블록 번호
-   private int beginPage;
-   
-   // 현재 페이지에서 마지막 블록 번호
-   private int endPage;
-   
-   // 현재 페이지가 1인지
-   private boolean isFirst;
-   
-   // 현재 페이지가 마지막 페이지 인지.
-   private boolean isLast; 
-   
-   // 이전 페이지
-   private int prevPage;
-   
-   // 다음 페이지
-   private int nextPage;
-   
+   private int rows = 20;		// 노출될 데이터 행의 개수
+   private int pages = 5;   	// 한 블럭에 표시될 페이지 개수
+   private int currentPage;		// 현재 페이지
+   private int offset;			// 페이지별 데이터를 가져올 첫번째 행의 인덱스
+   private int totalRows;		// 총 데이터 개수
+   private int totalPages;		// 총 페이지 개수
+   private int totalBlocks;		// 총 페에지 블럭 개수
+   private int currentBlock;	// 현재 페이지의 블럭
+   private int beginPage;		// 현재 블럭의 시작 페이지
+   private int endPage;			// 현재 블럭의 마지막 페이지
+   private boolean isFirst;		// 첫번째 페이지 여부
+   private boolean isLast;		// 마지막 페이지 여부
+   private int prevPage;		// 이전 페이지
+   private int nextPage;		// 다음 페이지
+  
    /**
     * 요청한 페이지번호, 총 게시글 개수를 전달 받으면, 
     * 위의 필드 멤버들이 초기화 된다.

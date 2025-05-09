@@ -95,7 +95,7 @@ public class StringUtils {
 	 * @param str 숫자로 구성된 문자열
 	 * @return 정수값
 	 */
-	public static int strToInt(String str) {
+	public static Integer strToInt(String str) {
 		if (str == null) {
 			throw new IllegalArgumentException("null값은 숫자로 변환할 수 없다.");
 		}
