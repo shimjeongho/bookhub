@@ -6,6 +6,7 @@
 <configuration>
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
 	</settings>
 	
 	<typeAliases>
@@ -26,7 +27,8 @@
   
 	<mappers>
 		<mapper resource="mybatis/mappers/CategoryBooksMapper.xml"/>
-    <mapper resource="mybatis/mappers/SearchMapper.xml"/>
+    	<mapper resource="mybatis/mappers/DonationMapper.xml"/>
+    	<mapper resource="mybatis/mappers/SearchMapper.xml"/>
 	</mappers>
   
 </configuration>

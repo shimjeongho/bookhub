@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.DonationMapper">
+	
+	<!--  
+		void insertDonationBook(Donation donation);
+	-->
+	<insert id="insertDonationBook" parameterType="Donation">
+		insert into BOOKHUB_DONATION_BOOKS
+		(DONATION_NO
+		, DONATION_BOOK_TITLE
+		, DONATION_BOOK_AUTHOR
+		, DONATION_BOOK_PUBLISHER
+		, DONATION_BOOK_DESCRIPTION
+		, USER_ID
+		, LIB_NO)
+		values
+		(BOOKHUB_DONATION_BOOKS_DONATION_NO_SEQ.nextval
+		, #{title}
+		, #{author}
+		, #{publisher}
+		, #{description}
+		, #{user.id}
+		, #{library.no})
+	</insert>
+	
+	<!--  
+		List<Library> getAllLibrary()
+	-->
+	<select id="getAllLibrary" resultType="Library">
+	SELECT 
+	    LIB_NO					as no
+	    , LIB_NAME				as name
+	    , LIB_LOCATION			as location
+	    , LIB_LONGITUDE			as longitude
+	    , LIB_LATITUDE			as latitude
+	    , LIB_TEL				as tel
+	    , LIB_IMG_PATH			as imgPath
+	    , LIB_BUSINESS_HOURS	as businessHours
+	FROM 
+		BOOKHUB_LIBRARIES
+	</select>
+	
+	<!--  
+		List<Donation> getAllDonation();
+	-->
+	<select id="getAllDonation" resultType="Donation">
+		SELECT
+		    DONATION_NO						as no
+		    , DONATION_BOOK_TITLE			as title
+		    , DONATION_BOOK_AUTHOR			as author
+		    , DONATION_BOOK_PUBLISHER		as publisher
+		    , DONATION_BOOK_DESCRIPTION		as description
+		    , DONATION_CREATED_DATE			as createdDate
+		    , DONATION_UPDATED_DATE			as updatedDate
+		    , IS_DELETED					as isDeleted
+		    , USER_ID						as "user.id"
+		    , LIB_NO						as "library.no"
+		FROM BOOKHUB_DONATION_BOOKS
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
