@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우도도서관</title>
+    <!-- Google Fonts - Noto Sans KR -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../common/nav.jsp" rel="stylesheet">
+</head>
+<body>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>BOOKHUB</h5>
+                    <p>주소: 제주특별자치도 제주시 우도면 우도해안길 123</p>
+                    <p>전화: 064-123-4567</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>이용시간</h5>
+                    <p>평일: 09:00 - 18:00</p>
+                    <p>주말: 09:00 - 17:00</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>바로가기</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="../search.html" class="text-white">자료검색</a></li>
+                        <li><a href="#" class="text-white">이용안내</a></li>
+                        <li><a href="#" class="text-white">문화행사</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="text-center">
+                <small>&copy; 2024 우도도서관. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

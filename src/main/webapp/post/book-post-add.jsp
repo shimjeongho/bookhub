@@ -1,0 +1,61 @@
+<%@page import="kr.co.bookhub.util.MybatisUtils"%>
+<%@page import="kr.co.bookhub.mapper.PostMapper"%>
+<%@page import="kr.co.bookhub.vo.PostCategory"%>
+<%@page import="kr.co.bookhub.vo.Book"%>
+<%@page import="kr.co.bookhub.vo.User"%>
+<%@page import="kr.co.bookhub.vo.Post"%>
+<%@page import="kr.co.bookhub.util.StringUtils"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%--  
+도서 문의 입력폼에서 등록 버튼을 누르면 넘어오는 페이지로서, 등록 처리를 담당하는 페이지. 
+- 서버로부터 받는 값 : 문의도서 번호(bookNo), 사용자 아이디(세션에서 받음.), 문의 유형 번호(postCateNo)
+   				  게시글 제목(title), 게시글 내용(content), 공개 및 비공개 여부(isPublic)
+   				  공개 및 비공개 여부는 N 또는 Y로 온다.
+1. 서버로 부터 받는 값들을 전부 추출한다. 
+2. post객체를 생성하여 이 값들을 전부 set 한다. 
+3. mapper 객체를 사용가능한 상태로 만든다.
+4. post 객체에 mapper의 insert 쿼리문에 할당한다. 
+5. 초기화면으로 돌아간다.   				  
+ --%>    
+<% 
+	//1. 서버에서 받은 값들을 추출한다. 
+	String userId = "123@123"; 
+	int bookNo = StringUtils.strToInt(request.getParameter("bookNo")); 
+	int postCateNo = StringUtils.strToInt(request.getParameter("postCateNo"));
+	String title = request.getParameter("title"); 
+	String content = request.getParameter("content");
+	String isPublic = request.getParameter("isPublic"); 
+	
+	//2.Post 객체 생성하기 
+	Post post = new Post();
+	
+	//3.Post 객체에 set하기
+	post.setTitle(title); 
+	post.setContent(content); 
+	post.setIsPublic(isPublic);
+	
+	//3-1.사용자 아이디, 게시판 유형 번호, 문의 도서 번호를 넣기 위해 
+	// User, Book, PostCategory 객체들을 생성하고 각 객체에 set 한 다음 
+	// Post 객체에 할당. 
+	User user = new User(); 
+	Book book = new Book(); 
+	PostCategory category = new PostCategory();
+	
+	user.setId(userId);
+	book.setNo(bookNo);
+	category.setNo(postCateNo); 
+	
+	post.setUser(user);
+	post.setBook(book);
+	post.setPostCategory(category);
+	
+	//4.mapper 사용가능하게 해서 post 객체 + insert 쿼리문 실행 
+	PostMapper mapper = MybatisUtils.getMapper(PostMapper.class);
+	mapper.insertBookPost(post);
+	
+	//도서 문의 게시판의 초기화면으로 이동한다. + 공개여부에 대한 값도 들고 간다.
+	response.sendRedirect("post-list-1.jsp?postCateNo="+postCateNo);
+	
+
+%>
