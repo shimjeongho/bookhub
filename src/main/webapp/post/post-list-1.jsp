@@ -1,0 +1,276 @@
+<%@page import="kr.co.bookhub.util.Pagination"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="kr.co.bookhub.vo.Post"%>
+<%@page import="kr.co.bookhub.util.StringUtils"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%
+	//일단 mapper를 사용가능한 상태로 만든다. 
+	PostMapper selectPost = MybatisUtils.getMapper(PostMapper.class);
+
+	//메인 페이지에서 postCateNo 값을 서버로 부터 전달 받음.
+	//이 값을 통해, 게시판의 유형별로 게시글을 조회할 수 있음. 그리고 글쓰기 버튼에 갈 때도 전달해야됨.
+	int postCateNo = StringUtils.strToInt(request.getParameter("postCateNo"));
+
+	// 페이지 번호 블록을 누르면 아래 pageNo값이 서버로 보내지게 되고, 우리는 그 값을 다시 받아와서 추출한다.
+	int pageNo = StringUtils.strToInt(request.getParameter("pageNo"), 1);
+
+	// 검색 유형과 검색어를 추출하는데 null인 경우, "" 공백으로 추출한다. 
+	// 왜냐하면 무조건 존재하는 것은 아니기 때문에, 그래서 아래에서 공백이 아닌 경우에만 map 객체에 할당되도록 하여, 
+	// 공백은 그냥 공백인 체로 내비두는 것이다. 
+	String searchType = StringUtils.nullToBlank(request.getParameter("searchType"));
+	String searchKeyword = StringUtils.nullToBlank(request.getParameter("searchKeyword"));
+	
+	//반면 솔트는 디폴트로 정렬되어 있어야 하기 때문에, null인 경우 newest로 하도록 한다.
+	String sort = StringUtils.nullToStr(request.getParameter("sort"), "newest");
+	
+	// 추후에 세션에서 뽑아올 예정.
+	String userId = "123@123";
+	
+
+	//map 객체를 생성한다.
+	Map<String, Object> conditon = new HashMap<>();
+
+	//map 객체에 서버로 부터 요청 받은 값을 할당한다. 
+	//- postCateNo, searchType, searchTypeKeyword,pageNo
+	conditon.put("postCateNo", postCateNo);
+
+	if (!searchType.isEmpty() && !searchKeyword.isEmpty()) {
+		conditon.put("searchType", searchType);
+		conditon.put("searchKeyword", searchKeyword);
+	}
+
+	conditon.put("pageNo", pageNo);
+	
+	conditon.put("sort",sort != null ? sort : "newest");
+
+	// 전체 데이터 개수를 조회한다. 
+	int totalRows = selectPost.getTotalRows(conditon);
+
+	// 페이지 네이션 객체 생성하여 페이징 처리에 필요한 값 생성. 
+	Pagination pnt = new Pagination(pageNo, totalRows);
+
+	//offset값과 rows 값을 map 객체에 할당
+	conditon.put("offset", pnt.getOffset());
+	conditon.put("rows", pnt.getRows());
+	
+	// 전체 게시글을 조회하는 메소드를 호출한다.
+	List<Post> posts = selectPost.getPosts(conditon);
+%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도서 문의 게시판 - 북허브</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Font Awesome -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+	rel="stylesheet">
+<!-- Custom CSS -->
+<link href="../resources/css/styles.css" rel="stylesheet">
+
+</head>
+<body>
+	<%@include file="../common/nav.jsp"%>
+
+	<!-- Board Content -->
+	<div class="board-container">
+		<!-- Board Header -->
+		<div class="card mb-4">
+			<div class="card-body">
+			    <div class="row align-items-center">
+			        <div class="col-md-3">
+			            <h4 class="card-title mb-0">도서 문의 게시판</h4>
+			        </div>
+			        <div class="col-md-9">
+			            <div class="d-flex justify-content-end align-items-center gap-2">
+			                <form method="get" id="form-post-list" class="d-flex align-items-center"> 
+			                	<!-- 정렬 셀렉트 박스 -->
+			                    <select class="form-select form-select-sm me-2" id="sort-select" name="sort" style="width: 100px;">
+        							<option value="newest" <%= "newest".equals(request.getParameter("sort")) ? "selected" : "" %>>최신순</option>
+       								<option value="views" <%= "views".equals(request.getParameter("sort")) ? "selected" : "" %>>조회수 순</option>
+    							</select>
+    							
+			                	<!-- 검색유형 셀렉트 박스 -->
+			                    <select class="form-select form-select-sm me-2" id="search-type" name="searchType" style="width: 100px;">
+			                        <option value="title" <%="title".equals(searchType) ? "selected" : ""%>>제목</option>
+			                        <option value="user" <%="user".equals(searchType) ? "selected" : ""%>>작성자</option>
+			                    </select>
+			                    
+			                    <!-- 검색어 입력 -->
+			                    <input type="text" class="form-control form-control-sm me-2" id="post-search-keyword" 
+			                           placeholder="검색어 입력" name="searchKeyword" value="<%=searchKeyword%>" style="width: 200px;">
+			                    
+			                    <!-- 숨김필드 -->
+			                    <input type="hidden" name="postCateNo" value="<%=postCateNo%>">
+			                    <input type="hidden" name="pageNo" value="<%=pageNo%>">
+			                    
+			                    <button class="btn btn-primary btn-sm" id="search-btn" name="searchBtn">
+			                        <i class="fas fa-search"></i>
+			                    </button>
+			                </form>
+			                
+			                <a href="/bookhub/post/book-post-form.jsp?postCateNo=<%=postCateNo%>>" class="btn btn-primary btn-sm">
+			                    <i class="fas fa-pen"></i> 글쓰기
+			                </a>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+
+
+		<!-- Post List -->
+		<div class="card">
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-hover mb-0">
+						<thead class="table-light">
+							<tr>
+								<th scope="col" class="text-center" style="width: 80px;">번호</th>
+								<th scope="col">제목</th>
+								<th scope="col" class="text-center" style="width: 200px;">문의도서</th>
+								<th scope="col" class="text-center" style="width: 120px;">작성자</th>
+								<th scope="col" class="text-center" style="width: 120px;">작성일</th>
+								<th scope="col" class="text-center" style="width: 80px;">조회</th>
+							</tr>
+						</thead>
+						
+						<tbody id="post-list">
+<%
+	for (Post post : posts) {
+		if("Y".equals(post.getIsPublic())) {
+%>
+							<tr id="post-list-info">
+								<td class="text-center"><%=post.getNo()%></td>
+								<td><a
+									href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+									class="post-title"><%=post.getTitle()%></a> <!-- 요청할 파라미터가 여러 개인 경우 '?'가 아닌 '&'로 붙힌다. -->
+								</td>
+								<td class="text-center"><%=StringUtils.truncate(post.getBook().getTitle(), 10)%></td>
+								<td class="text-center"><%=post.getUser().getName()%></td>
+								<td class="text-center"><%=StringUtils.simpleDate((post.getUpdatedDate()))%></td>
+								<td class="text-center"><%=post.getViewCnt()%></td>
+							</tr>
+<%
+		} else { 
+%>			
+							<tr id="post-list-info">
+								<td class="text-center"><%=post.getNo()%></td>
+<% 	       
+			if (userId != null && userId.equals(post.getUser().getId())) {
+%>
+								<td>
+								<a href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+								   class="post-title">비공개 게시글입니다.</a> 
+								</td>
+<% 
+			}else  {
+%>
+								<td>
+								<a href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+								   class="post-title-disabled text-secondary">비공개 게시글입니다.</a> 
+								</td>
+<%
+			}
+%>
+								<td class="text-center">비공개</td>
+								<td class="text-center"><%= post.getUser().getName() %></td>
+								<td class="text-center"><%=StringUtils.simpleDate((post.getCreatedDate()))%></td>
+								<td class="text-center"><%=post.getViewCnt()%></td>
+							</tr>
+<%
+		}
+	}
+%>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+<%
+	if (totalRows > 0) {
+%>
+		<!-- Pagination -->
+		<nav class="mt-4">
+			<ul id="page-id" class="pagination justify-content-center">
+<%
+		if (!pnt.isFirst()) {
+%>
+				<li class="page-item"><a href="?page=<%=pnt.getPrevPage()%>"
+					class="page-link" data-page-no="<%=pnt.getPrevPage()%>">이전</a></li>
+<%
+		}
+
+		int currentPage = pnt.getCurrentPage();
+		int beginPage = pnt.getBeginPage();
+		int endPage = pnt.getEndPage();
+		for (int num = beginPage; num <= endPage; num++) {
+			
+			if (num == currentPage) {
+%>
+				<li class="page-item active"><span class="page-link"><%=num%></span>
+				</li>
+<%
+			}else {
+%>
+				<li class="page-item"><a href="?page=<%=num%>"
+					class="page-link" data-page-no="<%=num%>"><%=num%></a></li>
+<%
+			}
+		}
+
+		if (!pnt.isLast()) {
+%>
+				<li class="page-item <%=pnt.isLast() ? "disabled" : ""%>"><a
+					href="?page=<%=pnt.getNextPage()%>" class="page-link"
+					data-page-no="<%=pnt.getNextPage()%>">다음</a></li>
+<%
+		}
+%>
+			</ul>
+		</nav>
+<%
+}
+%>
+	</div>
+	<!-- Footer -->
+	<%@include file="../common/footer.jsp"%>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script type="text/javascript">
+		const $formPostList = $("#form-post-list");
+		
+		//페이지 번호를 눌렀을 때, 거기서의 pageNo값을 뽑아서, 서버에 제출, 
+		//그리고 링크 이기 때문에 기본 동작을 막는 return false를 작성한다.
+		$("#page-id .page-link").click(function() {
+			const pageNo = $(this).data("page-no");
+			$formPostList.find("input[name=pageNo]").val(pageNo);
+
+			$formPostList.trigger("submit");
+			return false;
+		});
+		
+		$("#sort-select").change(function() {
+			$formPostList.find("input[name=pageNo]").val(1);
+			$formPostList.trigger("submit");
+		}); 
+		
+		//비공개 게시글 중, 본인 사용자가 아닌 경우 게시글의 제목부를 클릭햇을 때 일어나는 이벤트임.
+		// 권한이 없다는 알림창을 주고, return false로 기본 동작을 할 수 없도록 한다.
+		$(".post-title-disabled").click(function () {
+			alert("열람 권한이 없습니다.");
+			return false;
+			
+		});
+	</script>
+</body>
+</html>

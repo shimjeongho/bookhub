@@ -6,7 +6,9 @@
 <configuration>
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
 	</settings>
+	
 	
 	<typeAliases>
 		<package name="kr.co.bookhub.vo"/>
@@ -27,6 +29,7 @@
 	<mappers>
 		<mapper resource="mybatis/mappers/CategoryBooksMapper.xml"/>
     <mapper resource="mybatis/mappers/SearchMapper.xml"/>
+    <mapper resource="mybatis/mappers/PostMapper.xml"/>
 	</mappers>
   
 </configuration>

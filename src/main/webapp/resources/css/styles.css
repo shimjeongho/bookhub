@@ -613,9 +613,9 @@ body {
 
 /* Post Form Page Styles */
 .post-form-container {
-  max-width: 900px;
+  max-width: 1140px;
   margin: 40px auto;
-  padding: 30px;
+  padding: 40px 120px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);

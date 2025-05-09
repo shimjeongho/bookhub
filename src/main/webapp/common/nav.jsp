@@ -1,13 +1,18 @@
 <%@page import="kr.co.bookhub.vo.Category"%>
+<%@page import="kr.co.bookhub.vo.PostCategory"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
 <%@page import="kr.co.bookhub.mapper.CategoryBooksMapper"%>
+<%@page import="kr.co.bookhub.mapper.PostMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
 <%
 	CategoryBooksMapper categoryMapper = MybatisUtils.getMapper(CategoryBooksMapper.class);
 	List<Category> categories = categoryMapper.getMainCategory();
+
+  PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	List<PostCategory> categories = postMapper.selectPostCategoryInfo(); 
 %>
 
 <!-- Navigation -->
@@ -28,9 +33,9 @@
                         게시판
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="boardDropdown">
-                        <li><a class="dropdown-item" href="../board.html?type=book">도서 문의</a></li>
-                        <li><a class="dropdown-item" href="../board.html?type=library">도서관 문의</a></li>
-                        <li><a class="dropdown-item" href="../board.html?type=system">기타/시스템 문의</a></li>
+<% for(PostCategory category : categories) { %>                        
+                        <li><a class="dropdown-item" href="/bookhub/post/post-list-<%= category.getNo() %>.jsp?postCateNo=<%= category.getNo() %>"><%= category.getName() %></a></li> 
+<% 	} %>                            
                     </ul>
                 </li>
                 <li class="nav-item">
