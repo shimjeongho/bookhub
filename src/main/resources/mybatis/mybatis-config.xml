@@ -9,6 +9,7 @@
 		<setting name="logImpl" value="STDOUT_LOGGING"/>
 	</settings>
 	
+	
 	<typeAliases>
 		<package name="kr.co.bookhub.vo"/>
 	</typeAliases>
@@ -27,7 +28,8 @@
   
 	<mappers>
 		<mapper resource="mybatis/mappers/CategoryBooksMapper.xml"/>
-    	<mapper resource="mybatis/mappers/SearchMapper.xml"/>
+    <mapper resource="mybatis/mappers/SearchMapper.xml"/>
+    <mapper resource="mybatis/mappers/PostMapper.xml"/>
 	</mappers>
   
 </configuration>

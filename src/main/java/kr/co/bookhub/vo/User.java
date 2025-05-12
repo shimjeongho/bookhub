@@ -1,6 +1,8 @@
 package kr.co.bookhub.vo;
 
+
 //User정보를 담은 vo
+
 
 import java.util.Date;
 
@@ -14,7 +16,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Alias("User")
-
 public class User {
 	
 	private String id;
