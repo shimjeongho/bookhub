@@ -39,6 +39,7 @@
 	  		bookhub_books
 	  	set
 	  		book_review_count	= #{reviewCount}
+	  	  , review_avg = #{reviewAvg}
 	  	  , book_updated_date	= sysdate
 	  	where
 	  		book_no = #{no}

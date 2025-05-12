@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.BookWishListMapper">
+
+	<!-- 
+		void addWishList(Map<String, Object> condition);
+	 -->
+	 <insert id="addWishList" parameterType="map">
+	 	INSERT INTO BOOKHUB_WISHLIST
+	 	( BOOK_NO
+	 	, USER_ID)
+	 	VALUES
+	 	( #{book_no}
+	 	, #{user_id})
+	 </insert>
+	 
+	 <!-- 
+	 	void removeWishList(Map<String, Object> condition);
+	  -->
+	  <delete id="removeWishList" parameterType="map">
+	  	DELETE 
+	  		FROM 
+	  			BOOKHUB_WISHLIST
+	  		WHERE
+	  			BOOK_NO = #{book_no}
+	  		AND USER_ID = #{user_id}
+	  </delete>
+</mapper>

@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Pagination {
-   private int rows = 10;
+   private int rows = 3;
    private int pages = 5;   
    private int currentPage;
    private int offset;

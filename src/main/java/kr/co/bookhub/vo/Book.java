@@ -22,7 +22,7 @@ public class Book {
 	private String description;
 	private String pubDate;
 	private int reviewCount;
-	private int reviewAvg;
+	private double reviewAvg;
 	private String coverImagePath;
 	private Date createDate;
 	private Date updateDate;
