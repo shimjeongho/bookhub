@@ -82,7 +82,7 @@
 	<link href="../resources/css/styles.css" rel="stylesheet">
 </head>
 <body>
-	<%@ include file="../common/nav.jsp" %>
+	<%@ include file="../common/nav.jsp" %>	
 	
 	<!-- Search Header -->
     <header class="search-header">

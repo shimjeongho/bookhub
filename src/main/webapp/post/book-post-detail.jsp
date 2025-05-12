@@ -1,3 +1,6 @@
+<%@page import="kr.co.bookhub.vo.PostReply"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.vo.Post"%>
 <%@page import="kr.co.bookhub.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -12,17 +15,21 @@
 	String postCateNo = request.getParameter("postCateNo");
 	int postNo = StringUtils.strToInt(request.getParameter("postNo")); 
 	String pageNo = request.getParameter("pageNo");
+	String userId = "123@123"; //세션에서 꺼내는 것으로 변경하기.
 	
-	PostMapper selectPost = MybatisUtils.getMapper(PostMapper.class);
-	Post post = selectPost.selectPostBypostNo(postNo); 
+	PostMapper mapper = MybatisUtils.getMapper(PostMapper.class);
+	Post post = mapper.selectPostBypostNo(postNo); 
+
+	Map<String,Object> condition = new HashMap<>();
+	
+	//댓글 조회하기
+	condition.put("postNo",postNo);
+	List<PostReply> postReplies = mapper.getPostReplies(condition); 
 	
 	// 조회 수 값을 들어올 때마다 1 증가 시킨다. 
 	post.setViewCnt(post.getViewCnt() + 1); 
 	// 변경된 값을 updatePost 쿼리문에 적용한다.
-	selectPost.updatePost(post);
-	
-	//세션에서 꺼내는 것으로 변경하기.
-	String userId = "123@123";
+	mapper.updatePost(post);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -40,6 +47,8 @@
 <body>
     <!-- Navigation -->
     <%@include file="../common/nav.jsp" %>
+    <!-- /bookhub/src/main/webapp/common/nav.jsp 
+         /bookhub/src/main/webapp/post/book-post-detail.jsp-->
 
     <!-- Post Detail Content -->
     <div class="container my-5">
@@ -98,10 +107,10 @@
                             <div>
 <% if(userId != null && userId.equals(post.getUser().getId())) { %>       
 <!-- 세션에서 꺼낸 아이디가 존재하고, 해당 게시글의 유저와 동일한 유저일 경우, 수정 삭제 기능을 구현할 수 있다. -->                 
-                                <a href="/bookhub/post/book-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
+                                <a href="book-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
                                     <i class="fas fa-edit me-1"></i> 수정
                                 </a>
-                                <a href="/bookhub/post/book-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
+                                <a href="book-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
                                 id="del-post-btn">
                                     <i class="fas fa-trash me-1"></i> 삭제
                                 </a>
@@ -123,50 +132,94 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title mb-4">댓글 (3)</h5>
-                        
+                     
                         <!-- 댓글 입력하는 공간 -->
-                        <form action="">
+                        <form id="reply-add" method="post" action="book-post-detail-reply-add.jsp">
 	                       <div class="mb-4">
-	                           <textarea name="comment" id="post-comment" class="form-control mb-2" rows="3" placeholder="댓글을 입력하세요"></textarea>
+	                           <textarea name="replyContent" 
+	                           			 class="form-control mb-2" 
+	                           			 rows="3" 
+	                           			 placeholder="댓글을 입력하세요"
+	                           			 ></textarea>
+	                           <input type="hidden" name="postCateNo" value="<%= postCateNo %>"> 
+	                           <input type="hidden" name="postNo" value="<%= postNo %>"> 
+	                           <input type="hidden" name="pageNo" value="<%= pageNo %>">
+	                            
 	                           <div class="d-flex justify-content-end">
-	                               <button class="btn btn-primary">댓글 작성</button>
+	                               <button type="submit" class="btn btn-primary">댓글 등록</button>
 	                           </div>
 	                       </div>
                         </form>
-                        
+<% 
+	for(PostReply postReply : postReplies) {
+		int postReplyNo = postReply.getNo();
+%>                           
                         <!-- 댓글 리스트 -->
                         <div class="comments-list">
-                            <!-- 댓글 1 -->
-                            <!-- for문 시작 -->
-                            <div class="comment-item mb-3 pb-3 border-bottom">
+                            <div class="comment-item mb-1 pb-4 border-bottom">
                                 <div class="d-flex justify-content-between mb-2">
+                                   <!-- 사용자 이름 및 작성일자.--> 
                                     <div>
-                                        <span class="fw-bold">사용자 이름</span>
-                                        <span class="text-muted ms-2">등록 일자(update 쿼리 사용)</span>
+                                        <span class="fw-bold"><%=postReply.getUser().getName() %></span>
+                                        <span class="text-muted ms-2"><%=StringUtils.simpleDate(postReply.getCreatedDate()) %></span>
                                     </div>
-                                    <div>
-                                        <button type="button" class="btn btn-sm btn-link text-muted">답글</button>
-                                        <button type="button" id="modify-btn" class="btn btn-sm btn-link text-muted">수정</button>
-                                        <button type="button" class="btn btn-sm btn-link text-danger">삭제</button>
-                                    </div>
+                                    <!-- 답글 및 수정 버튼 -->
+				                    <div>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-link text-muted reply_reply_btn"
+                                                data-reply-no="<%=postReplyNo %>">답글</button>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-link text-muted reply_modify_btn"
+                                                data-reply-no="<%=postReplyNo %>">수정</button>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-link text-danger reply_del_btn"
+                                                data-reply-no="<%=postReplyNo %>">삭제</button>
+                                    </div> 
                                 </div>
-                                <div id="saved-comment">
-	                                <p class="mb-0" data-saved-comment ="여기는 스크립틀릿으로 댓글 내용을 조회할 예정">여기는 스크립틀릿으로 댓글 내용을 조회할 예정</p>
+                                <!-- 댓글 내용. -->
+                                <div id="reply-content-<%=postReplyNo %>">
+	                                <p class="mb-0"><%=postReply.getContent() %></p>
+                                </div> 
+                                <!-- 댓글 수정폼 -->
+                                <div class="d-none"
+                                     id="reply-modify-container-<%=postReplyNo %>">
+                                	<form action="">
+                                		<textarea class="form-control mb-2" 
+                                				  rows="3"
+                                				  name=""></textarea>
+                                		<button type="submit" 
+                                				class="btn btn-sm btn-link text-muted">등록</button>
+	                        			<button type="button" 
+	                        					class="btn btn-sm btn-link text-muted reply_modify_cancle_btn"
+	                        					data-reply-no=<%=postReplyNo %>>취소</button>
+                                	</form>
                                 </div>
-                                <!-- 댓글 수정 입력폼. -->
-                                <form id="comment-modify-form" action="">
-                                	<textarea name="modifyComment" id="modify-comment" class="form-control mb-2" rows="3"></textarea>
-                                	<button class="btn btn-sm btn-link text-muted">등록</button>
-                                </form>
+                                
+                                <!-- 답글 입력폼 --> 
+                                <div class="d-none"
+                                	 id="reply-reply-container">
+                                	<form action="">
+                                		<textarea class="form-control mb-2" 
+                                				  rows="3"></textarea>
+                                		<button type="submit" 
+                                				class="btn btn-sm btn-link text-muted">등록</button>
+	                        			<button type="button" 
+	                        					class="btn btn-sm btn-link text-muted reply-reply-cancle-btn"
+	                        					data-reply-no=<%=postReplyNo %> >취소</button>
+                                	</form>
+                                </div>
+                                
                             </div>
-                            <!-- for문 종료  -->
                         </div>
+<%
+	}
+%>                    
                     </div>
                 </div>
 
                 <!-- Navigation Buttons -->
                 <div class="d-flex justify-content-between mb-5">
-                    <a href="/bookhub/post/post-list-1.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
+                    <a href="post-list-1.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
                         <i class="fas fa-arrow-left me-1"></i> 목록으로
                     </a>
                    <!--  <div>
@@ -191,26 +244,69 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
     	$(document).ready(function () {
+    		//게시글 삭제 버턴 눌렀을 때 이벤트
 	    	$("#del-post-btn").click(function () { 
 	    		let result = confirm("정말 삭제하시겠습니까?");
 	    		return result;
 			});
-				
-		});
     	/* 예를 누르면 result 값이 true. 
     	   아니오를 누르면 result 값이 false로 반환.*/
     	   
-    	 // 처음 화면에 띄워질 땐, 댓글 수정 입력폼이 나오지 않고, 
-    	 // 댓글 안에 수정 버튼이 나와야 댓글 수정 입력폼이 나오게 된다.
-    	 // 기존 댓글 내용을 가져와서, 수정폼에 복붙한다.
-    	 $("#comment-modify-form").addClass("d-none");
-    	 $("#modify-btn").click(function () {
-    		const savedComment = $("#saved-comment p").data("saved-comment"); 
-			$("#saved-comment").addClass("d-none");
-			$("#comment-modify-form").removeClass("d-none");
-			$("#comment-modify-form textarea").val(savedComment);
+	    	   // 댓글에서 수정 버튼을 누르게 되면
+	    	   $(".reply_modify_btn").click(function() {
+	    		   // 해당 이벤트의 data 값인 댓글의 고유 넘버를 꺼낸다.
+	    		   const replyNo = $(this).data("reply-no");
+	    		   
+	    		   // 댓글 내용이 담긴 선택자를 선택. 
+	    		   const $replyContent = $("#reply-content-"+replyNo);
+	    		   
+	    		   //댓글 내용을 추출한다.
+	    		   const replyContentData = $replyContent.find("p").text();
+	    		   
+	    		   // 해당 댓글의 수정폼 선택자를 선택.
+	    		   const $replyModifyContainer =$("#reply-modify-container-"+replyNo);
+	    		   
+	    		   //수정폼 선택자의 textarea에 댓글 내용을 넣는다.
+	    		   $replyModifyContainer.find("textarea").val(replyContentData);
+	    		   
+	    		   // 기존 댓글 화면을 안보이게 한다.
+	    		   $replyContent.addClass("d-none");
+	    		   
+	    		   //이 상태인 수정폼을 보이게 한다.
+	    		   $replyModifyContainer.removeClass("d-none");
+				});
+    			
+    			// 수정 폼에서 취소 버튼을 누르면 다시 원래대로 되돌아 온다.
+				$(".reply_modify_cancle_btn").click(function () {
+					
+					// 댓글 고유 넘버를 뽑아온다. 
+					const replyNo = $(this).data("reply-no");
+					
+					//수정폼을 선택한다. 
+					const $replyModifyContainer = $("#reply-modify-container-"+replyNo);
+					
+					//댓글 내용 선택자를 선택한다.
+					const $replyContent = $("#reply-content-"+replyNo);
+					
+					$replyModifyContainer.addClass("d-none");
+					
+					$replyContent.removeClass("d-none"); 
+				});
+    		 
+	    	   
+	    	
+	    	 // 댓글 등록 할 때
+	    	$("#reply-add").submit(function () {
+	    		const replyContent = $("textarea[name=replyContent]").val();
+	    		
+	    		if(!replyContent.trim() || replyContent.trim() === "") {
+	    			alert("댓글을 입력해주세요.");
+	    			return false;
+	    		}
+			});
 		});
-    
+    	   
+    	
     </script>
 </body>
 </html> 
