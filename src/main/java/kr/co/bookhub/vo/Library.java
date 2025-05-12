@@ -3,18 +3,23 @@ package kr.co.bookhub.vo;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Alias("Library")
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 public class Library {
 	
-	int no;
-	String name;
-	String location;
-	String longitude;
-	String latitude;
-	String tel;
-	String imgPath;
-	String businessHour;
+	private int no;
+	private String name;
+	private String location;
+	private String longitude;
+	private String latitude;
+	private String tel;
+	private String imgPath;
+	private String businessHours;
 	
 }

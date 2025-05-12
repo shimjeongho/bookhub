@@ -5,17 +5,22 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Alias("LoanHistory")
 public class LoanHistory {
-	int no;
-	Date loanDate;
-	Date returnDate;
-	Date dueDate;
-	String loanStatus;
-	User user;
-	Library library;
-	Book book;
-	String isExtension;
+	private int no;
+	private Date loanDate;
+	private Date returnDate;
+	private Date dueDate;
+	private String loanStatus;
+	private User user;
+	private Library library;
+	private Book book;
+	private String isExtension;
 }

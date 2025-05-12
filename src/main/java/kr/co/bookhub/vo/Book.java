@@ -5,21 +5,27 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+
 @Alias("Book")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Book {
-	int no;
-	String title;
-	String author;
-	String publisher;
-	String description;
-	Date pubDate;
-	int reviewAvg;
-	String coverImage;
-	Date createdDate;
-	Date updatedDate;
-	String isbn;
-	Category category;
-	
+	private int no;
+	private String title;
+	private String author;
+	private String publisher;
+	private String description;
+	private Date pubDate;
+	private int reviewCount;
+	private double reviewAvg;
+	private String coverImagePath;
+	private Date createdDate;
+	private Date updatedDate;
+	private String isbn;
+	private Category category;
 }

@@ -5,19 +5,21 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Alias("User")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
-	String id;
-	String password;
-	String name;
-	int zipcode;
-	String address;
-	String datail;
-	String phone;
-	Date birth;
-	Date createdDate;
-	Date updatedDate;
-	String isDeleted;
+	private String id;
+	private String password;
+	private String name;
+	private String phone;
+	private Date birth;
+	private Date createdDate;
+	private Date updatedDate;
+	private String isDeleted;
 }

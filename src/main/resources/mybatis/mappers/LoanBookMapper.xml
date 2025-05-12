@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.bookhub.mapper.LoanBookMapper">
+
+	<!-- 
+		List<LoanHistory> getLoanBookByUserId(String id);
+	 -->
+	 <select id="getLoanBookByUserId" resultType="LoanHistory">
+	 	select
+	 		B.book_no					as "book.no"
+	 		, L.loan_no					as  no
+	 		, B.book_title				as "book.title"
+	 		, B.book_author				as "book.author"
+	 		, B.book_publisher			as "book.publisher"
+	 		, B.book_cover_image_path	as "book.coverImagePath"
+	 		, L.loan_date				as  loanDate
+	 		, L.due_date				as  dueDate
+	 		, L.loan_status				as  loanStatus
+	 		, L.is_extension			as  isExtension
+	 	from bookhub_books B, bookhub_loan_histories L
+	 	where L.user_id = #{id}
+	 	and B.book_no = L.book_no
+	 	and L.loan_status = 'L'
+	 </select>
+	 
+	 <!--  
+	 	int getTotalRows(String id);
+	 -->
+	 <select id="getTotalRows"  parameterType="String">
+		select
+			count(*)
+		from
+			bookhub_loan_histories
+		where user_id = #{id}
+	 </select>
+	 
+	 <!--  
+	 	void updateDelayBooksStatus(String id);
+	 -->
+	 <update id="updateDelayBooksStatus" parameterType="String">
+    	UPDATE bookhub_loan_histories
+    	SET loan_status = 'D'
+    	WHERE due_date &lt; SYSDATE
+      	  AND user_id = #{id}
+      	  and loan_status = 'L'
+	 </update>
+	 
+	 
+	 <!--  
+	 	List<LoanHistory> getDelayBookByUserId(String id);
+	 -->
+	 <select id="getDelayBookByUserId" resultType="LoanHistory">
+	 	select
+	 		B.book_no					as "book.no"
+	 		, L.loan_no					as  no
+	 		, B.book_title				as "book.title"
+	 		, B.book_author				as "book.author"
+	 		, B.book_publisher			as "book.publisher"
+	 		, B.book_cover_image_path	as "book.coverImagePath"
+	 		, L.loan_date				as  loanDate
+	 		, L.due_date				as  dueDate
+	 		, L.loan_status				as  loanStatus
+	 		, L.is_extension			as  isExtension
+	 	from bookhub_books B, bookhub_loan_histories L
+	 	where L.user_id = #{id}
+	 	and B.book_no = L.book_no
+	 	and L.loan_status = 'D'
+	 </select>
+	 
+	 <!-- 
+	 	LoanHistory getLoanHistoryByLoanNo(String lno);
+	  -->
+	 <select id="getLoanHistoryByLoanNo" resultType="LoanHistory">
+	 	select
+	 		loan_no			as no			 
+	 		, loan_date		as loanDate
+	 		, return_date	as returnDate
+	 		, due_date		as due_date
+	 		, loan_status	as loanStatus
+	 		, user_id		as "user.id"
+	 		, lib_no		as "library.no"
+	 		, book_no		as "book.no"
+	 		, is_extension	as isExtension
+	 	from bookhub_loan_histories
+	 	where loan_no = #{lno}
+	 </select>
+	 
+	 <!-- 
+	 	void updateIsExtensionAndDueDateByLoanNo(String lno);
+	  -->
+	 <update id="updateIsExtensionAndDueDateByLoanNo" parameterType="String">
+	 	update bookhub_loan_histories
+	 	set
+	 		is_extension = 'Y',
+	 		due_date = due_date + 14
+	 	where
+	 		loan_no = #{lno}
+	 </update>
+	 
+	 <!--  
+	 	void InsertLoanHistoryByBnoAndRnoAndId(String id, String lno, String bno);
+	 -->
+	 <insert id="InsertLoanHistoryByBnoAndRnoAndId">
+	 	insert into bookhub_loan_histories
+	 	(loan_no
+	 	, loan_date
+	 	, return_date
+	 	, due_date
+	 	, loan_status
+	 	, user_id
+	 	, lib_no
+	 	, book_no
+	 	, is_extension)
+	 	values
+	 	(bookhub_loan_histories_loan_no_seq.nextval
+	 	, SYSDATE
+	 	, null
+	 	, SYSDATE+14
+	 	, 'L'
+	 	, #{id}
+	 	, #{lno}
+	 	, #{bno}
+	 	, 'N')
+	 </insert>
+	 
+	 
+	 
+	 
+	<!--
+		List<LoanHistory> getReturnBookByUserId(String id);
+	-->
+	<select id="getReturnBookByUserId" resultType="LoanHistory">
+	 	select
+	 		B.book_no					as "book.no"
+	 		, L.loan_no					as  no
+	 		, B.book_title				as "book.title"
+	 		, B.book_author				as "book.author"
+	 		, B.book_publisher			as "book.publisher"
+	 		, B.book_cover_image_path	as "book.coverImagePath"
+	 		, L.loan_date				as  loanDate
+	 		, L.due_date				as  dueDate
+	 		, L.return_date				as  returnDate
+	 		, L.loan_status				as  loanStatus
+	 		, L.is_extension			as  isExtension
+	 	from bookhub_books B, bookhub_loan_histories L
+	 	where L.user_id = #{id}
+	 	and B.book_no = L.book_no
+	 	and L.loan_status = 'P'
+	 </select>
+	 
+	 <!-- 
+	 	void updateLoanStatusAndreturnDateByLoanNo(String lno);
+	  -->
+	 <update id="updateLoanStatusAndreturnDateByLoanNo" parameterType="String">
+	 	update bookhub_loan_histories
+	 	set
+	 		loan_status = 'P',
+	 		return_date = SYSDATE
+	 	where
+	 		loan_no = #{lno}
+	 </update>
+</mapper>

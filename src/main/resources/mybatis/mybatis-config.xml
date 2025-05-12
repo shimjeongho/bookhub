@@ -7,6 +7,7 @@
 
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
+		<!-- <setting name="logImpl" value="STDOUT_LOGGING"/> -->
 	</settings>
 	
 	<typeAliases>
@@ -19,7 +20,7 @@
       <dataSource type="POOLED">
         <property name="driver" value="oracle.jdbc.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-        <property name="username" value="sui"/>
+        <property name="username" value="hr"/>
         <property name="password" value="zxcv1234"/>
       </dataSource>
     </environment>
@@ -27,7 +28,9 @@
   
   <!--Mapper xml 파일 등록 -->
   <mappers>
-  	
+  		<mapper resource="mybatis/mappers/LoanBookMapper.xml"/>
+  		<mapper resource="mybatis/mappers/StockMapper.xml"/>
+  		<mapper resource="mybatis/mappers/AddressMapper.xml"/>
   </mappers>
   
 </configuration>
