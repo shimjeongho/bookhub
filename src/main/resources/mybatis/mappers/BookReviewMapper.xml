@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.BookReviewMapper">
+
+
+	<!-- 
+		void insertBookReview(BookReview bookreview);
+	 -->
+	 <insert id="insertBookReview" parameterType="BookReview">
+	 	insert into bookhub_reviews
+	 	(review_no
+	 	, review_content
+	 	, review_star
+	 	, review_title
+	 	, user_id
+	 	, book_no)
+	 	values
+	 	(BOOKSTORE_REVIEWS_SEQ.nextval
+	 	, #{content}
+	 	, #{star}
+	 	, #{title}
+	 	, #{writer.id}
+	 	, #{book.no})
+	 </insert>
+	 
+	 <!-- 
+	 	int getTotalRows(int bookNo);
+	  -->
+	  <select id="getTotalRows" resultType="int">
+	  		select
+	  			count(*)
+	  		from
+	  			bookhub_reviews
+	  		where
+	  			book_no = #{bookNo}
+	  			and is_deleted = 'N'
+	  </select>
+	  
+	  <!-- 
+	  	List<BookReview> getBookReviewsByBookNo(Map<String, Object> condition);
+	   -->
+	   <select id="getBookReviewsByBookNo" parameterType="map" resultType="BookReview">
+		   	select
+		   			R.review_no				as no
+		   		  , R.review_content		as content
+		   		  , R.review_star			as star
+		   		  , R.review_likes			as likes
+		   		  , R.review_title			as title
+		   		  , R.review_created_date	as createdDate
+		   		  , R.review_updated_date	as updatedDate
+		   		  , U.user_id				as "writer.id"
+		   		  , U.user_name				as "writer.name"
+		   	from
+		   		bookhub_reviews R, bookhub_Users U
+		   	where
+		   		R.book_no = #{bookNo}
+		   		and R.user_id = U.user_id
+		   		and R.is_deleted = 'N'
+		   	<choose>
+		   		<when test="sort == 'newest'">
+		   			order by R.review_created_date desc
+		   		</when>
+		   		<when test="sort == 'oldest'">
+		   			order by R.review_created_date asc
+		   		</when>
+		   		<when test="sort == 'star'">
+		   			order by R.review_star desc
+		   		</when>
+		   		<when test="sort == 'likes'">
+		   			order by R.review_likes desc
+		   		</when>
+		   	</choose>
+		   	offset #{offset} rows 
+	 	 	fetch next #{rows} rows only
+	   </select>
+	   
+	   <!-- 
+	   		List<BookReview> getAllBookReviewsByUserId(String userId);
+	    -->
+	    
+	    <!-- 
+	    	void updateReview(int reviewNo);
+	     -->
+	    <update id="updateReview" parameterType="int">
+   		 update
+   		 	 bookhub_reviews
+   		 set
+   		 	is_deleted	=	'Y'
+   		 where review_no = #{reviewNo}
+		</update>
+	    
+	    <!-- 
+	    	int getTotalReviewScore(int bookNo);
+	     -->
+	    <select id="getTotalReviewScore" parameterType="int" resultType="int">
+		 select 
+		 		sum(review_star)		as totalStar
+		 from
+		 	bookhub_reviews
+	     where book_no = #{bookNo}
+	     and is_deleted	=	'N'
+		</select>
+	    
+	    <!-- 
+	    	int increaseLike(int reviewNo);
+	     -->
+	     <update id="increaseLike" parameterType="int">
+	     	UPDATE
+	     		BOOKHUB_REVIEWS
+	     	SET
+	     		REVIEW_LIKES = REVIEW_LIKES + 1
+	     	WHERE
+	     		REVIEW_NO = #{revieNo}
+	     </update>
+	     
+	    <!-- 
+	    	int decreaseLike(int reviewNo);
+	     -->
+	     <update id="decreaseLike" parameterType="int">
+	     	UPDATE
+	     		BOOKHUB_REVIEWS
+	     	SET
+	     		REVIEW_LIKES = REVIEW_LIKES - 1
+	     	WHERE
+	     		REVIEW_NO = #{revieNo}
+	     </update>
+	     <!-- 
+	     	int getLikesCount(int reviewNo);
+	      -->
+	      <select id="getLikesCount" parameterType="int" resultType="int">
+	      	SELECT
+	      		REVIEW_LIKES
+	      	FROM 
+	      		BOOKHUB_REVIEWS
+	      	WHERE
+	      		REVIEW_NO = #{revieNo}
+	      </select>
+</mapper>
