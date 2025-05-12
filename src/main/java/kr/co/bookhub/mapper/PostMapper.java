@@ -6,6 +6,7 @@ import java.util.Map;
 import kr.co.bookhub.vo.Book;
 import kr.co.bookhub.vo.Post;
 import kr.co.bookhub.vo.PostCategory;
+import kr.co.bookhub.vo.PostReply;
 
 public interface PostMapper {
 	/**
@@ -40,22 +41,30 @@ public interface PostMapper {
 	
 		/**
 		 * 모든 게시글들을 조회한다.
-		 * map에는 정렬, 페이징 처리 , 게시글 검색, 문의 유형 번호가 들어가 있다. 
 		 * - 각 게시판의 문의 유형에 따라 조회 결과도 다르게 해야한다. 
 		 * - 공개 여부가 'Y'이고, 삭제 여부가 'N'인 경우만 조회한다.
-		 * @param searchParam
-		 * @return
+		 * @param condition.postCateNo : 게시판 유형 고유 번호
+		 * @param condition.searchType : 게시글 검색 유형
+		 * @param condition.searchKeyword : 게시글 검색어
+		 * @param condition.pageNo : 현재 페이지 번호 
+		 * @param condition.sort : 정렬 기준
+		 * @param condition.offset : 오프셋 값 
+		 * @param condition.rows : 페이지 당 조호되는 데이터 개수
+		 * 
+		 * @return 여러 개의 게시글
 		 */
-	public List<Post> getPosts(Map<String, Object> searchParam);
+	public List<Post> getPosts(Map<String, Object> condition);
 	
 	/**
 	 * 페이징 처리를 위한 전체 데이터 개수를 조회한다. 
 	 * - map 객체 안에는 postCateNo값이 할당 되어 있기 때문에, 
 	 * - 들어 있는 값에 따라서 문의 유형별 게시글의 전체 개수를 조회할 수 있다.
-	 * @param searchParam
-	 * @return
+	 * @param condition.postCateNo : 게시판 유형 고유 번호
+	 * @param condition.pageNo : 현재 페이지 번호
+	 * 
+	 * @return 전체 데이터 개수
 	 */
-	public int getTotalRows(Map<String, Object> searchParam);
+	public int getTotalRows(Map<String, Object> condition);
 	
 	/**
 	 * - 쿼리 스트링으로 받은 게시판 번호를 추출하여 해당 메소드의 인자값으로 활용한다. 
@@ -88,5 +97,16 @@ public interface PostMapper {
 	 */
 	public List<Post> selectPostByUserName(String name);
 	
+	/**
+	 * 게시글 상세 페이지에 있는, 댓글을 등록하는 기능
+	 * @param postReply
+	 */
+	public void insertPostReply(PostReply postReply);
 	
+	/**
+	 *  해당 게시글에 작성된 모든 댓글을 조회한다.
+	 * @param condition.postNo
+	 * @return
+	 */
+	public List<PostReply> getPostReplies(Map<String, Object> condition);
 }

@@ -27,7 +27,8 @@
 	String sort = StringUtils.nullToStr(request.getParameter("sort"), "newest");
 	
 	// 추후에 세션에서 뽑아올 예정.
-	String userId = "123@123";
+	String userId = "123@123"; 
+	//String userId = null;
 	
 
 	//map 객체를 생성한다.
@@ -115,9 +116,10 @@
 			                    <button class="btn btn-primary btn-sm" id="search-btn" name="searchBtn">
 			                        <i class="fas fa-search"></i>
 			                    </button>
-			                </form>
-			                
-			                <a href="/bookhub/post/book-post-form.jsp?postCateNo=<%=postCateNo%>>" class="btn btn-primary btn-sm">
+			                </form>			                
+			                <a id="write-btn" 
+			                   href="book-post-form.jsp?postCateNo=<%=postCateNo %>" 
+			                   class="btn btn-primary btn-sm <%= userId == null ? "disabled" : ""%>">
 			                    <i class="fas fa-pen"></i> 글쓰기
 			                </a>
 			            </div>
@@ -132,14 +134,22 @@
 			<div class="card-body p-0">
 				<div class="table-responsive">
 					<table class="table table-hover mb-0">
+						<colgroup>
+							<col width="10%" />
+							<col width="20%" />
+							<col width="*" />
+							<col width="10%" />
+							<col width="15%" />
+							<col width="10%" />
+						</colgroup>
 						<thead class="table-light">
 							<tr>
-								<th scope="col" class="text-center" style="width: 80px;">번호</th>
+								<th scope="col" class="text-center" >번호</th>
 								<th scope="col">제목</th>
-								<th scope="col" class="text-center" style="width: 200px;">문의도서</th>
-								<th scope="col" class="text-center" style="width: 120px;">작성자</th>
-								<th scope="col" class="text-center" style="width: 120px;">작성일</th>
-								<th scope="col" class="text-center" style="width: 80px;">조회</th>
+								<th scope="col" class="text-center">문의도서</th>
+								<th scope="col" class="text-center" >작성자</th>
+								<th scope="col" class="text-center" >작성일</th>
+								<th scope="col" class="text-center" >조회</th>
 							</tr>
 						</thead>
 						
@@ -154,7 +164,7 @@
 									href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
 									class="post-title"><%=post.getTitle()%></a> <!-- 요청할 파라미터가 여러 개인 경우 '?'가 아닌 '&'로 붙힌다. -->
 								</td>
-								<td class="text-center"><%=StringUtils.truncate(post.getBook().getTitle(), 10)%></td>
+								<td class="text-center"><p class="book_post_title"><%=post.getBook().getTitle()%></p></td>
 								<td class="text-center"><%=post.getUser().getName()%></td>
 								<td class="text-center"><%=StringUtils.simpleDate((post.getUpdatedDate()))%></td>
 								<td class="text-center"><%=post.getViewCnt()%></td>
@@ -196,10 +206,10 @@
 			</div>
 		</div>
 
+		<!-- Pagination -->
 <%
 	if (totalRows > 0) {
 %>
-		<!-- Pagination -->
 		<nav class="mt-4">
 			<ul id="page-id" class="pagination justify-content-center">
 <%
@@ -269,8 +279,7 @@
 		$(".post-title-disabled").click(function () {
 			alert("열람 권한이 없습니다.");
 			return false;
-			
-		});
+		}); 
 	</script>
 </body>
 </html>

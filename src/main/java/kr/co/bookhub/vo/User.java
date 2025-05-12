@@ -17,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("User")
 public class User {
-	
 	private String id;
 	private String password;
 	private String name;

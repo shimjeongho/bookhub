@@ -46,8 +46,7 @@
 	<!-- 그리고 nav에서 PostCategories 테이블을 조회해서, no값과 name 값을 for문 처리하였음. 
          문제는 이 no값을 각 게시판 유형에 맞게 쿼리스트링으로 전달하는데, 게시글 입력폼까지 nav를 include 하면  
          no값이 중복 적용되어 오류가 발생함. 그래서 nav.jsp를 include 하지 않는 선택을 함.-->
-	<%-- <%@ include file="../common/nav.jsp"  %>  --%>
-
+	 <%@ include file="../common/nav.jsp"  %> 
 	<!-- Form Content -->
 	<div class="post-form-container">
 		<div class="post-form-header">
@@ -183,14 +182,14 @@
 			</div>
 
 			<div class="mb-4">
-				<label for="postTitle" class="form-label required">게시글 제목</label> <input
-					type="text" class="form-control" id="post-title" name="title"
-					placeholder="게시글 제목을 입력하세요" required>
+				<label for="postTitle" class="form-label required">게시글 제목</label> 
+				<input type="text" class="form-control" id="post-title" name="title"
+					   placeholder="게시글 제목을 입력하세요" required>
 			</div>
 
 			<div class="mb-4">
 				<label for="content" class="form-label required">내용</label>
-				<textarea id="post-content" name="content" class="form-control"></textarea>
+				<textarea id="post-content" name="content" class="form-control" required></textarea>
 			</div>
 
 			<div class="mb-4">
@@ -334,15 +333,11 @@
                 	let content = `
                 		<div class="row">
             			<div class="col-2">
-	                		<img src="\${coverImagePath}" alt="도서 표지"/>
+	                		<img style="max-width:100%;" src="\${coverImagePath}" alt="도서 표지"/>
             			</div>
-            			<div class="col-6">
+            			<div class="col-10">
 	                		<p>"\${title}"</p>                			
-            			</div>
-            			<div class="col-2">
 	                		<p>"\${author}"</p>
-            			</div>
-            			<div class="col-2">
 	                		<p>"\${pubDate}"</p>                			
             			</div>
             		</div>
@@ -406,19 +401,15 @@
                 	
                 	let content = ` 
                 		<div class="row">
-                			<div class="col-2">
-		                		<img src="\${coverImagePath}" alt="도서 표지"/>
-                			</div>
-                			<div class="col-6">
-		                		<p>"\${title}"</p>                			
-                			</div>
-                			<div class="col-2">
-		                		<p>"\${author}"</p>
-                			</div>
-                			<div class="col-2">
-		                		<p>"\${pubDate}"</p>                			
-                			</div>
-                		</div>
+            			<div class="col-2">
+	                		<img style="max-width:100%;" src="\${coverImagePath}" alt="도서 표지"/>
+            			</div>
+            			<div class="col-10">
+	                		<p>"\${title}"</p>                			
+	                		<p>"\${author}"</p>
+	                		<p>"\${pubDate}"</p>                			
+            			</div>
+            		</div>
                 	` ; 
                 	$("#selected-book").append(content);
                     bookSelectionModal.hide();
@@ -440,8 +431,9 @@
             /* 해당 입력폼을 서버에 보낼 때 */ 
              $('#post-form').on('submit', function() {
                 const inquiryBook = $('#inquiry-book').val();
-                const postTitle = $('#post-title').val();
+                const postTitle = $("#post-title").val();
                 const postContent = $('#post-content').summernote('code');
+                const postContent2 = $("#post-content").val();
                 const isPublic = $('input[name="isPublic"]:checked').val();
                 
                  if (!inquiryBook || inquiryBook.trim() === "") {
@@ -449,17 +441,15 @@
                     return false;
                 }
  
-                if (!postTitle.trim()) {
-                    alert('게시글 제목을 입력해주세요.'); 
-                    return false;
+                if (!postTitle.trim() || !postTitle.trim() === "") {
+                	alert('게시글 제목을 입력해주세요.'); 
+					return false;
                 }
                 
-                if (!postContent.trim() || postContent.trim() === "") {
+                if (!postContent2.trim() || !postContent2.trim() === "") {
                     alert('내용을 입력해주세요.');
                     return false;
                 }
-                
-
                 
                 // 임시로 성공 메시지 표시
                 alert('게시글이 등록되었습니다.');

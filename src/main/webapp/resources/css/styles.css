@@ -32,6 +32,10 @@ h1, h2, h3, h4, h5, h6 {
 	margin-bottom: 1rem;
 }
 
+table {
+	table-layout: fixed;
+}
+
 a {
 	color: var(--primary-color);
 	text-decoration: none;
@@ -423,6 +427,12 @@ a:hover {
 .post-title:hover {
 	color: var(--primary-color);
 }
+
+.book_post_title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;	
+} 
 
 .table tbody tr {
 	transition: var(--transition);

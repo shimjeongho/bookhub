@@ -14,8 +14,8 @@
 	// 도서 상위 카테고리 가져오기
 	List<Category> categories = categoryMapper.getMainCategory();
 
-  PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
-	List<PostCategory> categories = postMapper.selectPostCategoryInfo(); 
+  	PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
+	List<PostCategory> postCategories = postMapper1.selectPostCategoryInfo(); 
 %>
 
 <!-- Navigation -->
@@ -38,8 +38,8 @@
                         게시판
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="boardDropdown">
-<% for(PostCategory category : categories) { %>                        
-                        <li><a class="dropdown-item" href="/bookhub/post/post-list-<%= category.getNo() %>.jsp?postCateNo=<%= category.getNo() %>"><%= category.getName() %></a></li> 
+<% for(PostCategory pCategory : postCategories) { %>                        
+                        <li><a class="dropdown-item" href="/bookhub/post/post-list-<%= pCategory.getNo() %>.jsp?postCateNo=<%= pCategory.getNo() %>"><%= pCategory.getName() %></a></li> 
 <% 	} %>                            
                     </ul>
                 </li>
