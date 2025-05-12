@@ -9,11 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Alias("Category")
-public class Category {
-	
-	private int no;
-	private String name;
-	private transient Category parents;
+@Alias("PostCategory")
+public class PostCategory {
+	private int no; // post_cate_no
+	private String name; // post_cate_name
 	
 }

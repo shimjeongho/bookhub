@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.RecommendBooksMapper">
+	
+	<!-- 도서 -->
+	<resultMap type="Book" id="BookResultMap">
+		<id				column="BOOK_NO"				property="no"/>
+		<result			column="BOOK_TITLE"				property="title"/>
+		<result			column="BOOK_AUTHOR"			property="author"/>
+		<result			column="BOOK_PUBLISHER"			property="publisher"/>
+		<result			column="BOOK_DESCRIPTION"		property="description"/>
+		<result			column="BOOK_PUB_DATE"			property="pubDate"/>
+		<result			column="BOOK_REVIEW_COUNT"		property="reviewCount"/>
+		<result			column="BOOK_REVIEW_AVG"		property="reviewAvg"/>
+		<result			column="BOOK_COVER_IMAGE_PATH"	property="coverImagePath"/>
+		<result			column="BOOK_CREATED_DATE"		property="createdDate"/>
+		<result			column="BOOK_UPDATED_DATE"		property="updatedDate"/>
+		<result			column="BOOK_ISBN"				property="isbn"/>
+	</resultMap>
+
+	 <!-- 로그인 유저의 대여 도서 정보로 맞춤 도서 목록 가져오기
+	 * @param userId 로그인 유저 아이디
+	 * @return 맞춤 도서 목록
+	List<Book> getRecommendBooksByUserId(String userId) -->
+	<select id="getRecommendBooksByUserId" resultMap="BookResultMap">
+		SELECT
+			B.BOOK_NO
+			, B.BOOK_TITLE
+			, B.BOOK_AUTHOR
+			, B.BOOK_PUBLISHER
+			, B.BOOK_DESCRIPTION
+			, B.BOOK_PUB_DATE
+			, B.BOOK_REVIEW_COUNT
+			, B.BOOK_REVIEW_AVG
+			, B.BOOK_COVER_IMAGE_PATH
+			, B.BOOK_CREATED_DATE
+			, B.BOOK_UPDATED_DATE
+			, B.BOOK_ISBN
+		FROM 
+			BOOKHUB_BOOKS B
+		WHERE
+		
+		ORDER BY
+		
+		FETCH FIRST 10 ROWS ONLY
+	</select>
+	
+</mapper>

@@ -97,7 +97,7 @@ public class StringUtils {
 	 * @param str 숫자로 구성된 문자열
 	 * @return 정수값
 	 */
-	public static int strToInt(String str) {
+	public static Integer strToInt(String str) {
 		if (str == null) {
 			throw new IllegalArgumentException("null값은 숫자로 변환할 수 없다.");
 		}
@@ -155,5 +155,22 @@ public class StringUtils {
 	public static double round(double value) {
 		String str = decimalFormat2.format(value);
 		return Double.valueOf(str);
+
+	 * text와 text의 최대 글자 길이를 전달 받아서, 
+	 * text의 길이를 최대 글자 정도까지만 표시하고, 그 이상이되는 글자들은 "..."으로 표시한다. 
+	 * @param text
+	 * @param maxLength
+	 * @return
+	 */
+	public static String truncate (String text, int maxLength) {
+		
+		if(text == null) {
+			return null;
+		}
+		if(text.length() > maxLength) {
+			return text.substring(0,maxLength) + "...";
+		}
+		
+		return text;
 	}
 }

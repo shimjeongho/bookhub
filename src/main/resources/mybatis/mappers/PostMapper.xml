@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.PostMapper">
+
+	<resultMap type="Book" id="bookSearchResultMap">
+		<id column="BOOK_NO" property="no"/>
+		<result column="BOOK_TITLE" property="title"/>
+		<result column="BOOK_AUTHOR" property="author"/>
+		<result column="BOOK_PUBLISHER" property="publisher"/>
+		<result column="BOOK_DESCRIPTION" property="description"/>
+		<result column="BOOK_PUB_DATE" property="pubDate"/>
+		<result column="BOOK_REVIEW_COUNT" property="reviewCount"/>
+		<result column="REVIEW_AVG" property="reviewAvg"/>
+		<result column="BOOK_COVER_IMAGE_PATH" property="coverImagePath"/>
+		<result column="BOOK_CREATED_DATE" property="createdDate"/>
+		<result column="BOOK_UPDATED_DATE" property="updatedDate"/>
+		<result column="BOOK_ISBN" property="isbn"/>
+	</resultMap>
+	
+	<!-- public List<Book> bookKeywordSearch(String keyword); 
+		=> 입력된 키워드가 해당되는 모든 도서들을 조회 -->
+	<select id="bookKeywordSearch" resultType="Book">
+		select b.BOOK_NO as no
+		      ,b.BOOK_TITLE as title
+		      ,b.BOOK_AUTHOR as author
+		      ,b.BOOK_PUBLISHER as publisher
+		      ,b.BOOK_DESCRIPTION as description
+		      ,b.BOOK_PUB_DATE as pubDate
+		      ,b.BOOK_REVIEW_COUNT as reviewCount
+		      ,b.BOOK_REVIEW_AVG as reviewAvg
+		      ,b.BOOK_COVER_IMAGE_PATH as coverImagePath
+		      ,b.BOOK_CREATED_DATE as createdDate
+		      ,b.BOOK_UPDATED_DATE as updatedDate
+		      ,b.BOOK_ISBN as isbn
+		from  BOOKHUB_BOOKS b , BOOKHUB_KEYWORDS k
+		where b.book_no = k.book_no
+	    and k.KEYWORD like '%' || #{keyword} || '%' 
+	 </select>
+	 
+	 <!-- public List<Book> userLoanBookSearch(String userId); 
+	 	=> 사용자가 대여한 도서들을 조회 - 사용자 아이디 필요. --> 
+	 <select id="userLoanBookSearch" resultMap="bookSearchResultMap">
+	 	select
+	 		 b.BOOK_NO
+	 		,b.BOOK_TITLE 
+	 		,b.BOOK_AUTHOR 
+	 		,b.BOOK_PUBLISHER
+	 		,b.BOOK_DESCRIPTION 
+	 		,b.BOOK_PUB_DATE
+	 		,b.BOOK_REVIEW_COUNT
+	 		,b.BOOK_REVIEW_AVG
+	 		,b.BOOK_COVER_IMAGE_PATH
+	 		,b.BOOK_CREATED_DATE
+	 		,b.BOOK_UPDATED_DATE
+	 		,b.BOOK_ISBN
+	 	from
+	 		BOOKHUB_BOOKS b , BOOKHUB_LOAN_HISTORIES l, BOOKHUB_USERS u
+	 	where 
+	 		b.book_no = l.book_no and 
+	 		u.user_id = l.user_id and 
+	 		u.user_id = #{userId}
+	 </select>
+	 
+	 <!-- public List<PostCategory> selectPostCategoryInfo(); 
+	      => 문의 유형에 대한 고유 번호와 이름을 조회. --> 
+	 <select id="selectPostCategoryInfo" resultType="PostCategory">
+	 	select
+	 		 post_cate_no as no 
+	 		,post_cate_name as name
+	 	from 
+	 		bookhub_post_categories
+	 </select>
+	 
+	<!-- public List<Post> getPosts(Map<String, Object> searchParam);
+	   => 모든 게시글들을 조회한다. --> 
+	 <select id="getPosts" parameterType="map" resultType="Post">
+		select 
+		     p.post_no as no 
+		    ,p.post_title as title
+		    ,b.book_title as "book.title"
+		    ,u.user_name as "user.name"
+		    ,p.post_created_date as createdDate
+		    ,p.post_view_cnt as viewCnt
+		    ,p.IS_PUBLIC as isPublic
+		    ,u.user_id as "user.id"
+		    ,p.POST_UPDATED_DATE as updatedDate			
+
+		from 
+		    bookhub_posts p, bookhub_books b, bookhub_users u
+		where 
+		    p.user_id = u.user_id 
+		    and b.book_no = p.book_no
+		    and p.is_deleted = 'N'
+		    and p.post_cate_no = #{postCateNo}
+		<if test="'title' == searchType">
+			and p.post_title like '%'|| #{searchKeyword} ||'%'
+		</if>
+		<if test="'user' == searchType">
+			and u.user_name like '%' || #{searchKeyword} ||'%'
+		</if>	
+		<choose>
+			<when test="sort == 'newest' ">
+				ORDER BY P.POST_CREATED_DATE DESC
+			</when> 
+			<when test="sort == 'views' ">
+				ORDER BY P.POST_VIEW_CNT DESC
+			</when>
+		</choose>
+		offset #{offset} rows
+		fetch next #{rows} rows only
+	 </select> 
+	 
+	 <!-- public int getTotalRows(Map<String, Object> searchParam); 
+	     => 게시글의 전체 데이터 개수를 조회할 수 있다.--> 
+	 <select id="getTotalRows" parameterType="map"> 
+		select 
+			count(*)
+		from 
+			bookhub_posts 
+		where 
+			post_cate_no = #{postCateNo}
+			and is_deleted = 'N'
+	 </select>
+	 
+	 <!-- public Post selectPostBypostNo(int postNo); 
+	 	=> 게시글 번호를 전달받아, 해당 번호를 가진 게시글 하나의 모든 정보를 가져온다.
+	 	=> 도서 표지, 제목, 저자, 출판사, 출판일 
+	 	=> 사용자 이름과 사용자 아이디도 전부 가져온다. -->
+	 <select id="selectPostBypostNo" resultType="Post"> 
+		select
+			p.POST_NO as no, 
+	 		p.POST_TITLE as title, 
+	 		p.POST_CONTENT as content, 
+	 		p.POST_VIEW_CNT as viewCnt, 
+	 		p.POST_CREATED_DATE as createdDate, 
+	 		p.POST_UPDATED_DATE as updatedDate, 
+	 		p.IS_DELETED as isDeleted, 
+	 		p.IS_PUBLIC as isPublic, 
+	 		p.USER_ID as "user.id", 
+	 		p.BOOK_NO as "book.no", 
+	 		p.LIB_NO as "library.no", 
+	 		p.POST_CATE_NO as "PostCategory.no",
+	 		b.BOOK_TITLE as "book.title", 
+	 		b.BOOK_AUTHOR as "book.author", 
+	 		b.BOOK_PUBLISHER as "book.publisher", 
+	 		b.BOOK_PUB_DATE as "book.pubDate", 
+	 		b.BOOK_COVER_IMAGE_PATH as "book.coverImagePath",
+	 		u.USER_NAME as "user.name"
+		from        
+		    bookhub_posts p, bookhub_books b, bookhub_users u 
+		where 
+		    p.book_no = b.book_no and
+		    p.user_id = u.user_id and
+		    p.post_no = #{postNo}
+	 </select>
+	 
+	 
+	 
+	 <!-- public void insertBookPost(Post post);  --> 
+	  <insert id="insertBookPost" parameterType="Post">
+	 	insert into bookhub_posts 
+		 	(post_no,
+		 	 post_title, 
+		 	 post_content, 
+		 	 user_id, 
+		 	 book_no,
+		 	 post_cate_no,
+		 	 IS_PUBLIC)
+	 	values
+	 		(bookhub_posts_post_no_seq.nextval, 
+		 	 #{title}, 
+		 	 #{content}, 
+		 	 #{user.id}, 
+		 	 #{book.no}, 
+		 	 #{postCategory.no},
+		 	 #{isPublic} )
+	 </insert>  
+	 
+	 <!-- public void updatePost(Post post); 
+	 	=> 게시글의 정보를 가져와서, 게시글의 정보를 수정한다.  -->
+	 <update id="updatePost" parameterType="Post"> 
+	 	update bookhub_posts
+	 	set
+	 		POST_TITLE = #{title}, 
+	 		POST_CONTENT = #{content}, 
+	 		POST_VIEW_CNT = #{viewCnt}, 
+	 		POST_CREATED_DATE = #{createdDate}, 
+	 		POST_UPDATED_DATE = SYSDATE, 
+	 		IS_DELETED = #{isDeleted}, 
+	 		IS_PUBLIC = #{isPublic}, 
+	 		USER_ID = #{user.id}, 
+	 		BOOK_NO = #{book.no}, 
+	 		LIB_NO = #{library.no}, 
+	 		POST_CATE_NO = #{postCategory.no}
+	 	where 
+	 		POST_NO = #{no}
+	 </update> 
+</mapper>
