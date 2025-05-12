@@ -7,8 +7,10 @@ import java.util.Date;
 public class StringUtils {
 
 	private static DecimalFormat decimalFormat = new DecimalFormat("##,###");
+	private static DecimalFormat decimalFormat2 = new DecimalFormat("#,###.#");
 	private static SimpleDateFormat detailDateFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 m분 s초");
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	
 	/**
 	 * 값을 전달받아서, 해당 값이 null이면 defaultValue를 반환한다.
@@ -146,6 +148,14 @@ public class StringUtils {
 	}
 	
 	/**
+	 * 실수를 소수점 첫번째 값으로 반올림한다.
+	 * @param value 실수값
+	 * @return 소숫점 첫번째자리로 반올림된 실수값
+	 */
+	public static double round(double value) {
+		String str = decimalFormat2.format(value);
+		return Double.valueOf(str);
+
 	 * text와 text의 최대 글자 길이를 전달 받아서, 
 	 * text의 길이를 최대 글자 정도까지만 표시하고, 그 이상이되는 글자들은 "..."으로 표시한다. 
 	 * @param text
