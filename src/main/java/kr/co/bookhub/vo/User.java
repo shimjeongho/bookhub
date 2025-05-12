@@ -1,5 +1,9 @@
 package kr.co.bookhub.vo;
 
+
+//User정보를 담은 vo
+
+
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
@@ -13,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("User")
 public class User {
-
+	
 	private String id;
 	private String password;
 	private String name;
@@ -22,4 +26,5 @@ public class User {
 	private Date createDate;
 	private Date updateDate;
 	private String isDeleted;
+  
 }

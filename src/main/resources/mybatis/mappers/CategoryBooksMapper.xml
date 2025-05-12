@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.CategoryBooksMapper">
+
+	<!-- 카테고리 -->
+	<resultMap type="Category" id="CategoryResultMap">
+		<id				column="CATEGORY_NO"			property="no"/>
+		<result			column="CATEGORY_NAME"			property="name"/>
+	</resultMap>
+	
+	<!-- 도서 -->
+	<resultMap type="Book" id="BookResultMap">
+		<id				column="BOOK_NO"				property="no"/>
+		<result			column="BOOK_TITLE"				property="title"/>
+		<result			column="BOOK_AUTHOR"			property="author"/>
+		<result			column="BOOK_PUBLISHER"			property="publisher"/>
+		<result			column="BOOK_DESCRIPTION"		property="description"/>
+		<result			column="BOOK_PUB_DATE"			property="pubDate"/>
+		<result			column="BOOK_REVIEW_COUNT"		property="reviewCount"/>
+		<result			column="BOOK_REVIEW_AVG"		property="reviewAvg"/>
+		<result			column="BOOK_COVER_IMAGE_PATH"	property="coverImagePath"/>
+		<result			column="BOOK_CREATED_DATE"		property="createdDate"/>
+		<result			column="BOOK_UPDATED_DATE"		property="updatedDate"/>
+		<result			column="BOOK_ISBN"				property="isbn"/>
+	</resultMap>
+
+	<!-- 대분류 목록 가져오기
+	List<Category> getMainCategory() -->
+	<select id="getMainCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_PARENTS_NO IS NULL OR CATEGORY_PARENTS_NO = ''
+		ORDER BY
+			CATEGORY_NAME ASC
+	</select>
+	
+	
+	<!-- 특정 대분류 정보 가져오기
+	 * @param cateNo 대분류 번호
+	 * @return 카테고리 정보
+	Category getCategory(int cateNo) -->
+	<select id="getCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_NO = #{cateNo}
+	</select>
+	
+	<!-- 대분류 번호를 전달받아 대분류에 속한 하위 분류 목록 가져오기
+	List<Category> getSubCategory(int cateNo) -->	
+	<select id="getSubCategory" resultMap="CategoryResultMap">
+		SELECT 
+			CATEGORY_NO				
+			, CATEGORY_NAME			
+		FROM
+			BOOKHUB_CATEGORIES
+		WHERE
+			CATEGORY_PARENTS_NO IS NOT NULL
+		AND 
+			CATEGORY_PARENTS_NO = #{cateNo}
+		ORDER BY
+			CATEGORY_NAME ASC
+	</select>
+	
+	<!-- 조건에 맞는 모든 데이터 개수 가져오기
+	 * @param condition.cateNo 대분류 번호
+	 * @param condition.subCateNo 대분류에 속한 하위 분류 번호(선택하지 않으면 0)
+	 * @return 조회된 모든 데이터 개수
+	 * @param condition.searchPart 검색 조건
+	 * @param condition.searchStr 검색어
+	 * @param condition.keywords 검색어 키워드
+	int getTotalRows(Map<String, Object> condition) -->
+	<select id="getTotalRows" parameterType="map">
+		SELECT 
+			COUNT(DISTINCT B.BOOK_NO)
+		FROM 
+			BOOKHUB_BOOKS B
+			, BOOKHUB_CATEGORIES C
+		<if test="searchStr != null"> <!-- 검색어가 있을 경우 키워드 테이블 조인 -->
+			, BOOKHUB_KEYWORDS K
+		</if>
+		WHERE
+			B.CATEGORY_NO = C.CATEGORY_NO
+		AND
+		<choose> <!-- 서브 카테고리가 선택 여부에 따른 조건문 -->
+			<when test="subCateNo != 0"> 
+				C.CATEGORY_NO = #{subCateNo}
+			</when>
+			<otherwise>
+				C.CATEGORY_PARENTS_NO = #{cateNo}
+			</otherwise>
+		</choose>
+		<if test="searchStr != null"> <!-- 검색어가 있을 경우 조건문 -->
+		AND
+			B.BOOK_NO = K.BOOK_NO
+		AND
+			<choose> <!-- 검색 조건에 따른 조건문 -->
+				<when test="searchPart == 'title'">
+					(UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{searchStr}) || '%'
+					<if test="keywords != null"> <!-- 키워드가 있을 경우 -->
+						<foreach collection="keywords" item="keyword" open="OR" separator="OR">
+							UPPER(K.KEYWORD) LIKE '%' || UPPER(#{keyword}) || '%'
+						</foreach>
+					</if>)
+				</when>
+				<when test="searchPart == 'author'">
+					(UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{searchStr}) || '%'
+					<if test="keywords != null"> <!-- 키워드가 있을 경우 -->
+						<foreach collection="keywords" item="keyword" open="OR" separator="OR">
+							UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{keyword}) || '%'
+						</foreach>
+					</if>)
+				</when>
+				<when test="searchPart == 'author'">
+					UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{searchStr}) || '%'
+				</when>
+				<when test="searchPart == 'isbn'">
+					UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{searchStr}) || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<!-- 대분류에 속한 하위분류 번호로 도서 목록 가져오기
+	 * @param condition.cateNo 대분류 번호
+	 * @param condition.subCateNo 대분류에 속한 하위 분류 번호(선택하지 않으면 0)
+	 * @param condition.offset 요청페이지 offset 값 
+	 * @param condition.rows 요청페이지의 데이서 개수 
+	 * @param condition.sort 정렬조건
+	 * @param condition.searchPart 검색 조건
+	 * @param condition.searchStr 검색어
+	 * @param condition.keywords 검색어 키워드
+	List<Book> getBooksByCategoryAndKeywords(Map<String, Object> condition) -->
+	<select id="getBooksByCategoryAndKeywords" parameterType="map" resultMap="BookResultMap">
+		SELECT
+			B.BOOK_NO
+			, B.BOOK_TITLE
+			, B.BOOK_AUTHOR
+			, B.BOOK_PUBLISHER
+			, B.BOOK_DESCRIPTION
+			, B.BOOK_PUB_DATE
+			, B.BOOK_REVIEW_COUNT
+			, B.BOOK_REVIEW_AVG
+			, B.BOOK_COVER_IMAGE_PATH
+			, B.BOOK_CREATED_DATE
+			, B.BOOK_UPDATED_DATE
+			, B.BOOK_ISBN
+			, SUM(
+				<choose> <!-- 검색이 아닐 경우 즉시 0반환 -->
+					<when test="searchStr != null">
+						<choose> <!-- 검색일 경우 searchPart에 따른 점수 계산 -->
+							<when test="searchPart == 'title'">
+								CASE
+									WHEN UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 100
+									<if test="keywords != null">
+										<foreach collection="keywords" item="keyword">
+										    WHEN UPPER(K.KEYWORD) LIKE '%' || UPPER(#{keyword}) || '%' THEN 1
+										</foreach>
+									</if>
+									ELSE 0
+								END
+							</when>
+							<when test="searchPart == 'author'">
+								CASE
+									WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 100
+									ELSE 0
+								END
+								<if test="keywords != null">
+									<foreach collection="keywords" item="keyword">
+									    + CASE
+											WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{keyword}) || '%' THEN 1
+											ELSE 0
+										END
+									</foreach>
+								</if>
+							</when>
+							<when test="searchPart == 'publisher'">
+								CASE
+									WHEN UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 1
+									ELSE 0
+								END
+							</when>
+							<when test="searchPart == 'isbn'">
+								CASE
+									WHEN UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 1
+									ELSE 0
+								END
+							</when>
+						</choose>
+					</when>
+					<otherwise>
+						0
+					</otherwise>
+				</choose>
+			) AS MATCH_POINT
+		FROM
+			BOOKHUB_BOOKS B
+			, BOOKHUB_CATEGORIES C
+		<if test="searchStr != null">
+			, BOOKHUB_KEYWORDS K
+		</if>
+		WHERE
+			B.CATEGORY_NO = C.CATEGORY_NO
+		AND
+		<choose>
+			<when test="subCateNo != 0">
+				C.CATEGORY_NO = #{subCateNo}
+			</when>
+			<otherwise>
+				C.CATEGORY_PARENTS_NO = #{cateNo}
+			</otherwise>
+		</choose>
+		<if test="searchStr != null">
+		AND
+			B.BOOK_NO = K.BOOK_NO
+		GROUP BY
+			B.BOOK_NO
+			, B.BOOK_TITLE
+			, B.BOOK_AUTHOR
+			, B.BOOK_PUBLISHER
+			, B.BOOK_DESCRIPTION
+			, B.BOOK_PUB_DATE
+			, B.BOOK_REVIEW_COUNT
+			, B.BOOK_REVIEW_AVG
+			, B.BOOK_COVER_IMAGE_PATH
+			, B.BOOK_CREATED_DATE
+			, B.BOOK_UPDATED_DATE
+			, B.BOOK_ISBN
+		HAVING
+			SUM(
+				<choose> <!-- 검색이 아닐 경우 즉시 0반환 -->
+					<when test="searchStr != null">
+						<choose> <!-- 검색일 경우 searchPart에 따른 점수 계산 -->
+							<when test="searchPart == 'title'">
+								CASE
+									WHEN UPPER(B.BOOK_TITLE) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 100
+									<if test="keywords != null">
+										<foreach collection="keywords" item="keyword">
+										    WHEN UPPER(K.KEYWORD) LIKE '%' || UPPER(#{keyword}) || '%' THEN 1
+										</foreach>
+									</if>
+									ELSE 0
+								END
+							</when>
+							<when test="searchPart == 'author'">
+								CASE
+									WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 100
+									ELSE 0
+								END
+								<if test="keywords != null">
+									<foreach collection="keywords" item="keyword">
+									    + CASE
+											WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{keyword}) || '%' THEN 1
+											ELSE 0
+										END
+									</foreach>
+								</if>
+							</when>
+							<when test="searchPart == 'publisher'">
+								CASE
+									WHEN UPPER(B.BOOK_PUBLISHER) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 1
+									ELSE 0
+								END
+							</when>
+							<when test="searchPart == 'isbn'">
+								CASE
+									WHEN UPPER(B.BOOK_ISBN) LIKE '%' || UPPER(#{searchStr}) || '%' THEN 1
+									ELSE 0
+								END
+							</when>
+						</choose>
+					</when>
+					<otherwise>
+						0
+					</otherwise>
+				</choose>
+			) > 0
+		</if>
+		<choose>
+			<when test="sort == 'accuracy'">
+	            ORDER BY MATCH_POINT DESC
+	        </when>
+			<when test="sort == 'newest'">
+				ORDER BY B.BOOK_PUB_DATE DESC
+			</when>
+			<when test="sort == 'title'">
+				ORDER BY B.BOOK_TITLE ASC
+			</when>
+			<when test="sort == 'rating'">
+				ORDER BY B.BOOK_REVIEW_AVG DESC
+			</when>
+		</choose>
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{rows} ROWS ONLY
+	</select>
+	
+</mapper>
