@@ -157,8 +157,8 @@
                         <button class="btn btn-primary me-2" id="borrowButton" disabled>
                             <i class="fas fa-book"></i> 대여하기
                         </button>
-                        <button class="btn btn-outline-secondary">
-                            <i class="fas fa-heart"></i> 찜하기
+                        <button id="wishlistBtn" class="btn btn-outline-secondary" data-book-no="<%=book.getNo()%>">
+                            <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
                         </button>
                     </div>
                 </div>
@@ -409,6 +409,44 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
     
+    	// 찜 하기 버튼으로 비동기 통신
+    	$("#wishlistBtn").click(function() {
+    		const bookNo = $("input[name=bno]").val();
+    		
+    		// 이미 비활성화 상태면 종료
+    		if ($(this).hasClass('disabled')) return;
+    		
+    		// 중복클릭 방지
+    	    $(this).addClass('disabled');
+    	    
+    		$.ajax({
+    			method: "get",
+    			url: "wishlist.jsp",
+    			dataType: "json",
+    			data: {
+    				bookNo
+    			},
+    			success: function(response) {
+                    console.log(response); //응답 확인
+
+                    if (response.isWished) {
+                        $("#wishlistBtn").removeClass("btn-outline-secondary").addClass("btn-danger");
+                        $("#wishlistText").text("찜 해제");
+                    } else {
+                        $("#wishlistBtn").removeClass("btn-danger").addClass("btn-outline-secondary");
+                        $("#wishlistText").text("찜하기");
+                    }
+                },
+                error: function() {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                },
+                // 다시 활성화
+                complete: function() {
+                    $("#wishlistBtn").removeClass('disabled');
+                }
+    		})
+		})
+    
     	// 폼 제출 시 유효성 검사
 	    $("#reviewForm").submit(function() {
 			if ($("#reviewTitle").val() == "") {
@@ -425,6 +463,8 @@
 	
 			return true;
 	    });
+    	
+ // 리뷰 등록/삭제 후 알림창
 <%
 	if ("add".equals(complete)) {
 %>

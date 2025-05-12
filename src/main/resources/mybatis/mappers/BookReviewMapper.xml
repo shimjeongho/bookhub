@@ -104,4 +104,38 @@
 	     and is_deleted	=	'N'
 		</select>
 	    
+	    <!-- 
+	    	int increaseLike(int reviewNo);
+	     -->
+	     <update id="increaseLike" parameterType="int">
+	     	UPDATE
+	     		BOOKHUB_REVIEWS
+	     	SET
+	     		REVIEW_LIKES = REVIEW_LIKES + 1
+	     	WHERE
+	     		REVIEW_NO = #{revieNo}
+	     </update>
+	     
+	    <!-- 
+	    	int decreaseLike(int reviewNo);
+	     -->
+	     <update id="decreaseLike" parameterType="int">
+	     	UPDATE
+	     		BOOKHUB_REVIEWS
+	     	SET
+	     		REVIEW_LIKES = REVIEW_LIKES - 1
+	     	WHERE
+	     		REVIEW_NO = #{revieNo}
+	     </update>
+	     <!-- 
+	     	int getLikesCount(int reviewNo);
+	      -->
+	      <select id="getLikesCount" parameterType="int" resultType="int">
+	      	SELECT
+	      		REVIEW_LIKES
+	      	FROM 
+	      		BOOKHUB_REVIEWS
+	      	WHERE
+	      		REVIEW_NO = #{revieNo}
+	      </select>
 </mapper>

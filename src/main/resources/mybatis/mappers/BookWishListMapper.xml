@@ -5,6 +5,20 @@
  
 <mapper namespace="kr.co.bookhub.mapper.BookWishListMapper">
 
+
+	<!-- 
+		int isBookWish(Map<String, Object> condition);
+	 -->
+	 <select id="isBookWish" parameterType="map" resultType="int">
+	    SELECT 
+	    	COUNT(1) AS count 
+	    FROM 
+	    	BOOKHUB_WISHLIST
+	    WHERE BOOK_NO = #{bookNo} 
+	      AND USER_ID = #{userId}
+	</select>
+
+	 
 	<!-- 
 		void addWishList(Map<String, Object> condition);
 	 -->
@@ -13,19 +27,18 @@
 	 	( BOOK_NO
 	 	, USER_ID)
 	 	VALUES
-	 	( #{book_no}
-	 	, #{user_id})
+	 	( #{bookNo}
+	 	, #{userId})
 	 </insert>
 	 
 	 <!-- 
 	 	void removeWishList(Map<String, Object> condition);
 	  -->
 	  <delete id="removeWishList" parameterType="map">
-	  	DELETE 
-	  		FROM 
+	  	DELETE FROM 
 	  			BOOKHUB_WISHLIST
 	  		WHERE
-	  			BOOK_NO = #{book_no}
-	  		AND USER_ID = #{user_id}
+	  			BOOK_NO = #{bookNo}
+	  		AND USER_ID = #{userId}
 	  </delete>
 </mapper>
