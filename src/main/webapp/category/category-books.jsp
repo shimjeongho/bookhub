@@ -89,33 +89,32 @@
         <div class="container">
 			<p class="fs-3"><%=category.getName() %></p>
             
-            <form id="category-books-form" class="row justify-content-center"
+            <form id="category-books-form"
             	method="get">
             	<input type="hidden" name="cateNo" value="<%=cateNo %>" >
             	<input type="hidden" name="page" value="<%=pageNo %>" >
             	<input type="hidden" name="sort" value="<%=sort %>" >
             	
-                <div class="col-md-8">
-                	<div class="row mb-3">
-                    	<div class="col-md-4">
-                        	<select name="subCateNo" id="sub-category" class="form-select">
-                                <option value="">전체</option>
+                <div class="col-md-12 d-flex justify-content-between">
+                   	<div class="col-md-3">
+                       	<select name="subCateNo" id="sub-category" class="form-select"
+                       		style="height: 100%;">
+                        	<option value="">전체</option>
                                 
 <%
 	if (!subCategories.isEmpty()) {
 		for (Category cate : subCategories) {
 %>
-                                <option value="<%=cate.getNo() %>" <%=cate.getNo() == subCateNo ? "selected" : "" %>><%=cate.getName() %></option>
+                        	<option value="<%=cate.getNo() %>" <%=cate.getNo() == subCateNo ? "selected" : "" %>><%=cate.getName() %></option>
 <%
 		}
 	}
 %>
-                            </select>
-                        </div>
+                    	</select>
                     </div>
-                    
-                    <div class="row justify-content-center">
-						<div class="col-md-4">
+	                    
+                    <div class="col-md-9 row justify-content-end">
+						<div class="col-md-2">
 							<div class="input-group" style="height: 100%;">
 							    <select name="searchPart" class="form-select">
 								    <option value="title" <%="title".equals(searchPart) ? "selected" : "" %>>제목</option>
@@ -126,7 +125,7 @@
 		                	</div>
 						</div>
 		                  
-						<div class="col-md-8">
+						<div class="col-md-6">
 		                    <div class="input-group">
                         		<input type="search" name="searchStr" class="form-control form-control-lg" placeholder="검색어를 입력하세요" value="<%=searchStr %>">
 		                        <button id="search-btn" class="btn btn-primary" type="button">
@@ -150,7 +149,7 @@
 <%
 	if (!searchStr.isEmpty()) {
 %>
-						<%=searchStr %> 검색결과
+						"<%=searchStr %>" 검색결과
 <%
 	}
 %>

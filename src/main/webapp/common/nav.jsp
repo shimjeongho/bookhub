@@ -8,7 +8,10 @@
     pageEncoding="UTF-8"%>
     
 <%
+	// 맵퍼
 	CategoryBooksMapper categoryMapper = MybatisUtils.getMapper(CategoryBooksMapper.class);
+	
+	// 도서 상위 카테고리 가져오기
 	List<Category> categories = categoryMapper.getMainCategory();
 
   	PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
@@ -18,7 +21,9 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="../home.html">BOOKHUB</a>
+        <a class="navbar-brand" href="/bookhub/index.jsp">
+        	<img src="/bookhub/resources/images/bookhub-signature-logo.png" alt="로고" >
+       	</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

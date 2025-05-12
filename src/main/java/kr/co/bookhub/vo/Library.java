@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("Library")
 public class Library {
+  
 	private int no; 
 	private String name; 
 	private String location;
@@ -19,4 +20,5 @@ public class Library {
 	private String tel; // 도서관 전화번호
 	private String imgPath; 
 	private String businessHours;// 운영 시간
+  
 }
