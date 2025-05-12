@@ -42,5 +42,25 @@ public interface BookReviewMapper {
 	 */
 	int getTotalReviewScore(int bookNo);
 
+	/**
+	 * 리뷰 좋아요 추가
+	 * @param reviewNo 리뷰 번호
+	 * @return 리뷰의 좋아요 추가 후 좋아요 수 
+	 */
+	int increaseLike(int reviewNo);
+	
+	/**
+	 * 리뷰 좋아요 감소
+	 * @param reviewNo 리뷰 번호
+	 * @return 리뷰의 좋아요 감소 후 좋아요 수
+	 */
+	int decreaseLike(int reviewNo);
+	
+	/**
+	 * 리뷰 좋아요 총 개수
+	 * @param reviewNo 리뷰 번호
+	 * @return 리뷰 좋아요 총 개수
+	 */
+	int getLikesCount(int reviewNo);
 	
 }

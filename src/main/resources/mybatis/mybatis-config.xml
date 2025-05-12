@@ -29,6 +29,7 @@
   <mappers>
   	<mapper resource="mybatis/mappers/BookMapper.xml"/>
   	<mapper resource="mybatis/mappers/BookReviewMapper.xml"/>
+  	<mapper resource="mybatis/mappers/BookWishListMapper.xml"/>
   	
   </mappers>
   

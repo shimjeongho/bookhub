@@ -4,7 +4,12 @@ import java.util.Map;
 
 public interface BookWishListMapper {
 	
-	int isWished(Map<String, Object> condition);
+	/**
+	 * 찜하기 여부
+	 * @param condition
+	 * @return 1(찜하기 중), 0(찜 취소)
+	 */
+	int isBookWish(Map<String, Object> condition);
 
 	/**
 	 * 찜하기
@@ -16,6 +21,6 @@ public interface BookWishListMapper {
 	 * 찜하기 취소
 	 * @param condition 찜 취소목록
 	 */
-	void removeWishList(Map<String, Object> condition);
+	int removeWishList(Map<String, Object> condition);
 	
 }
