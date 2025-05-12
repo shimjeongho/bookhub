@@ -21,7 +21,7 @@
 	<!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 mb-4">우도도서관에 오신 것을 환영합니다</h1>
+            <h1 class="display-4 mb-4">북허브에 오신 것을 환영합니다</h1>
             <p class="lead mb-4">지식과 문화가 함께하는 공간</p>
             <a href="#" class="btn btn-light btn-lg">자료검색</a>
         </div>
@@ -101,6 +101,9 @@
             </div>
         </div>
     </section>
+    
+    
+	<%@ include file="../common/book-recommend.jsp" %>
 	
 	<%@ include file="../common/footer.jsp" %>
 	
