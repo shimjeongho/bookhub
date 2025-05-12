@@ -79,7 +79,7 @@
             </ul>
             <ul class="navbar-nav">
                 <%
-                	if (loggedInUserId) {
+                	if (loggedInUserId != null) {
                 %>
                 	<li class="nav-item">
                 		<span class="nav-link">
