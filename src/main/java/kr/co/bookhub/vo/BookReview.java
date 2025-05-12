@@ -1,7 +1,5 @@
 package kr.co.bookhub.vo;
 
-//User정보를 담은 vo
-
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
@@ -9,18 +7,21 @@ import org.apache.ibatis.type.Alias;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
-@Alias("User")
-public class User {
+@Alias("BookReview")
+public class BookReview {
+
+	private int no;
 	private String id;
-	private String password;
-	private String name;
-	private String phone;
-	private Date birth;
-	private Date createDate;
-	private Date updateDate;
+	private String content;
+	private int star;
+	private int likes;
+	private String title;
+	private Date createdDate;
+	private Date updatedDate;
 	private String isDeleted;
+	private User writer;
+	private Book book;
 }

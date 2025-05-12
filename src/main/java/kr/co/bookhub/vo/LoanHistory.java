@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("LoanHistory")
 public class LoanHistory {
+
 	private int no;
 	private Date loanDate;
 	private Date returnDate;

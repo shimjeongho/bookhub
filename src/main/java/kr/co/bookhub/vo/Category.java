@@ -1,19 +1,18 @@
 package kr.co.bookhub.vo;
 
 import org.apache.ibatis.type.Alias;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @Alias("Category")
 public class Category {
-
+	
 	private int no;
 	private String name;
-	private Category parents;
+	private transient Category parents;
+	
 }
