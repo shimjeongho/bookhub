@@ -19,7 +19,7 @@
 		5. 재요청하기
 	*/
 	// 나중에 세션, 속성에서 가져오는걸로 변경 예정
-	String loginedUserId = "zxcv@zxcv";
+	String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
 	
 	// 요청 파라미터 정보 조회
 	int libraryNo = StringUtils.strToInt(request.getParameter("library"));

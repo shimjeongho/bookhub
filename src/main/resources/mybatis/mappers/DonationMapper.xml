@@ -46,8 +46,9 @@
 	
 	<!--  
 		List<Donation> getAllDonation();
+		List<Donation> getAllDonation(Map<String, Object> condition);
 	-->
-	<select id="getAllDonation" resultType="Donation">
+	<select id="getAllDonation" parameterType="map" resultType="Donation">
 		SELECT
 		    DONATION_NO						as no
 		    , DONATION_BOOK_TITLE			as title
@@ -59,6 +60,17 @@
 		    , IS_DELETED					as isDeleted
 		    , USER_ID						as "user.id"
 		    , LIB_NO						as "library.no"
+		FROM BOOKHUB_DONATION_BOOKS
+		ORDER BY no DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{rows} ROWS ONLY
+	</select>
+	
+	<!--  
+		int getTotalRows();
+	-->
+	<select id="getTotalRows">
+		SELECT
+			COUNT(*)
 		FROM BOOKHUB_DONATION_BOOKS
 	</select>
 	

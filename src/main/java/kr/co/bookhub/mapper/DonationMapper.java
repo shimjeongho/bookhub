@@ -1,6 +1,7 @@
 package kr.co.bookhub.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.bookhub.vo.Donation;
 import kr.co.bookhub.vo.Library;
@@ -23,6 +24,13 @@ public interface DonationMapper {
 	 * 모든 기부 정보 가져오기
 	 * @return
 	 */
-	List<Donation> getAllDonation();
+	List<Donation> getAllDonation(Map<String, Object> condition);
+	
+	/**
+	 * 모든 기부 정보의 행 개수 가져오기
+	 * @param condition
+	 * @return
+	 */
+	int getTotalRows();
 	
 }

@@ -82,6 +82,7 @@
             <div class="mb-4">
                 <label for="book-description" class="form-label required">도서 요약 설명</label>
                 <textarea name="description" id="book-description" class="form-control" rows="5" placeholder="도서 내용을 간단히 입력하세요" required></textarea>
+                <small id="description-count" class="form-text text-muted">0 / 200자</small>
             </div>
             
             <div class="btn-container">
@@ -97,23 +98,42 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('donationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const library = document.getElementById('librarySelect').value;
-            const title = document.getElementById('bookTitle').value;
-            const author = document.getElementById('bookAuthor').value;
-            const publisher = document.getElementById('bookPublisher').value;
-            const description = document.getElementById('bookDescription').value;
+	    const form = document.getElementById('form-donation');
+	    const librarySelect = document.getElementById('library-select');
+	    const titleInput = document.getElementById('book-title');
+	    const authorInput = document.getElementById('book-author');
+	    const publisherInput = document.getElementById('book-publisher');
+	    const descriptionInput = document.getElementById('book-description');
+	    const descriptionCount = document.getElementById('description-count');
 
-            if (!library || !title.trim() || !author.trim() || !publisher.trim() || !description.trim()) {
-                alert('모든 항목을 입력해주세요.');
-                return;
-            }
-
-            console.log({ library, title, author, publisher, description });
-            alert('도서 기증이 등록되었습니다.');
-            window.location.href = 'donation-success.html';
-        });
-    </script>
+	    descriptionInput.addEventListener('input', function () {
+	        if (this.value.length > 200) {
+	            this.value = this.value.slice(0, 200);
+	        }
+	        descriptionCount.textContent = this.value.length + " / 200자";
+	    });
+	
+	    // 폼 제출 시 유효성 검사
+	    form.addEventListener('submit', function (e) {
+	        const library = librarySelect.value;
+	        const title = titleInput.value.trim();
+	        const author = authorInput.value.trim();
+	        const publisher = publisherInput.value.trim();
+	        const description = descriptionInput.value.trim();
+	
+	        if (!library || !title || !author || !publisher || !description) {
+	            alert('모든 항목을 입력해주세요.');
+	            e.preventDefault();
+	            return;
+	        }
+	
+	        if (description.length > 100) {
+	            alert('도서 요약 설명은 100자 이내로 입력해주세요.');
+	            e.preventDefault();
+	            return;
+	        }
+	    });
+	    
+	</script>
 </body>
 </html>
