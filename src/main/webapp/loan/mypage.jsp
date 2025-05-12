@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.util.Pagination"%>
 <%@page import="kr.co.bookhub.vo.Address"%>
 <%@page import="kr.co.bookhub.mapper.AddressMapper"%>
@@ -35,6 +37,36 @@
 	
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	List<Address> userAddresses = addressMapper.getAllAddressByUserId(id);
+	
+	   
+
+	int loanPageNo = StringUtils.strToInt(request.getParameter("page"), 1);
+	int returnPageNo = StringUtils.strToInt(request.getParameter("page"), 1);
+	
+	// 대여,연체된 책
+	Map<String, Object> loancondition = new HashMap<>();
+	
+    int loanTotalRows = loanBookMapper.getLoanTotalRows(id);
+
+	Pagination loanPagination = new Pagination(loanPageNo, loanTotalRows, 5);	
+	
+	loancondition.put("id", id);
+    loancondition.put("offset", loanPagination.getOffset());
+	loancondition.put("rows", 5);
+	List<LoanHistory> sortedloanbooks = loanBookMapper.getSortedLoanBooksByUserId(loancondition);
+	
+	// 반납한 책
+	Map<String,Object> returncondition = new HashMap<>();
+	
+	int returnTotalRows = loanBookMapper.getReturnTotalRows(id);
+	
+	Pagination returnPagination = new Pagination(returnPageNo, returnTotalRows, 5);
+	
+	returncondition.put("id", id);
+	loancondition.put("offset", returnPagination.getOffset());
+	loancondition.put("rows", 5);
+	
+	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
 	
 %>
 <!DOCTYPE html>
@@ -181,160 +213,135 @@
             <div class="tab-pane fade <%="rental".equals(tab) ? "show active" : "" %>" id="rental" role="tabpanel" aria-labelledby="rental-tab">
                 <h4 class="mb-4">대여 내역</h4>
 <%
-	if (loanbooks.isEmpty()) {
+	if (sortedloanbooks.isEmpty()) {
 %>                
                 <div class="card mb-3">
-                            <div class="card-body text-center">
-                              <div class="mb-3">
-                                <i class="bi bi-geo-alt-fill fs-1 text-muted"></i>
-                              </div>
-                              <h5 class="card-title">대여한 책이 없습니다</h5>
-                              <p class="card-text text-muted">대여 할 책을 추가해주세요.</p>
-                            </div>
-                        </div>
+                    <div class="card-body text-center">
+                      <div class="mb-3">
+                        <i class="bi bi-geo-alt-fill fs-1 text-muted"></i>
+                      </div>
+                      <h5 class="card-title">대여한 책이 없습니다</h5>
+                      <p class="card-text text-muted">대여 할 책을 추가해주세요.</p>
+                    </div>
+                </div>
 <%
 	}
 %>                        
 
 <%
-	if (!delayBooks.isEmpty()) {
-		for (LoanHistory delaybook : delayBooks) {
+	for (LoanHistory sortedloanbook : sortedloanbooks) {
 %>
-			 <div class="book-item" id="loan-<%=delaybook.getNo()%>">
+                <div class="book-item" id="loan-<%=sortedloanbook.getNo()%>">
                     <div class="row align-items-center">
                         <div class="col-md-1">
-                        	<a href="detail.jsp?bno=<%=delaybook.getBook().getNo() %>">
-                            	<img src="<%=delaybook.getBook().getCoverImagePath()%>"  alt="책 표지" class="book-cover" style="width: 80px; height: 120px; object-fit: cover;">
+                        	<a href="detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>">
+                            	<img src="<%=sortedloanbook.getBook().getCoverImagePath()%>"  alt="책 표지" class="book-cover" style="width: 80px; height: 120px; object-fit: cover;">
                             </a>
                         </div>
                         <div class="col-md-5">
-                        	<a href="detail.jsp?bno=<%=delaybook.getBook().getNo() %>" 
+                        	<a href="detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>" 
                         		style="color:black">
-	                            <h5><%=delaybook.getBook().getTitle() %></h5>
-	                            <p class="text-muted mb-0">저자:<%=delaybook.getBook().getAuthor() %> | 출판사: <%=delaybook.getBook().getPublisher() %></p>
+	                            <h5><%=sortedloanbook.getBook().getTitle() %></h5>
+	                            <p class="text-muted mb-0">저자:<%=sortedloanbook.getBook().getAuthor() %> | 출판사: <%=sortedloanbook.getBook().getPublisher() %></p>
                             </a> 
                         </div>
                         <div class="col-md-2">
-                            <p class="mb-0">대여일: <%=StringUtils.simpleDate(delaybook.getLoanDate()) %></p>
-                            <p class="mb-0">반납일: <%=StringUtils.simpleDate(delaybook.getDueDate()) %></p>
+                            <p class="mb-0">대여일: <%=StringUtils.simpleDate(sortedloanbook.getLoanDate()) %></p>
+                            <p class="mb-0">반납일: <%=StringUtils.simpleDate(sortedloanbook.getDueDate()) %></p>
                         </div>
-                         <div class="col-md-2 text-center">
+                        
+<%
+	if ("D".equals(sortedloanbook.getLoanStatus())) {
+%>
+						<div class="col-md-2 text-center">
                             <span class="badge bg-danger status-badge">연체중</span><br/>
                         </div>
-                        <div class="col-md-2">
-                        	<a href="return.jsp?lno=<%=delaybook.getNo() %>">
-                        		<button class="btn btn-sm btn-outline-primary">반납하기</button>
-                        	</a>
-                        </div>
-                     </div>
-                 </div>
 <%
-		}
-	}
+	} else {
 %>
 
+                       
 <%
-	for (LoanHistory loanbook : loanbooks) {
-%>
-                <div class="book-item" id="loan-<%=loanbook.getNo()%>">
-                    <div class="row align-items-center">
-                        <div class="col-md-1">
-                        	<a href="detail.jsp?bno=<%=loanbook.getBook().getNo() %>">
-                            	<img src="<%=loanbook.getBook().getCoverImagePath()%>"  alt="책 표지" class="book-cover" style="width: 80px; height: 120px; object-fit: cover;">
-                            </a>
-                        </div>
-                        <div class="col-md-5">
-                        	<a href="detail.jsp?bno=<%=loanbook.getBook().getNo() %>" 
-                        		style="color:black">
-	                            <h5><%=loanbook.getBook().getTitle() %></h5>
-	                            <p class="text-muted mb-0">저자:<%=loanbook.getBook().getAuthor() %> | 출판사: <%=loanbook.getBook().getPublisher() %></p>
-                            </a> 
-                        </div>
-                        <div class="col-md-2">
-                            <p class="mb-0">대여일: <%=StringUtils.simpleDate(loanbook.getLoanDate()) %></p>
-                            <p class="mb-0">반납일: <%=StringUtils.simpleDate(loanbook.getDueDate()) %></p>
-                        </div>
-<%
-	if (loanbook.getIsExtension().equals("Y")) {
+		if (sortedloanbook.getIsExtension().equals("Y")) {
 %>                       
-                        <div class="col-md-2 text-center">
+                        <div class="col-md-2 text-center">                        
                             <span class="badge bg-primary status-badge">대여중</span><br/>
                             <span class="badge bg-success status-badge">연장완료</span>
                         </div>
                         <div class="col-md-2">
-                        	<a href="return.jsp?lno=<%=loanbook.getNo() %>">
+                        	<a href="return.jsp?lno=<%=sortedloanbook.getNo() %>">
                         		<button class="btn btn-sm btn-outline-primary">반납하기</button>
                         	</a>
+                        </div>
 <%
-	} else if(loanbook.getIsExtension().equals("N")) {
+		} else if(sortedloanbook.getIsExtension().equals("N")) {
 %>  
                         <div class="col-md-2 text-center">
                             <span class="badge bg-primary status-badge">대여중</span><br/>
                         </div>
                         <div class="col-md-2">
-                        	<a href="return.jsp?lno=<%=loanbook.getNo() %>">
+                        	<a href="return.jsp?lno=<%=sortedloanbook.getNo() %>">
                         		<button class="btn btn-sm btn-outline-primary mb-2">반납하기</button>
                         	</a>
-                            <a href="extension.jsp?lno=<%=loanbook.getNo() %>">
+                            <a href="extension.jsp?lno=<%=sortedloanbook.getNo() %>">
                             	<button class="btn btn-sm btn-outline-primary">연장하기</button>
                             </a>
+                        </div>
 <%
 		}
 %>               
-                        </div>
-                    </div>
-                </div>
 <%
 	}
-%>               
+%> 
+                    </div>
+                </div>
+
 <%
-
-   int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
+	}
+%>              
+<%
    
-   int totalRows = loanBookMapper.getTotalRows(id);
-
-   Pagination pagination = new Pagination(pageNo, totalRows, 4);	
-   if (totalRows > 0) {
+   if (loanTotalRows > 0) {
 %>
             <!-- Pagination -->
                 <nav class="mt-4">
                    <ul id="pagination" class="pagination justify-content-center">
 <%
-      if (!pagination.isFirst()) {
+      if (!loanPagination.isFirst()) {
 %>
-                  <li class="page-item">
-                            <a href="?page=<%=pagination.getPrevPage() %>" class="page-link"
-                               data-page-no="<%=pagination.getPrevPage() %>">이전</a>
+                  		<li class="page-item">
+                            <a href="?page=<%=loanPagination.getPrevPage() %>&tab=rental" class="page-link"
+                               data-page-no="<%=loanPagination.getPrevPage() %>">이전</a>
                         </li>
 <%
    }
 
-      int currentPage = pagination.getCurrentPage();
-      int beginPage = pagination.getBeginPage();
-      int endPage = pagination.getEndPage();
+      int currentPage = loanPagination.getCurrentPage();
+      int beginPage = loanPagination.getBeginPage();
+      int endPage = loanPagination.getEndPage();
       for (int num = beginPage; num <= endPage; num++) {
          if (num == currentPage) {
 %>   
-                  <li class="page-item active">
+                  		<li class="page-item active">
                            <span class="page-link"><%=num %></span>
                         </li>
 <%
          } else {
 %>
-                  <li class="page-item">
-                         <a href="?page=<%=num %>" class="page-link" 
+                  		<li class="page-item">
+                         	<a href="?page=<%=num %>&tab=rental" class="page-link" 
                               data-page-no="<%=num %>"><%=num %></a>
-                  </li>
+                  		</li>
 <%         
          }
       }
       
-   if (!pagination.isLast()) {
+   if (!loanPagination.isLast()) {
 %>
-                  <li class="page-item <%=pagination.isLast() ? "disabled" : "" %>">
-                            <a href="?page=<%=pagination.getNextPage() %>" class="page-link"
-                               data-page-no="<%=pagination.getNextPage() %>">다음</a>
-                        </li>
+						<li class="page-item <%=loanPagination.isLast() ? "disabled" : "" %>">
+						    <a href="?page=<%=loanPagination.getNextPage() %>&tab=rental" class="page-link"
+						       data-page-no="<%=loanPagination.getNextPage() %>">다음</a>
+						</li>
 <%
       }
 %>
@@ -349,55 +356,107 @@
             <div class="tab-pane fade <%="return".equals(tab) ? "show active" : "" %>" id="return" role="tabpanel" aria-labelledby="return-tab">
                 <h4 class="mb-4">반납 내역</h4>
 <%
-	if (returnBooks.isEmpty()) {
+	if (sortedreturnbooks.isEmpty()) {
 %>                
                 <div class="card mb-3">
-                            <div class="card-body text-center">
-                              <div class="mb-3">
-                                <i class="bi bi-geo-alt-fill fs-1 text-muted"></i>
-                              </div>
-                              <h5 class="card-title">반납한 책이 없습니다</h5>
-                              <p class="card-text text-muted">반납 할 책을 추가해주세요.</p>
-                            </div>
-                        </div>
+                    <div class="card-body text-center">
+                      <div class="mb-3">
+                        <i class="bi bi-geo-alt-fill fs-1 text-muted"></i>
+                      </div>
+                      <h5 class="card-title">반납한 책이 없습니다</h5>
+                      <p class="card-text text-muted">반납 할 책을 추가해주세요.</p>
+                    </div>
+                </div>
 <%
 	}
 %>
                         
 <%
-	for (LoanHistory returnbook : returnBooks) {             
+	for (LoanHistory sortedreturnbook : sortedreturnbooks) {             
 %>               
-                <div class="book-item" id="return-<%=returnbook.getNo()%>">
+                <div class="book-item" id="return-<%=sortedreturnbook.getNo()%>">
                     <div class="row align-items-center">
                         <div class="col-md-1">
-                        	<a href="detail.jsp?bno=<%=returnbook.getBook().getNo() %>">
-                            	<img src="<%=returnbook.getBook().getCoverImagePath() %>" alt="책 표지" class="book-cover">
+                        	<a href="detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>">
+                            	<img src="<%=sortedreturnbook.getBook().getCoverImagePath() %>" alt="책 표지" class="book-cover">
                             </a>
                         </div>
                         <div class="col-md-5">
-                        	<a href="detail.jsp?bno=<%=returnbook.getBook().getNo() %>"
+                        	<a href="detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>"
                         		style="color:black">
-                            	<h5><%=returnbook.getBook().getTitle() %></h5>
-                            	<p class="text-muted mb-0">저자: <%=returnbook.getBook().getAuthor() %> | 출판사: <%=returnbook.getBook().getPublisher() %></p>
+                            	<h5><%=sortedreturnbook.getBook().getTitle() %></h5>
+                            	<p class="text-muted mb-0">저자: <%=sortedreturnbook.getBook().getAuthor() %> | 출판사: <%=sortedreturnbook.getBook().getPublisher() %></p>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <p class="mb-0">대여일: <%=StringUtils.simpleDate(returnbook.getLoanDate()) %></p>
-                            <p class="mb-0">반납일: <%=StringUtils.simpleDate(returnbook.getDueDate()) %></p>
+                            <p class="mb-0">대여일: <%=StringUtils.simpleDate(sortedreturnbook.getLoanDate()) %></p>
+                            <p class="mb-0">반납일: <%=StringUtils.simpleDate(sortedreturnbook.getDueDate()) %></p>
                         </div>
                         <div class="col-md-2">
                             <span class="badge bg-success status-badge">반납처리중</span>
                         </div>
                         <div class="col-md-2">
-                            <span class="text-muted">반납신청: <%=StringUtils.simpleDate(returnbook.getReturnDate())%></span>
+                            <span class="text-muted">반납신청: <%=StringUtils.simpleDate(sortedreturnbook.getReturnDate())%></span>
                         </div>
                     </div>
                 </div>
 <%
 	}
 %>
-                
-                
+
+<%
+   
+   if (returnTotalRows > 0) {
+%>
+            <!-- Pagination -->
+                <nav class="mt-4">
+                   <ul id="pagination" class="pagination justify-content-center">
+<%
+      if (!returnPagination.isFirst()) {
+%>
+                  		<li class="page-item">
+                            <a href="?page=<%=returnPagination.getPrevPage() %>&tab=return" class="page-link"
+                               data-page-no="<%=returnPagination.getPrevPage() %>">이전</a>
+                        </li>
+<%
+   }
+
+      int currentPage = returnPagination.getCurrentPage();
+      int beginPage = returnPagination.getBeginPage();
+      int endPage = returnPagination.getEndPage();
+      for (int num = beginPage; num <= endPage; num++) {
+         if (num == currentPage) {
+%>   
+                  		<li class="page-item active">
+                           <span class="page-link"><%=num %></span>
+                        </li>
+<%
+         } else {
+%>
+                  		<li class="page-item">
+                         	<a href="?page=<%=num %>&tab=return" class="page-link" 
+                              data-page-no="<%=num %>"><%=num %></a>
+                  		</li>
+<%         
+         }
+      }
+      
+   if (!returnPagination.isLast()) {
+%>
+						<li class="page-item <%=returnPagination.isLast() ? "disabled" : "" %>">
+						    <a href="?page=<%=returnPagination.getNextPage() %>&tab=return" class="page-link"
+						       data-page-no="<%=returnPagination.getNextPage() %>">다음</a>
+						</li>
+<%
+      }
+%>
+                    </ul>
+                </nav>
+<%
+   }
+%>
+
+
             </div>
             
             <!-- Wishlist Tab -->

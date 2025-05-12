@@ -15,4 +15,14 @@
 			book_no = #{bno}
 			AND lib_no = #{lno}
 	</update>
+	
+	<!--  
+		int getBookStockCount(String bno, String lno); 
+	-->
+	<select id="getBookStockCount" parameterType="String">
+		select sum(book_stock)
+		from bookhub_stocks
+		where book_no = #{bno}
+		and lib_no = #{lno}
+	</select>
 </mapper>

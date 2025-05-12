@@ -18,12 +18,25 @@ public interface LoanBookMapper {
 	List<LoanHistory> getLoanBookByUserId(String id);
 	
 	
+	List<LoanHistory> getSortedLoanBooksByUserId(Map<String, Object> condition);
+	
+	
+	List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
+	
+	
 	/**
 	 * 모든 행의 갯수를 조회한다.
 	 * @param condition
 	 * @return
 	 */
-	int getTotalRows(String id);
+	int getLoanTotalRows(String id);
+	
+	/**
+	 * 반납한 책의 모든 행의 갯수를 조회한다.
+	 * @param id
+	 * @return
+	 */
+	int getReturnTotalRows(String id);
 	
 	
 	/**

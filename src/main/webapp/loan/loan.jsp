@@ -20,12 +20,31 @@
 	String id = "hong@gmail.com";
 	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
-	loanBookMapper.InsertLoanHistoryByBnoAndRnoAndId(id, lno, bno);
-	// 재고테이블에서 해당 도서의 수량을 업데이트
+		
 	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
-	stockMapper.updateStock(bno, lno);
 	
-	// 책번호, 도서관번호, 아이디를 통해 대여이력테이블에 대여이력을 추가한다.
+	//재고가 있는지 체크
+	int bookStock = stockMapper.getBookStockCount(bno, lno);
 	
-	response.sendRedirect("mypage.jsp?tab=rental");
+	if (bookStock <= 0) {
+%>
+		<script>
+			alert("해당 도서의 대여 가능 수량이 없습니다.");
+			location.href = "detail.jsp";
+		</script>
+	
+<%
+	} else {
+		loanBookMapper.InsertLoanHistoryByBnoAndRnoAndId(id, lno, bno);
+		// 재고테이블에서 해당 도서의 수량을 업데이트
+		stockMapper.updateStock(bno, lno);
+	
+		// 책번호, 도서관번호, 아이디를 통해 대여이력테이블에 대여이력을 추가한다.
+%>
+	<script>
+		alert("대여가 완료되었습니다.");
+		location.href = "mypage.jsp?tab=rental";
+	</script>
+<%	
+	}
 %>

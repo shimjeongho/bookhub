@@ -27,14 +27,84 @@
 	 </select>
 	 
 	 <!--  
-	 	int getTotalRows(String id);
+	 	List<LoanHistory> getSortedLoanBooksByUserId(Map<String, Object> condition);
 	 -->
-	 <select id="getTotalRows"  parameterType="String">
+	 <select id="getSortedLoanBooksByUserId" parameterType="map" resultType="LoanHistory">
+	 	select
+    		B.book_no                as "book.no",
+    		L.loan_no                as no,
+    		B.book_title             as "book.title",
+    		B.book_author            as "book.author",
+    		B.book_publisher         as "book.publisher",
+    		B.book_cover_image_path  as "book.coverImagePath",
+    		L.loan_date              as loanDate,
+    		L.due_date               as dueDate,
+    		L.loan_status            as loanStatus,
+    		L.is_extension           as isExtension
+		from
+    		bookhub_books B, bookhub_loan_histories L
+		where
+    		L.user_id = #{id}
+   		 	and B.book_no = L.book_no
+   		 	and L.loan_status in ('L', 'D')
+		order by
+    		case when L.loan_status = 'D' then 0 else 1 end, 
+    		L.loan_date desc 
+		offset #{offset} rows
+		fetch next #{rows} rows only
+	 </select>
+	 
+	 <!--  
+	 	List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
+	 -->
+	 <select id="getSortedReturnBooksByUserId">
+	 	select
+    		B.book_no                as "book.no",
+    		L.loan_no                as no,
+    		B.book_title             as "book.title",
+    		B.book_author            as "book.author",
+    		B.book_publisher         as "book.publisher",
+    		B.book_cover_image_path  as "book.coverImagePath",
+    		L.return_date			 as returnDate,
+    		L.loan_date              as loanDate,
+    		L.due_date               as dueDate,
+    		L.loan_status            as loanStatus,
+    		L.is_extension           as isExtension
+		from
+    		bookhub_books B, bookhub_loan_histories L
+		where
+    		L.user_id = #{id}
+   		 	and B.book_no = L.book_no
+   		 	and L.loan_status = 'P'
+		order by
+    		case when L.loan_status = 'D' then 0 else 1 end, 
+    		L.loan_date desc 
+		offset #{offset} rows
+		fetch next #{rows} rows only
+	 </select>
+	 
+	 <!--  
+	 	int getLoanTotalRows(String id);
+	 -->
+	 <select id="getLoanTotalRows"  parameterType="String">
 		select
 			count(*)
 		from
 			bookhub_loan_histories
 		where user_id = #{id}
+		and loan_status in ('L', 'D')
+	 </select>
+	 
+	 <!--  
+	 	int getReturnTotalRows(String id);
+	 -->
+	 <select id="getReturnTotalRows" parameterType="String">
+	 	select
+			count(*)
+		from
+			bookhub_loan_histories
+		where user_id = #{id}
+		and loan_status = 'P'
 	 </select>
 	 
 	 <!--  
