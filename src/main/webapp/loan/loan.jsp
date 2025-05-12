@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="kr.co.bookhub.vo.LoanHistory"%>
 <%@page import="org.apache.ibatis.reflection.SystemMetaObject"%>
 <%@page import="kr.co.bookhub.mapper.StockMapper"%>
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
@@ -19,27 +21,38 @@
 	
 	String id = "hong@gmail.com";
 	
+	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
-		
-	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
+	
+	if (loanBookMapper.getLoanHistoryByIdAndBno(id, bno) != null) {
+%>
+	<script>
+		alert("이미 대여 중이거나 반납 신청한 도서입니다.");
+		location.href = "detail.jsp?bno=<%=bno %>";
+	</script>
+<% 		
+		return;
+	}
 	
 	//재고가 있는지 체크
+	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
+	
 	int bookStock = stockMapper.getBookStockCount(bno, lno);
 	
 	if (bookStock <= 0) {
 %>
 		<script>
 			alert("해당 도서의 대여 가능 수량이 없습니다.");
-			location.href = "detail.jsp";
+			location.href = "detail.jsp?bno=<%=bno %>";
 		</script>
 	
 <%
+		return;
 	} else {
 		loanBookMapper.InsertLoanHistoryByBnoAndRnoAndId(id, lno, bno);
 		// 재고테이블에서 해당 도서의 수량을 업데이트
 		stockMapper.updateStock(bno, lno);
 	
-		// 책번호, 도서관번호, 아이디를 통해 대여이력테이블에 대여이력을 추가한다.
 %>
 	<script>
 		alert("대여가 완료되었습니다.");

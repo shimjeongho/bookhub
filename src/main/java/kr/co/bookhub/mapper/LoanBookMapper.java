@@ -15,7 +15,7 @@ public interface LoanBookMapper {
 	 * @param id
 	 * @return 해당 유저가 빌린 책의 목록이 다 조회된다.
 	 */
-	List<LoanHistory> getLoanBookByUserId(String id);
+	List<LoanHistory> getAllBookByUserId(String id);
 	
 	
 	List<LoanHistory> getSortedLoanBooksByUserId(Map<String, Object> condition);
@@ -58,6 +58,13 @@ public interface LoanBookMapper {
 	 * @return 대여번호를 통해 해당 도서가 조회된다.
 	 */
 	LoanHistory getLoanHistoryByLoanNo(String lno);
+	
+	/**
+	 * 도서 번호를 통해 해당 유저가 빌린 혹은 반납신청한 도서를 가져온다.
+	 * @param bno
+	 * @return
+	 */
+	LoanHistory getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
 	
 	/**
 	 * 대여번호(LoanNo)를 통해 대여내역테이블에서 대여상태, 반납일을 업데이트한다.

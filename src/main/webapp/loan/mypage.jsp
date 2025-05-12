@@ -28,7 +28,6 @@
 	
 	String id = "hong@gmail.com";
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
-	List<LoanHistory> loanbooks = loanBookMapper.getLoanBookByUserId(id);
 	
 	List<LoanHistory> returnBooks = loanBookMapper.getReturnBookByUserId(id);
 	

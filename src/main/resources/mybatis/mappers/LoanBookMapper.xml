@@ -6,9 +6,9 @@
 <mapper namespace="kr.co.bookhub.mapper.LoanBookMapper">
 
 	<!-- 
-		List<LoanHistory> getLoanBookByUserId(String id);
+		List<LoanHistory> getAllBookByUserId(String id);
 	 -->
-	 <select id="getLoanBookByUserId" resultType="LoanHistory">
+	 <select id="getAllBookByUserId" resultType="LoanHistory">
 	 	select
 	 		B.book_no					as "book.no"
 	 		, L.loan_no					as  no
@@ -23,7 +23,6 @@
 	 	from bookhub_books B, bookhub_loan_histories L
 	 	where L.user_id = #{id}
 	 	and B.book_no = L.book_no
-	 	and L.loan_status = 'L'
 	 </select>
 	 
 	 <!--  
@@ -156,6 +155,25 @@
 	 		, is_extension	as isExtension
 	 	from bookhub_loan_histories
 	 	where loan_no = #{lno}
+	 </select>
+	 
+	 <!--  
+	 	LoanHistory getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
+	 -->
+	 <select id="getLoanHistoryByIdAndBno" resultType="LoanHistory">
+	 	select
+	 		loan_no			as no			 
+	 		, loan_date		as loanDate
+	 		, return_date	as returnDate
+	 		, due_date		as due_date
+	 		, loan_status	as loanStatus
+	 		, user_id		as "user.id"
+	 		, lib_no		as "library.no"
+	 		, book_no		as "book.no"
+	 		, is_extension	as isExtension
+	 	from bookhub_loan_histories
+	 	where user_id = #{id}
+	 	and book_no = #{bno}
 	 </select>
 	 
 	 <!-- 
