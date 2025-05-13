@@ -27,4 +27,15 @@
 		AND LIB_NO = #{lno}
 	</select>
 	
+	<!-- 
+		int getBookAvailability(int bookNo);
+	 -->
+	 <select id="getBookAvailability" parameterType="int" resultType="int">
+	 	SELECT
+	 		COUNT(*)
+	 	FROM
+	 		BOOKHUB_STOCKS
+	 	WHERE
+	 		BOOK_NO = #{bookNo} AND BOOK_STOCK > 0
+	 </select>
 </mapper>
