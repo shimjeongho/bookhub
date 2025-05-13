@@ -20,7 +20,12 @@ public interface BookReviewMapper {
 	 */
 	int getTotalRows(int bookNo);
 	
-	List<BookReview> getAllBookReviewsByUserId(String userId);
+	/**
+	 * 전체 리뷰를 가져오는 메서드
+	 * @param condition
+	 * @return 전체의 리뷰 목록
+	 */
+    List<BookReview> getAllBookReviewsByBookNo(Map<String, Object> condition);
 	
 	/**
 	 * 도서의 리뷰 목록

@@ -34,8 +34,9 @@
 		<mapper resource="mybatis/mappers/CategoryBooksMapper.xml"/>
         <mapper resource="mybatis/mappers/DonationMapper.xml"/>
         <mapper resource="mybatis/mappers/LoanBookMapper.xml"/>
-	    <mapper resource="mybatis/mappers/PostMapper.xml"/>
-	    <mapper resource="mybatis/mappers/RecommendBooksMapper.xml"/>
+    <mapper resource="mybatis/mappers/PostMapper.xml"/>
+      <mapper resource="mybatis/mappers/LibraryMapper.xml"/>
+    <mapper resource="mybatis/mappers/RecommendBooksMapper.xml"/>
   		<mapper resource="mybatis/mappers/StockMapper.xml"/>
 	    <mapper resource="mybatis/mappers/SearchMapper.xml"/>
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>

@@ -15,6 +15,8 @@
 	
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	addressMapper.deleteAddressByNo(no);
-	
-	response.sendRedirect("mypage.jsp?tab=address");
-%>
+%>	
+<script>
+	alert("주소가 삭제되었습니다.");
+	location.href = "/bookhub/loan/mypage.jsp?tab=address";
+</script>

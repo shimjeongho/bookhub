@@ -1,7 +1,5 @@
 package kr.co.bookhub.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface StockMapper {
@@ -20,4 +18,11 @@ public interface StockMapper {
 	 * @return
 	 */
 	int getBookStockCount(@Param("bno") String bno, @Param("lno") String lno); 
+	
+	/**
+	 * 특정 도서 번호를 전달받아 모든 도서관 재고를 체크한다
+	 * @param bookNo 책번호
+	 * @return 특정 도서 번호의 대한 모든 도서관 재고 체크
+	 */
+	int getBookAvailability(int bookNo); 	
 }

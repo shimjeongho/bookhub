@@ -1,3 +1,7 @@
+<%@page import="kr.co.bookhub.mapper.StockMapper"%>
+<%@page import="kr.co.bookhub.vo.Stock"%>
+<%@page import="kr.co.bookhub.mapper.LibraryMapper"%>
+<%@page import="kr.co.bookhub.vo.Library"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.util.Pagination"%>
@@ -14,7 +18,6 @@
 <%
 	// bno
 	int bookNo = StringUtils.strToInt(request.getParameter("bno"));
-	
 	// 요청 파라미터 조회(페이지네이션)
 	int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
 	String sort = StringUtils.nullToStr(request.getParameter("sort"), "newest");
@@ -37,8 +40,16 @@
 	// 구현객체 가져오기
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
+	LibraryMapper libraryMapper = MybatisUtils.getMapper(LibraryMapper.class);
+	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
 	
+	// 책 정보 조회
 	Book book = bookMapper.getBookByNo(bookNo);
+	// 도서 번호를 이용하여 도서관 책 재고 조회
+	List<Stock> stocks = libraryMapper.getLibraryStocksByBookNo(bookNo);
+	// 특정 도서 번호를 전달받아 모든 도서관 재고를 체크한다
+	int availableCount = stockMapper.getBookAvailability(bookNo);
+	
 	
 	// 총 리뷰 개수 조회
 	int totalRows = bookReviewMapper.getTotalRows(bookNo);
@@ -49,6 +60,8 @@
 	condition.put("rows", pagination.getRows());
 	// 필터링 조건에 맞는 리뷰목록 조회
 	List<BookReview> bookReviews = bookReviewMapper.getBookReviewsByBookNo(condition);
+	// 전체 리뷰 조회
+    List<BookReview> bookReviewsAllList = bookReviewMapper.getAllBookReviewsByBookNo(condition);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -66,40 +79,8 @@
      /bookhub/src/main/webapp/book/detail.jsp-->
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="home.html">우도도서관</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">자료검색</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">이용안내</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">게시판</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">도서관소개</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="signup.html">회원가입</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <%@ include file="../common/nav.jsp" %>	
+    
     <!-- Detail Content -->
     <div class="detail-container">
         <div class="row">
@@ -139,19 +120,32 @@
                             <span class="text-muted">(<%=book.getReviewAvg() %> / <%=book.getReviewCount() %>명)</span>
                         </p>
                     </div>
+<%
+	if (availableCount > 0) {
+%>                    
                     <div class="availability">
                         <span class="badge bg-success availability-badge">대출 가능</span>
                     </div>
-                    
+<%
+	} else {
+%>
+                    <div class="availability">
+   						 <span class="badge bg-danger availability-badge">대출 불가능</span>
+					</div>
+<%
+	}
+%>                    
                     <div class="action-buttons">
                         <div class="mb-3">
-                            <select class="form-select" id="librarySelect">
+                            <select class="form-select" id="librarySelect" name="libNo">
                                 <option value="">도서관을 선택하세요</option>
-                                <option value="central">LG상남도서관 (재고: 4권)</option>
-                                <option value="west">우리소리도서관 (재고: 2권)</option>
-                                <option value="east">서울특별시교육청 정독도서관 (재고: 1권)</option>
-                                <option value="south">서울특별시교육청 어린이도서관 (재고: 3권)</option>
-                                <option value="south">삼청공원숲속도서관 (재고: 0권)</option>
+<%
+	for  (Stock stock : stocks) {
+%>
+                                <option value="<%=stock.getLibrary().getNo() %>" <%=stock.getStock() == 0 ? "disabled" : "" %>><%=stock.getLibrary().getName() %> (재고: <%=stock.getStock() %>권)</option>
+<%
+	}
+%>
                             </select>
                         </div>
                         <button class="btn btn-primary me-2" id="borrowButton" disabled>
@@ -176,7 +170,7 @@
     int[] stars = new int[5]; // 5점, 4점, 3점, 2점, 1점 순서
    
 
-    for (BookReview review : bookReviews) {
+    for (BookReview review : bookReviewsAllList) {
         int star = review.getStar();
         if (star >= 1 && star <= 5) {
             stars[5 - star]++;
@@ -325,9 +319,12 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">작성자: <%=review.getWriter().getName() %></small>
                         <div>
-                            <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="far fa-thumbs-up"></i> <%=review.getLikes() %>
-                            </button>
+                            <button id="like-button-<%=review.getNo()%>" 
+					        	class="btn btn-sm btn-outline-secondary me-2 like-button"
+					        	data-review-no="<%=review.getNo()%>">
+					    		<i class="far fa-thumbs-up"></i> 
+					    		<span id="like-count-<%=review.getNo()%>"><%=review.getLikes() %></span>
+							</button>
                             <button class="btn btn-sm btn-outline-secondary">
                                 <i class="far fa-comment"></i> 답글
                             </button>
@@ -395,19 +392,42 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="text-center">
-                <small class="text-muted">&copy; 2024 우도도서관. All rights reserved.</small>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="../common/footer.jsp" %>
 
    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
+    
+    	$(".like-button").click(function() {
+    		const reviewNo = $(this).attr("data-review-no");
+    		const isLiked = $(this).hasClass("liked");
+    		
+    		$.ajax({
+    			method: "get",
+    			url: "like.jsp",
+    			dataType: "json",
+    			data: {
+    				reviewNo,
+    				action: isLiked ? "decrease" : "increase"
+    			},
+    			success: function(response) {
+    				console.log(response); //응답 확인
+   				// 좋아요 개수 업데이트
+	   	            $(`#like-count-\${reviewNo}`).text(response.updatedLikes);
+	
+	   	            if (isLiked) {
+	   	                $(`#like-button-\${reviewNo}`).removeClass("liked");
+	   	            } else {
+	   	                $(`#like-button-\${reviewNo}`).addClass("liked");
+	   	            }
+	   	        },
+	   	        error: function(xhr, status, error) {
+	   	            console.log(xhr.responseText);
+	   	            alert("오류가 발생했습니다.");
+	    	        }
+    		})
+    	})
     
     	// 찜 하기 버튼으로 비동기 통신
     	$("#wishlistBtn").click(function() {

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Stock { 
-	private int libNo;
-	private int bookNo;
+	private Library library;
+	private Book book;
 	private int stock;
 }
