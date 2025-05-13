@@ -53,14 +53,4 @@ public class MybatisUtils {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

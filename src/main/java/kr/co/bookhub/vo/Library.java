@@ -20,5 +20,5 @@ public class Library {
 	private String tel; // 도서관 전화번호
 	private String imgPath; 
 	private String businessHours;// 운영 시간
-  
+
 }

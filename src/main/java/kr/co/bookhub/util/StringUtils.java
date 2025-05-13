@@ -1,6 +1,7 @@
 package kr.co.bookhub.util;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,6 +35,21 @@ public class StringUtils {
 		return nullToStr(value, "");
 	}
 	
+	
+	/**
+	 * 날짜 형식의 문자열을 Date로 변환한다.
+	 * @param str 날짜형식의 문자열
+	 * @return Date
+	 * @throws ParseException
+	 */
+	public static Date strToDate(String str) throws ParseException {
+		if (str ==  null || str.isBlank()) {
+			return null;
+		}
+		
+		return simpleDateFormat.parse(str);
+	}
+	
 	/**
 	 * 날짜를 전달받아서 
 	 * "2024년 1월 1일 오전 9시 10분 20초" 형식의 문자열로 반환한다.
@@ -46,6 +62,7 @@ public class StringUtils {
 		}
 		return detailDateFormat.format(date);
 	}
+	
 	
 	
 	/**
@@ -156,7 +173,7 @@ public class StringUtils {
 		String str = decimalFormat2.format(value);
 		return Double.valueOf(str);
 	}
-	
+		
 	/**
 	 * text와 text의 최대 글자 길이를 전달 받아서, 
 	 * text의 길이를 최대 글자 정도까지만 표시하고, 그 이상이되는 글자들은 "..."으로 표시한다. 

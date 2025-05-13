@@ -1,8 +1,6 @@
 package kr.co.bookhub.vo;
 
-
 //User정보를 담은 vo
-
 
 import java.util.Date;
 
@@ -22,8 +20,7 @@ public class User {
 	private String name;
 	private String phone;
 	private Date birth;
-	private Date createDate;
-	private Date updateDate;
+	private Date createdDate;
+	private Date updatedDate;
 	private String isDeleted;
-  
 }
