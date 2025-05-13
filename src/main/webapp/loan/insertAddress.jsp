@@ -55,5 +55,5 @@
 	// address를 주소테이블에 추가한다.
 	addressMapper.insertAddress(address);
 	
-	response.sendRedirect("mypage.jsp?tab=address");
+	response.sendRedirect("/bookhub/loan/mypage.jsp?tab=address");
 %>

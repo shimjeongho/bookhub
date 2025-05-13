@@ -28,14 +28,21 @@
 	List<Address> userAddresses = addressMapper.getAllAddressByUserId(id);
 	
 	if (userAddresses.isEmpty()) {
-		response.sendRedirect("mypage.jsp?tab=address");
+%>
+		<script>
+			alert("주소를 등록하세요.");
+			location.href = "/bookhub/loan/mypage.jsp?tab=address";
+		</script>
+<%
 		return;
 	}
 	
 	// 해당 도서 lno 값을 이용해 도서의 대여 상태를 'P'로 수정하고 반납일자를 수정한다.
 	LoanBookMapper returnBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
 	returnBookMapper.updateLoanStatusAndreturnDateByLoanNo(lno);
-	
-	response.sendRedirect("mypage.jsp?tab=return#return-"+lno);
-	
 %>
+		<script>
+			alert("반납신청이 완료되었습니다.");
+			location.href = "/bookhub/loan/mypage.jsp?tab=return#return-" + "<%=lno %>";
+		</script>	
+
