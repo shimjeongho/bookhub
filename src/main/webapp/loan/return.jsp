@@ -20,7 +20,7 @@
 		2. 해당 lno에 해당하는 도서의 loan_status 값을 변경한다.
 	*/
 	
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	String lno = request.getParameter("lno");
 	
 	
@@ -31,7 +31,7 @@
 %>
 		<script>
 			alert("주소를 등록하세요.");
-			location.href = "/bookhub/loan/mypage.jsp?tab=address";
+			location.href = "/bookhub/user/mypage.jsp?tab=address";
 		</script>
 <%
 		return;
@@ -43,6 +43,6 @@
 %>
 		<script>
 			alert("반납신청이 완료되었습니다.");
-			location.href = "/bookhub/loan/mypage.jsp?tab=return#return-" + "<%=lno %>";
+			location.href = "/bookhub/user/mypage.jsp?tab=return#return-" + "<%=lno %>";
 		</script>	
 

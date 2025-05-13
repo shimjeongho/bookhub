@@ -36,7 +36,7 @@
 		SELECT
 			A.ADDR_NO        AS no
 			, A.ADDR_NAME    AS name
-			, U.USER_ID      AS "user.id"
+			, A.USER_ID      AS "user.id"
 			, U.USER_PHONE   AS "user.phone"
 			, U.USER_NAME    AS "user.name"
 			, A.ADDR_BASIC   AS basic
@@ -44,7 +44,8 @@
 			, A.ADDR_GIBON   AS gibon
 			, A.ADDR_ZIPCODE AS zipcode
 		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
-		WHERE U.USER_ID = #{id}
+		WHERE A.USER_ID = #{id}
+		AND A.USER_ID = U.USER_ID
 		ORDER BY CASE WHEN A.ADDR_GIBON = 'Y' THEN 0 ELSE 1 END, A.ADDR_NO
 	</select>
 	
@@ -84,6 +85,7 @@
 		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
 		WHERE U.USER_ID = #{id}
 		AND A.ADDR_GIBON = 'Y'
+		AND A.USER_ID = U.USER_ID
 		AND A.ADDR_NO != #{no}
 	</select>
 	

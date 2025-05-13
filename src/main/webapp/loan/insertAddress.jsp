@@ -17,7 +17,7 @@
 	String addressDetail = request.getParameter("addressDetail");
 	String addressName = request.getParameter("addressName");
 	String isGibon = request.getParameter("isGibon");
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	
 	List<Address> userAddresses = addressMapper.getAllAddressByUserId(id);
@@ -55,5 +55,5 @@
 	// address를 주소테이블에 추가한다.
 	addressMapper.insertAddress(address);
 	
-	response.sendRedirect("/bookhub/loan/mypage.jsp?tab=address");
+	response.sendRedirect("/bookhub/user/mypage.jsp?tab=address");
 %>
