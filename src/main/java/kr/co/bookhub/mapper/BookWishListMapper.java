@@ -7,7 +7,7 @@ public interface BookWishListMapper {
 	/**
 	 * 찜하기 여부
 	 * @param condition
-	 * @return 1(찜하기 중), 0(찜 취소)
+	 * @return 1(찜하기 중), 0(찜 취소) count(*)은 안좋다
 	 */
 	int isBookWish(Map<String, Object> condition);
 

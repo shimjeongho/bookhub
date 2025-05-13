@@ -14,8 +14,12 @@
 	// 도서 상위 카테고리 가져오기
 	List<Category> categories = categoryMapper.getMainCategory();
 
-  	PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
+  PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
 	List<PostCategory> postCategories = postMapper1.selectPostCategoryInfo(); 
+  
+  //네비게이션바에 이름 표시
+  String loggedInUserId = (String)session.getAttribute("LOGINED_USER_ID");
+  String loggedInUserName = (String)session.getAttribute("LOGINED_USER_NAME");
 %>
 
 <!-- Navigation -->
@@ -46,9 +50,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="../library.html">북허브소개</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../mypage.html">마이페이지</a>
-                </li>
+                
 <%
 	if (!categories.isEmpty()) {
 %>
@@ -73,12 +75,30 @@
 %>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="../login.html">로그인</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../signup.html">회원가입</a>
-                </li>
+                <%
+                	if (loggedInUserId != null) {
+                %>
+                	<li class="nav-item">
+                		<a class="nav-link" href="/bookhub/user/mypage.jsp">
+                                <%= loggedInUserName %> 님  
+                        </a>
+                	</li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bookhub/user/logout.jsp">로그아웃</a>
+                    </li>
+                <%
+                	} else {
+                %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bookhub/user/signup.jsp">회원가입</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bookhub/user/signin.jsp">로그인</a>
+                    </li>
+                <%
+                	}
+                %>
             </ul>
         </div>
     </div>

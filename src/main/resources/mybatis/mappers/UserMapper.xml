@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.UserMapper">
+	<!--
+		 void insertUser(User user);
+	 -->
+	<insert id="insertUser" parameterType="User">
+		insert into bookhub_users
+		(user_id, user_password, user_name, user_phone, user_birth)
+		values
+		(#{id}, #{password}, #{name}, #{phone}, #{birth})
+	</insert>
+	
+	<select id="getUserById" parameterType="string" resultType="User">
+		SELECT
+            user_id         as id,
+            user_password   as password,
+            user_name       as name,
+            user_phone      as phone,
+            user_birth      as birth,
+            user_created_date    as createdDate,
+            user_updated_date    as updatedDate,
+            is_deleted      as isDeleted
+        from
+        	bookhub_users
+        where
+        	user_id = #{id}
+        and
+        	is_deleted = 'N'
+	</select>
+	
+	<update id="updateUser" parameterType="kr.co.bookhub.vo.User">
+	update bookhub_users
+	set
+		user_password = #{password},
+		user_name = #{name},
+		user_phone = #{phone},
+		user_updated_date = SYSDATE  
+	where
+		user_id = #{id}
+	and
+		is_deleted = 'N'
+	</update>
+	
+	<update id="deleteUser" parameterType="string">
+	update bookhub_users
+	set
+		is_deleted='Y',
+		user_updated_date = SYSDATE
+	where
+		user_id = #{id}
+	and
+		is_deleted = 'N'
+	</update>
+</mapper>
