@@ -27,6 +27,6 @@ public interface UserMapper {
 	
 	
 	
-	int deleteUser(String id);
+	void deleteUser(String id);
 		
 }
