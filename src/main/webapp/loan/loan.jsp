@@ -19,7 +19,7 @@
 	String bno = request.getParameter("bno");
 	String lno = request.getParameter("lno");
 	
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	
 	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
@@ -28,7 +28,7 @@
 %>
 	<script>
 		alert("이미 대여 중이거나 반납 신청한 도서입니다.");
-		location.href = "detail.jsp?bno=<%=bno %>";
+		location.href = "/bookhub/book/detail.jsp?bno=<%=bno %>";
 	</script>
 <% 		
 		return;
@@ -43,7 +43,7 @@
 %>
 		<script>
 			alert("해당 도서의 대여 가능 수량이 없습니다.");
-			location.href = "detail.jsp?bno=<%=bno %>";
+			location.href = "/bookhub/book/detail.jsp?bno=<%=bno %>";
 		</script>
 	
 <%
@@ -56,7 +56,7 @@
 %>
 	<script>
 		alert("대여가 완료되었습니다.");
-		location.href = "/bookhub/loan/mypage.jsp?tab=rental";
+		location.href = "/bookhub/user/mypage.jsp?tab=rental";
 	</script>
 <%	
 	}

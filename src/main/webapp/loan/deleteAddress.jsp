@@ -10,7 +10,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>    
 <%
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	String no = request.getParameter("no");
 	
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
@@ -18,5 +18,5 @@
 %>	
 <script>
 	alert("주소가 삭제되었습니다.");
-	location.href = "/bookhub/loan/mypage.jsp?tab=address";
+	location.href = "/bookhub/user/mypage.jsp?tab=address";
 </script>

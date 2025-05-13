@@ -10,7 +10,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>    
 <%
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
     int addressNo = StringUtils.strToInt(request.getParameter("no"));
     String zipcode = request.getParameter("zipcode");
     String basicAddress = request.getParameter("basicAddress");
@@ -49,5 +49,5 @@
 	
 	addressMapper.updateAddressByAddress(address);
 	
-	response.sendRedirect("/bookhub/loan/mypage.jsp?tab=address");
+	response.sendRedirect("/bookhub/user/mypage.jsp?tab=address");
 %>

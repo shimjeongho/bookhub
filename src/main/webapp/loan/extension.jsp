@@ -25,7 +25,7 @@
 				mypage.jsp 페이지로 alert('연장을 완료했습니다.') 알림을 실행하도록한다.
 	*/
 	
-	String id = "hong@gmail.com";
+	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	String lno = request.getParameter("lno");
 	
 	LoanBookMapper loanbookmapper = MybatisUtils.getMapper(LoanBookMapper.class);
@@ -35,5 +35,5 @@
 %>
 	<script>
 		alert("연장이 완료되었습니다.")
-		location.href = "/bookhub/loan/mypage.jsp?tab=rental#loan-"+ "<%=lno %>";
+		location.href = "/bookhub/user/mypage.jsp?tab=rental#loan-"+ "<%=lno %>";
 	</script>
