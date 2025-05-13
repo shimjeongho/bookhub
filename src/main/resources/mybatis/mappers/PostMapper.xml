@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.PostMapper">
+
+	<resultMap type="Book" id="bookResultMap">
+		<id     column="BOOK_NO" 				property="no"/>
+		<result column="BOOK_TITLE" 			property="title"/>
+		<result column="BOOK_AUTHOR" 			property="author"/>
+		<result column="BOOK_PUBLISHER" 		property="publisher"/>
+		<result column="BOOK_DESCRIPTION" 		property="description"/>
+		<result column="BOOK_PUB_DATE" 			property="pubDate"/>
+		<result column="BOOK_REVIEW_COUNT" 		property="reviewCount"/>
+		<result column="REVIEW_AVG" 			property="reviewAvg"/>
+		<result column="BOOK_COVER_IMAGE_PATH"  property="coverImagePath"/>
+		<result column="BOOK_CREATED_DATE" 		property="createdDate"/>
+		<result column="BOOK_UPDATED_DATE" 		property="updatedDate"/>
+		<result column="BOOK_ISBN" 				property="isbn"/>
+	</resultMap>
+	
+	<resultMap type="Post" id="postResultMap">
+		<id 	column="POST_NO" 					property="no"/>
+		<result column="POST_TITLE" 				property="title"/>
+		<result column="POST_CONTENT" 				property="content"/>
+		<result column="POST_VIEW_CNT" 				property="viewCnt"/>
+		<result column="POST_CREATED_DATE"  		property="createdDate"/>
+		<result column="POST_UPDATED_DATE"  		property="updatedDate"/>
+		<result column="IS_DELETED" 				property="isDeleted"/>
+		<result column="IS_PUBLIC" 					property="isPublic"/>
+		<result column="USER_ID" 					property="user.id"/>
+		<result column="BOOK_NO" 					property="book.no"/>
+		<result column="LIB_NO" 					property="library.no"/>
+		<result column="POST_CATE_NO"				property="postCategory.no"/>
+		
+		<association javaType="Book" 				property="book">
+			<id 	column="BOOK_NO" 				property="no"/>
+			<result column="BOOK_TITLE" 			property="title"/>		
+			<result column="BOOK_AUTHOR" 			property="author"/>		
+			<result column="BOOK_PUBLISHER" 		property="publisher"/>		
+			<result column="BOOK_DESCRIPTION" 		property="description"/>		
+			<result column="BOOK_PUB_DATE" 			property="pubDate"/>		
+			<result column="BOOK_REVIEW_COUNT" 		property="reviewCount"/>
+			<result column="BOOK_REVIEW_AVG" 		property="reviewAvg"/>
+			<result column="BOOK_COVER_IMAGE_PATH"  property="coverImagePath"/>		
+			<result column="BOOK_CREATED_DATE" 		property="createdDate"/>		
+			<result column="BOOK_UPDATED_DATE" 		property="updatedDate"/>		
+			<result column="BOOK_ISBN" 		        property="isbn"/>		
+		</association>
+		
+		<association javaType="User" 				property="user">
+			<id 	column="USER_ID" 				property="id"/>
+			<result column="USER_PASSWORD" 			property="password"/>
+			<result column="USER_NAME" 				property="name"/>
+			<result column="USER_PHONE" 			property="phone"/>
+			<result column="USER_BIRTH" 			property="birth"/>
+			<result column="USER_CREATED_DATE" 		property="created_date"/>
+			<result column="USER_UPDATED_DATE" 		property="updated_date"/>
+			<result column="IS_DELETED" 			property="deleted"/>
+		</association>
+	</resultMap>
+	
+
+	
+	<!-- public List<Book> bookKeywordSearch(String keyword); 
+		=> 입력된 키워드가 해당되는 모든 도서들을 조회 -->
+	<select id="bookKeywordSearch" resultMap="bookResultMap">
+		select 
+			   b.BOOK_NO 
+		      ,b.BOOK_TITLE 
+		      ,b.BOOK_AUTHOR 
+		      ,b.BOOK_PUBLISHER 
+		      ,b.BOOK_DESCRIPTION 
+		      ,b.BOOK_PUB_DATE 
+		      ,b.BOOK_REVIEW_COUNT 
+		      ,b.BOOK_REVIEW_AVG 
+		      ,b.BOOK_COVER_IMAGE_PATH 
+		      ,b.BOOK_CREATED_DATE 
+		      ,b.BOOK_UPDATED_DATE 
+		      ,b.BOOK_ISBN 
+		from  BOOKHUB_BOOKS b , BOOKHUB_KEYWORDS k
+		where b.book_no = k.book_no
+	    and k.KEYWORD like '%' || #{keyword} || '%' 
+	 </select>
+	 
+	 <!-- public List<Book> userLoanBookSearch(String userId); 
+	 	=> 사용자가 대여한 도서들을 조회 - 사용자 아이디 필요. --> 
+	 <select id="userLoanBookSearch" resultMap="bookResultMap">
+	 	select
+	 		 b.BOOK_NO
+	 		,b.BOOK_TITLE 
+	 		,b.BOOK_AUTHOR 
+	 		,b.BOOK_PUBLISHER
+	 		,b.BOOK_DESCRIPTION 
+	 		,b.BOOK_PUB_DATE
+	 		,b.BOOK_REVIEW_COUNT
+	 		,b.BOOK_REVIEW_AVG
+	 		,b.BOOK_COVER_IMAGE_PATH
+	 		,b.BOOK_CREATED_DATE
+	 		,b.BOOK_UPDATED_DATE
+	 		,b.BOOK_ISBN
+	 	from
+	 		BOOKHUB_BOOKS b , BOOKHUB_LOAN_HISTORIES l, BOOKHUB_USERS u
+	 	where 
+	 		b.BOOK_NO = l.BOOK_NO and 
+	 		u.USER_ID = l.USER_ID and 
+	 		u.USER_ID = #{userId}
+	 </select>
+	 
+	 <!-- public List<PostCategory> selectPostCategoryInfo(); 
+	      => 문의 유형에 대한 고유 번호와 이름을 조회. --> 
+	 <select id="selectPostCategoryInfo" resultType="PostCategory">
+	 	SELECT
+	 		 POST_CATE_NO 		AS no 
+	 		,POST_CATE_NAME 	AS name
+	 	FROM 
+	 		BOOKHUB_POST_CATEGORIES
+	 </select>
+	 
+	<!-- public List<Post> getPosts(Map<String, Object> searchParam);
+	   => 모든 게시글들을 조회한다. --> 
+	 <select id="getPosts" parameterType="map" resultMap="postResultMap">
+		select 
+		     p.POST_NO 
+		    ,p.POST_TITLE 
+		    ,b.BOOK_TITLE 
+		    ,u.USER_NAME 
+		    ,p.POST_CREATED_DATE 
+		    ,p.POST_VIEW_CNT 
+		    ,p.IS_PUBLIC 
+		    ,u.USER_ID a
+		    ,p.POST_UPDATED_DATE 	
+		from 
+		    BOOKHUB_POSTS p, BOOKHUB_BOOKS b, BOOKHUB_USERS u
+		where 
+		    p.USER_ID = u.USER_ID 
+		    and b.BOOK_NO = p.BOOK_NO
+		    and p.IS_DELETED = 'N'
+		    and p.POST_CATE_NO = #{postCateNo}
+		<if test="'title' == searchType">
+			and p.POST_TITLE LIKE '%'|| #{searchKeyword} ||'%'
+		</if>
+		<if test="'user' == searchType">
+			and u.USER_NAME LIKE '%' || #{searchKeyword} ||'%'
+		</if>	
+		<choose>
+			<when test="sort == 'newest' ">
+				ORDER BY P.POST_CREATED_DATE DESC
+			</when> 
+			<when test="sort == 'views' ">
+				ORDER BY P.POST_VIEW_CNT DESC
+			</when>
+		</choose>
+		offset #{offset} rows
+		fetch next #{rows} rows only
+	 </select> 
+	 
+	 <!-- public int getTotalRows(Map<String, Object> searchParam); 
+	     => 게시글의 전체 데이터 개수를 조회할 수 있다.--> 
+	 <select id="getTotalRows" parameterType="map"> 
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOOKHUB_POSTS 
+		WHERE 
+			POST_CATE_NO = #{postCateNo}
+			AND IS_DELETED = 'N'
+	 </select>
+	 
+	 <!-- public Post selectPostBypostNo(int postNo); 
+	 	=> 게시글 번호를 전달받아, 해당 번호를 가진 게시글 하나의 모든 정보를 가져온다.
+	 	=> 도서 표지, 제목, 저자, 출판사, 출판일 
+	 	=> 사용자 이름과 사용자 아이디도 전부 가져온다. -->
+	 <select id="selectPostBypostNo" resultMap="postResultMap"> 
+		select
+			 p.POST_NO 
+	 		,p.POST_TITLE  
+	 		,p.POST_CONTENT  
+	 		,p.POST_VIEW_CNT  
+	 		,p.POST_CREATED_DATE  
+	 		,p.POST_UPDATED_DATE  
+	 		,p.IS_DELETED  
+	 		,p.IS_PUBLIC  
+	 		,p.USER_ID  
+	 		,p.BOOK_NO  
+	 		,p.POST_CATE_NO 
+	 		,b.BOOK_TITLE  
+	 		,b.BOOK_AUTHOR  
+	 		,b.BOOK_PUBLISHER  
+	 		,b.BOOK_PUB_DATE  
+	 		,b.BOOK_COVER_IMAGE_PATH 
+	 		,u.USER_NAME 
+		from        
+		    BOOKHUB_POSTS p, BOOKHUB_BOOKS b, BOOKHUB_USERS u 
+		where 
+		    p.BOOK_NO = b.BOOK_NO AND
+		    p.USER_ID = u.USER_ID AND
+		    p.POST_NO = #{postNo}
+	 </select>
+	 
+	 
+	 
+	 <!-- public void insertBookPost(Post post);  --> 
+	  <insert id="insertBookPost" parameterType="Post">
+	 	INSERT INTO BOOKHUB_POSTS 
+		 	( POST_NO
+		 	 ,POST_TITLE 
+		 	 ,POST_CONTENT 
+		 	 ,USER_ID
+		 	 ,BOOK_NO
+		 	 ,POST_CATE_NO
+		 	 ,IS_PUBLIC)
+	 	VALUES
+	 		( BOOKHUB_POSTS_POST_NO_SEQ.nextval, 
+		 	 ,#{title} 
+		 	 ,#{content} 
+		 	 ,#{user.id} 
+		 	 ,#{book.no} 
+		 	 ,#{postCategory.no}
+		 	 ,#{isPublic} )
+	 </insert>  
+	 
+	 <!-- public void updatePost(Post post); 
+	 	=> 게시글의 정보를 가져와서, 게시글의 정보를 수정한다.  -->
+	 <update id="updatePost" parameterType="Post"> 
+	 	UPDATE BOOKHUB_POSTS
+	 	set
+	 		 POST_TITLE = #{title} 
+	 		,POST_CONTENT = #{content} 
+	 		,POST_VIEW_CNT = #{viewCnt} 
+	 		,POST_CREATED_DATE = #{createdDate} 
+	 		,POST_UPDATED_DATE = SYSDATE 
+	 		,IS_DELETED = #{isDeleted} 
+	 		,IS_PUBLIC = #{isPublic} 
+	 		,USER_ID = #{user.id} 
+	 		,BOOK_NO = #{book.no} 
+	 		,LIB_NO = #{library.no} 
+	 		,POST_CATE_NO = #{postCategory.no}
+	 	WHERE 
+	 		POST_NO = #{no}
+	 </update> 
+	 
+	 <!-- public void insertPostReply(PostReply postReply); --> 
+	 <insert id="insertPostReply" parameterType="PostReply">
+		INSERT INTO BOOKHUB_POST_REPLIES
+			(REPLY_NO 
+			 ,REPLY_CONTENT 
+			 ,USER_ID 
+			 ,POST_NO) 
+		VALUES 
+			( BOOKHUB_POST_REPLIES_REPLY_NO_SEQ.NEXTVAL
+			 ,#{content} 
+			 ,#{user.id} 
+			 ,#{post.no})
+	 </insert>
+	 
+	 <!--public List<PostReply> getPostReplies(Map<String, Object> condition);  -->
+	 <select id="getPostReplies" parameterType="map" resultType="PostReply"> 
+            SELECT
+                 RP1.REPLY_NO							AS no
+                ,RP1.PARENT_NO 							AS "postReply.no" 
+                ,RP1.REPLY_CONTENT 						AS content 
+                ,RP1.REPLY_CREATED_DATE 					AS createdDate 
+                ,RP1.REPLY_UPDATED_DATE 					AS updatedDate 
+                ,RP1.USER_ID 							AS "user.id" 
+                ,RP1.POST_NO 							AS "post.no" 
+                
+                ,RP2.REPLY_NO 							AS "postReply.no" 
+                ,RP2.REPLY_CONTENT 						AS "postReply.content"
+                ,RP2.REPLY_CREATED_DATE 					AS "postReply.createdDate"
+                ,RP2.REPLY_UPDATED_DATE 					AS "postReply.updatedDate"
+                ,RP2.USER_ID 							AS "postReply.user.id"
+                ,RP2.POST_NO 							AS "postReply.post.no"
+                
+                ,U.USER_NAME 							AS "user.name"
+            FROM 
+                 BOOKHUB_POST_REPLIES RP1 
+                ,BOOKHUB_POST_REPLIES RP2 
+                ,BOOKHUB_USERS U 
+                ,BOOKHUB_POSTS P 
+            WHERE 
+                RP1.REPLY_NO = RP2.PARENT_NO(+) AND 
+                RP1.USER_ID = U.USER_ID AND
+                RP1.POST_NO = P.POST_NO AND
+                RP1.IS_DELETED = 'N' AND 
+                RP1.POST_NO = #{postNo} AND 
+                RP2.POST_NO(+) = #{postNo}
+	 </select>
+	 
+</mapper>

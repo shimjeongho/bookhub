@@ -191,9 +191,15 @@ if (totalRows > 0) {
 %>
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center" id="pagenation-search">
+<%
+	if (!pagination.isFirst()) {
+%>
                         <li class="page-item <%=pagination.isFirst() ? "disabled" : "" %>">
                             <a class="page-link" href="search.jsp?page=<%=prevPage %>" data-page-no="<%=prevPage %>">이전</a>
                         </li>
+<%
+	}
+%>
 <%
 	for (int num = beginPage; num <= endPage; num++) {
 %>
@@ -202,6 +208,8 @@ if (totalRows > 0) {
                         </li>
 <%
 	}
+
+		if (!pagination.isLast()) {
 %>
                         <li class="page-item <%=pagination.isLast() ? "disabled" : "" %>">
                             <a class="page-link" href="search.jsp?page=<%=nextPage %>" data-page-no="<%=nextPage %>">다음</a>
@@ -209,7 +217,8 @@ if (totalRows > 0) {
                     </ul>
                 </nav>
 <%
-}
+		}
+	}
 %>
             </div>
         </div>

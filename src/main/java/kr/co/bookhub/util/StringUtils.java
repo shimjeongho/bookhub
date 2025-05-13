@@ -1,14 +1,17 @@
 package kr.co.bookhub.util;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StringUtils {
 
 	private static DecimalFormat decimalFormat = new DecimalFormat("##,###");
+	private static DecimalFormat decimalFormat2 = new DecimalFormat("#,###.#");
 	private static SimpleDateFormat detailDateFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 m분 s초");
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	
 	/**
 	 * 값을 전달받아서, 해당 값이 null이면 defaultValue를 반환한다.
@@ -32,6 +35,21 @@ public class StringUtils {
 		return nullToStr(value, "");
 	}
 	
+	
+	/**
+	 * 날짜 형식의 문자열을 Date로 변환한다.
+	 * @param str 날짜형식의 문자열
+	 * @return Date
+	 * @throws ParseException
+	 */
+	public static Date strToDate(String str) throws ParseException {
+		if (str ==  null || str.isBlank()) {
+			return null;
+		}
+		
+		return simpleDateFormat.parse(str);
+	}
+	
 	/**
 	 * 날짜를 전달받아서 
 	 * "2024년 1월 1일 오전 9시 10분 20초" 형식의 문자열로 반환한다.
@@ -44,6 +62,7 @@ public class StringUtils {
 		}
 		return detailDateFormat.format(date);
 	}
+	
 	
 	
 	/**
@@ -143,5 +162,34 @@ public class StringUtils {
 		} else {
 			return "★★★★★";
 		}
+	}
+	
+	/**
+	 * 실수를 소수점 첫번째 값으로 반올림한다.
+	 * @param value 실수값
+	 * @return 소숫점 첫번째자리로 반올림된 실수값
+	 */
+	public static double round(double value) {
+		String str = decimalFormat2.format(value);
+		return Double.valueOf(str);
+	}
+		
+	/**
+	 * text와 text의 최대 글자 길이를 전달 받아서, 
+	 * text의 길이를 최대 글자 정도까지만 표시하고, 그 이상이되는 글자들은 "..."으로 표시한다. 
+	 * @param text
+	 * @param maxLength
+	 * @return
+	 */
+	public static String truncate (String text, int maxLength) {
+		
+		if(text == null) {
+			return null;
+		}
+		if(text.length() > maxLength) {
+			return text.substring(0,maxLength) + "...";
+		}
+		
+		return text;
 	}
 }

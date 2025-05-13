@@ -1,7 +1,9 @@
 <%@page import="kr.co.bookhub.vo.Category"%>
+<%@page import="kr.co.bookhub.vo.PostCategory"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
 <%@page import="kr.co.bookhub.mapper.CategoryBooksMapper"%>
+<%@page import="kr.co.bookhub.mapper.PostMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -11,6 +13,13 @@
 	
 	// 도서 상위 카테고리 가져오기
 	List<Category> categories = categoryMapper.getMainCategory();
+
+  PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
+	List<PostCategory> postCategories = postMapper1.selectPostCategoryInfo(); 
+  
+  //네비게이션바에 이름 표시
+  String loggedInUserId = (String)session.getAttribute("LOGINED_USER_ID");
+  String loggedInUserName = (String)session.getAttribute("LOGINED_USER_NAME");
 %>
 
 <!-- Navigation -->
@@ -33,17 +42,18 @@
                         게시판
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="boardDropdown">
-                        <li><a class="dropdown-item" href="../board.html?type=book">도서 문의</a></li>
-                        <li><a class="dropdown-item" href="../board.html?type=library">도서관 문의</a></li>
-                        <li><a class="dropdown-item" href="../board.html?type=system">기타/시스템 문의</a></li>
+<% for(PostCategory pCategory : postCategories) { %>                        
+                        <li><a class="dropdown-item" href="/bookhub/post/post-list-<%= pCategory.getNo() %>.jsp?postCateNo=<%= pCategory.getNo() %>"><%= pCategory.getName() %></a></li> 
+<% 	} %>                            
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../library.html">북허브소개</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../mypage.html">마이페이지</a>
+                    <a class="nav-link" href="mypage.jsp">마이페이지</a>
                 </li>
+                
 <%
 	if (!categories.isEmpty()) {
 %>
@@ -68,12 +78,32 @@
 %>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="../login.html">로그인</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../signup.html">회원가입</a>
-                </li>
+                <%
+                	if (loggedInUserId != null) {
+                %>
+                	<li class="nav-item">
+                		<span class="nav-link">
+                                <%= loggedInUserName %> 님   <!-- 사용자 이름 표시 -->
+                        </span>
+                	</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.jsp">마이페이지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.jsp">로그아웃</a>
+                    </li>
+                <%
+                	} else {
+                %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup.jsp">회원가입</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signin.jsp">로그인</a>
+                    </li>
+                <%
+                	}
+                %>
             </ul>
         </div>
     </div>

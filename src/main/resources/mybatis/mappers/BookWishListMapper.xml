@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.BookWishListMapper">
+
+
+	<!-- 
+		int isBookWish(Map<String, Object> condition);
+	 -->
+	 <select id="isBookWish" parameterType="map" resultType="int">
+	    SELECT 
+	    	COUNT(1) AS count 
+	    FROM 
+	    	BOOKHUB_WISHLIST
+	    WHERE BOOK_NO = #{bookNo} 
+	      AND USER_ID = #{userId}
+	</select>
+
+	 
+	<!-- 
+		void addWishList(Map<String, Object> condition);
+	 -->
+	 <insert id="addWishList" parameterType="map">
+	 	INSERT INTO BOOKHUB_WISHLIST
+	 	( BOOK_NO
+	 	, USER_ID)
+	 	VALUES
+	 	( #{bookNo}
+	 	, #{userId})
+	 </insert>
+	 
+	 <!-- 
+	 	void removeWishList(Map<String, Object> condition);
+	  -->
+	  <delete id="removeWishList" parameterType="map">
+	  	DELETE FROM 
+	  			BOOKHUB_WISHLIST
+	  		WHERE
+	  			BOOK_NO = #{bookNo}
+	  		AND USER_ID = #{userId}
+	  </delete>
+</mapper>

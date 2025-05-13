@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.BookMapper">
+
+	<!-- 
+		Book getBookByNo(int no);
+	 -->
+	 <select id="getBookByNo" resultType="Book">
+	 	select
+	 		B.book_no					as no
+	 	  , B.book_title				as title
+	 	  , B.book_author				as author
+	 	  , B.book_publisher			as publisher
+	 	  , B.book_description			as description
+	 	  , B.book_pub_date				as pubDate
+	 	  , B.book_review_count			as reviewCount   
+	 	  , B.review_avg				as reviewAvg
+	 	  , B.book_cover_image_path		as coverImagePath
+	 	  , B.book_created_date			as createdDate
+	  	  , B.book_updated_date			as updatedDate
+	  	  , B.book_isbn					as isbn
+	  	  , C.category_no				as "category.no"
+	  	  , C.category_name				as "category.name"
+	  	from
+	  		bookhub_books B, bookhub_categories C
+	  	where
+	  		B.book_no = #{no}
+	  		and B.category_no = C.category_no
+	 </select>
+	 
+	 <!-- 
+	 	void updateBook(Book book);
+	  -->
+	  <update id="updateBook" parameterType="Book">
+	  	update
+	  		bookhub_books
+	  	set
+	  		book_review_count	= #{reviewCount}
+	  	  , review_avg = #{reviewAvg}
+	  	  , book_updated_date	= sysdate
+	  	where
+	  		book_no = #{no}
+	  </update>
+</mapper>
