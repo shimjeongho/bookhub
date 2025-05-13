@@ -33,7 +33,7 @@
 		if (secretPassword.equals(savedUser.getPassword())) {
 			responseData.put("success", true);
             responseData.put("message", "로그인에 성공했습니다!");
-            responseData.put("redirectUrl", "home.jsp");
+            responseData.put("redirectUrl", "/bookhub/index.jsp");
             
             session.setAttribute("LOGINED_USER_ID", savedUser.getId());
             session.setAttribute("LOGINED_USER_NAME", savedUser.getName());

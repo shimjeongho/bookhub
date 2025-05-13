@@ -4,26 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="kr.co.bookhub.mapper.StockMapper">
+	
 	<!--  
 		void updateStock(String bno, String lno);
 	-->
 	<update id="updateStock" parameterType="String">
-		update bookhub_stocks
-		set
-			book_stock = book_stock-1
-		where
-			book_no = #{bno}
-			AND lib_no = #{lno}
+		UPDATE BOOKHUB_STOCKS
+		SET
+			BOOK_STOCK = BOOK_STOCK - 1
+		WHERE
+			BOOK_NO = #{bno}
+			AND LIB_NO = #{lno}
 	</update>
 	
 	<!--  
 		int getBookStockCount(String bno, String lno); 
 	-->
 	<select id="getBookStockCount" parameterType="String">
-		select sum(book_stock)
-		from bookhub_stocks
-		where book_no = #{bno}
-		and lib_no = #{lno}
+		SELECT SUM(BOOK_STOCK)
+		FROM BOOKHUB_STOCKS
+		WHERE BOOK_NO = #{bno}
+		AND LIB_NO = #{lno}
 	</select>
 	
 	<!-- 

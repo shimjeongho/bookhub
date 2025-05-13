@@ -50,9 +50,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="../library.html">북허브소개</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="mypage.jsp">마이페이지</a>
-                </li>
                 
 <%
 	if (!categories.isEmpty()) {
@@ -82,24 +79,22 @@
                 	if (loggedInUserId != null) {
                 %>
                 	<li class="nav-item">
-                		<span class="nav-link">
-                                <%= loggedInUserName %> 님   <!-- 사용자 이름 표시 -->
-                        </span>
+                		<a class="nav-link" href="/bookhub/user/mypage.jsp">
+                                <%= loggedInUserName %> 님  
+                        </a>
                 	</li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="mypage.jsp">마이페이지</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.jsp">로그아웃</a>
+                        <a class="nav-link" href="/bookhub/user/logout.jsp">로그아웃</a>
                     </li>
                 <%
                 	} else {
                 %>
                     <li class="nav-item">
-                        <a class="nav-link" href="signup.jsp">회원가입</a>
+                        <a class="nav-link" href="/bookhub/user/signup.jsp">회원가입</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="signin.jsp">로그인</a>
+                        <a class="nav-link" href="/bookhub/user/signin.jsp">로그인</a>
                     </li>
                 <%
                 	}

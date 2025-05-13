@@ -9,17 +9,17 @@
 		void insertAddress(Address address);
 	-->
 	<insert id="insertAddress" parameterType="Address">
-		insert into bookhub_address
-		(addr_no
-		, addr_zipcode
-		, addr_basic
-		, addr_detail
-		, addr_gibon
-		, addr_created_date
-		, addr_name
-		, user_id)
-		values
-		(bookhub_address_addr_no_seq.nextval
+		INSERT INTO BOOKHUB_ADDRESS
+		(ADDR_NO
+		, ADDR_ZIPCODE
+		, ADDR_BASIC
+		, ADDR_DETAIL
+		, ADDR_GIBON
+		, ADDR_CREATED_DATE
+		, ADDR_NAME
+		, USER_ID)
+		VALUES
+		(BOOKHUB_ADDRESS_ADDR_NO_SEQ.NEXTVAL
 		, #{zipcode}
 		, #{basic}
 		, #{detail}
@@ -33,128 +33,129 @@
 		List<Address> getAllAddressByUserId(String id);
 	-->
 	<select id="getAllAddressByUserId" resultType="Address">
-		select
-			a.addr_no			as no
-			, a.addr_name			as name
-			, u.user_id			as "user.id"
-			, u.user_phone		as "user.phone"
-			, u.user_name		as "user.name"
-			, a.addr_basic		as basic
-			, a.addr_detail		as detail
-			, a.addr_gibon		as gibon
-			, a.addr_zipcode	as zipcode
-		from bookhub_address a, bookhub_users u
-		where u.user_id = #{id}
-		ORDER BY CASE WHEN a.addr_gibon = 'Y' THEN 0 ELSE 1 END, a.addr_no
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		ORDER BY CASE WHEN A.ADDR_GIBON = 'Y' THEN 0 ELSE 1 END, A.ADDR_NO
 	</select>
 	
 	<!--  
 		Address getAddressByUserIdAndNo(String id, String no);
 	-->
 	<select id="getAddressByUserIdAndNo" resultType="Address">
-		select
-			a.addr_no			as no
-			, a.addr_name		as name
-			, u.user_id			as "user.id"
-			, u.user_phone		as "user.phone"
-			, u.user_name		as "user.name"
-			, a.addr_basic		as basic
-			, a.addr_detail		as detail
-			, a.addr_gibon		as gibon
-			, a.addr_zipcode	as zipcode
-		from bookhub_address a, bookhub_users u
-		where u.user_id = #{id}
-		And a.addr_no = #{no}
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_NO = #{no}
 	</select>
 	
 	<!--  
 		Address getGibonAddressByIdAndNo(String id, int no);
 	-->
 	<select id="getGibonAddressByIdAndNo" resultType="Address">
-		select
-			a.addr_no			as no
-			, a.addr_name		as name
-			, u.user_id			as "user.id"
-			, u.user_phone		as "user.phone"
-			, u.user_name		as "user.name"
-			, a.addr_basic		as basic
-			, a.addr_detail		as detail
-			, a.addr_gibon		as gibon
-			, a.addr_zipcode	as zipcode
-		from bookhub_address a, bookhub_users u
-		where u.user_id = #{id}
-		AND a.addr_gibon = 'Y'
-		AND a.addr_no != #{no}
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_GIBON = 'Y'
+		AND A.ADDR_NO != #{no}
 	</select>
 	
 	<!--  
 		Address getAddressOrderByNoById();
 	-->
 	<select id="getAddressOrderByNoById" resultType="Address">
-		select
-			a.addr_no			as no
-			, a.addr_name		as name
-			, u.user_id			as "user.id"
-			, u.user_phone		as "user.phone"
-			, u.user_name		as "user.name"
-			, a.addr_basic		as basic
-			, a.addr_detail		as detail
-			, a.addr_gibon		as gibon
-			, a.addr_zipcode	as zipcode
-		from bookhub_address a, bookhub_users u
-		where u.user_id = #{id}
-		order by a.addr_no asc
-		fetch first 1 row only
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		ORDER BY A.ADDR_NO ASC
+		FETCH FIRST 1 ROW ONLY
 	</select>
 	
 	<!--  
 		Address getGibonAddressByUserId(String id);
 	-->
 	<select id="getGibonAddressByUserId" resultType="Address">
-		select
-			a.addr_no			as no
-			, a.addr_name		as name
-			, u.user_id			as "user.id"
-			, u.user_phone		as "user.phone"
-			, u.user_name		as "user.name"
-			, a.addr_basic		as basic
-			, a.addr_detail		as detail
-			, a.addr_gibon		as gibon
-			, a.addr_zipcode	as zipcode
-		from bookhub_address a, bookhub_users u
-		where u.user_id = #{id}
-		AND a.addr_gibon = 'Y'
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_GIBON = 'Y'
 	</select>
 	
 	<!--  
 		void updateGibonAddress(Address address);
 	-->
 	<update id="updateGibonAddress" parameterType="address">
-		update bookhub_address
-		set
-			addr_gibon = 'N'
-		where addr_zipcode = #{zipcode}
+		UPDATE BOOKHUB_ADDRESS
+		SET
+			ADDR_GIBON = 'N'
+		WHERE ADDR_ZIPCODE = #{zipcode}
 	</update>
 	
 	<!--  
 		void updateAddressByAddress(Address address);
 	-->
 	<update id="updateAddressByAddress">
-		update bookhub_address
-		set
-			addr_zipcode = #{zipcode}
-			, addr_basic = #{basic}
-			, addr_detail = #{detail}
-			, addr_gibon = #{gibon}
-			, addr_name = #{name}
-		where addr_no = #{no}
+		UPDATE BOOKHUB_ADDRESS
+		SET
+			ADDR_ZIPCODE = #{zipcode}
+			, ADDR_BASIC = #{basic}
+			, ADDR_DETAIL = #{detail}
+			, ADDR_GIBON = #{gibon}
+			, ADDR_NAME = #{name}
+		WHERE ADDR_NO = #{no}
 	</update>
 	
 	<!--  
 		void deleteAddressByNo(String no);
 	-->
 	<delete id="deleteAddressByNo" parameterType="String">
-		delete from bookhub_address
-		where addr_no = #{no}
+		DELETE FROM BOOKHUB_ADDRESS
+		WHERE ADDR_NO = #{no}
 	</delete>
+	
 </mapper>

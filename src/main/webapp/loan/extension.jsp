@@ -29,15 +29,11 @@
 	String lno = request.getParameter("lno");
 	
 	LoanBookMapper loanbookmapper = MybatisUtils.getMapper(LoanBookMapper.class);
-/* 	LoanHistory loanhistory = new LoanHistory();
-	loanhistory = loanbookmapper.getLoanHistoryByLoanNo(lno); */
-	
 	
 	// 대여번호를 통해 도서의 반납일을 연장하고, 연장여부를 'Y'로 업데이트 한다.
 	loanbookmapper.updateIsExtensionAndDueDateByLoanNo(lno);
-	
-	response.sendRedirect("mypage.jsp?tab=rental#loan-"+lno);
-	
-	
-	
 %>
+	<script>
+		alert("연장이 완료되었습니다.")
+		location.href = "/bookhub/loan/mypage.jsp?tab=rental#loan-"+ "<%=lno %>";
+	</script>

@@ -27,46 +27,37 @@
 	String tab = StringUtils.nullToBlank(request.getParameter("tab"));
 	
 	String id = "hong@gmail.com";
+	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
-	
-	List<LoanHistory> returnBooks = loanBookMapper.getReturnBookByUserId(id);
-	
     loanBookMapper.updateDelayBooksStatus(id);
-	List<LoanHistory> delayBooks = loanBookMapper.getDelayBookByUserId(id);
 	
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	List<Address> userAddresses = addressMapper.getAllAddressByUserId(id);
 	
-	   
-
 	int loanPageNo = StringUtils.strToInt(request.getParameter("page"), 1);
 	int returnPageNo = StringUtils.strToInt(request.getParameter("page"), 1);
 	
 	// 대여,연체된 책
 	Map<String, Object> loancondition = new HashMap<>();
-	
     int loanTotalRows = loanBookMapper.getLoanTotalRows(id);
-
+    
 	Pagination loanPagination = new Pagination(loanPageNo, loanTotalRows, 5);	
-	
 	loancondition.put("id", id);
     loancondition.put("offset", loanPagination.getOffset());
 	loancondition.put("rows", 5);
+	
 	List<LoanHistory> sortedloanbooks = loanBookMapper.getSortedLoanBooksByUserId(loancondition);
 	
 	// 반납한 책
 	Map<String,Object> returncondition = new HashMap<>();
-	
 	int returnTotalRows = loanBookMapper.getReturnTotalRows(id);
 	
 	Pagination returnPagination = new Pagination(returnPageNo, returnTotalRows, 5);
-	
 	returncondition.put("id", id);
 	loancondition.put("offset", returnPagination.getOffset());
 	loancondition.put("rows", 5);
 	
 	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
-	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -233,12 +224,12 @@
                 <div class="book-item" id="loan-<%=sortedloanbook.getNo()%>">
                     <div class="row align-items-center">
                         <div class="col-md-1">
-                        	<a href="detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>">
+                        	<a href="/bookhub/book/detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>">
                             	<img src="<%=sortedloanbook.getBook().getCoverImagePath()%>"  alt="책 표지" class="book-cover" style="width: 80px; height: 120px; object-fit: cover;">
                             </a>
                         </div>
                         <div class="col-md-5">
-                        	<a href="detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>" 
+                        	<a href="/bookhub/book/detail.jsp?bno=<%=sortedloanbook.getBook().getNo() %>" 
                         		style="color:black">
 	                            <h5><%=sortedloanbook.getBook().getTitle() %></h5>
 	                            <p class="text-muted mb-0">저자:<%=sortedloanbook.getBook().getAuthor() %> | 출판사: <%=sortedloanbook.getBook().getPublisher() %></p>
@@ -268,9 +259,8 @@
                             <span class="badge bg-success status-badge">연장완료</span>
                         </div>
                         <div class="col-md-2">
-                        	<a href="return.jsp?lno=<%=sortedloanbook.getNo() %>">
-                        		<button class="btn btn-sm btn-outline-primary">반납하기</button>
-                        	</a>
+                        		<button class="btn btn-sm btn-outline-primary"
+                        			onclick="confirmReturn('<%=sortedloanbook.getNo() %>')">반납하기</button>
                         </div>
 <%
 		} else if(sortedloanbook.getIsExtension().equals("N")) {
@@ -279,12 +269,10 @@
                             <span class="badge bg-primary status-badge">대여중</span><br/>
                         </div>
                         <div class="col-md-2">
-                        	<a href="return.jsp?lno=<%=sortedloanbook.getNo() %>">
-                        		<button class="btn btn-sm btn-outline-primary mb-2">반납하기</button>
-                        	</a>
-                            <a href="extension.jsp?lno=<%=sortedloanbook.getNo() %>">
-                            	<button class="btn btn-sm btn-outline-primary">연장하기</button>
-                            </a>
+                        		<button class="btn btn-sm btn-outline-primary mb-2"
+                        			onclick="confirmReturn('<%=sortedloanbook.getNo() %>')">반납하기</button>
+                            	<button class="btn btn-sm btn-outline-primary" 
+                            		onclick="confirmExtension('<%=sortedloanbook.getNo() %>')">연장하기</button>
                         </div>
 <%
 		}
@@ -376,12 +364,12 @@
                 <div class="book-item" id="return-<%=sortedreturnbook.getNo()%>">
                     <div class="row align-items-center">
                         <div class="col-md-1">
-                        	<a href="detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>">
+                        	<a href="/bookhub/book/detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>">
                             	<img src="<%=sortedreturnbook.getBook().getCoverImagePath() %>" alt="책 표지" class="book-cover">
                             </a>
                         </div>
                         <div class="col-md-5">
-                        	<a href="detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>"
+                        	<a href="/bookhub/book/detail.jsp?bno=<%=sortedreturnbook.getBook().getNo() %>"
                         		style="color:black">
                             	<h5><%=sortedreturnbook.getBook().getTitle() %></h5>
                             	<p class="text-muted mb-0">저자: <%=sortedreturnbook.getBook().getAuthor() %> | 출판사: <%=sortedreturnbook.getBook().getPublisher() %></p>
@@ -647,9 +635,8 @@
 <%
 		if ("N".equals(address.getGibon())) {
 %>                                     
-                                        <a href="deleteAddress.jsp?no=<%=address.getNo() %>">
-                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
-                                      	</a>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                        	onclick="confirmDelete('<%=address.getNo() %>')">삭제</button>
 <%
 	 	}
 %>
@@ -669,7 +656,7 @@
 
                 <!-- Address Add Form View -->
                 <div id="addressAddView" style="display: none;">
-                    <form action="insertAddress.jsp" method="post" id="addressAddForm">
+                    <form action="/bookhub/loan/insertAddress.jsp" method="post" id="addressAddForm">
                         <div class="mb-3">
                             <label for="zipcode-field" class="form-label">우편번호</label>
                             <div class="input-group">
@@ -712,7 +699,7 @@
 
                 <!-- Address Edit Form View -->
                 <div id="addressEditView" style="display: none;">
-                    <form action="updateAddress.jsp" method="post" id="addressEditForm">
+                    <form action="/bookhub/loan/updateAddress.jsp" method="post" id="addressEditForm">
                         <input type="hidden" id="address-edit-no" name="no">
                         <div class="mb-3">
                             <label for="address-edit-zipcode" class="form-label">우편번호</label>
@@ -873,6 +860,27 @@
 	        addressView.style.display = 'none';
 	        addressAddView.style.display = 'none';
 	        addressEditView.style.display = 'block';
+	    }
+	    
+	    function confirmDelete(no) {
+	    	var result = confirm("해당 주소를 삭제하시겠습니까?");
+	    	if (result) {
+	    		location.href = "/bookhub/loan/deleteAddress.jsp?no=" + no;
+	    	}
+	    }
+	    
+	    function confirmExtension(lno) {
+	    	var result = confirm("해당 도서를 연장하시겠습니까?");
+	    	if (result) {
+	    		location.href = "/bookhub/loan/extension.jsp?lno=" + lno;
+	    	}
+	    }
+	    
+	    function confirmReturn(lno) {
+	    	var result = confirm("해당 도서를 반납하시겠습니까?");
+	    	if (result) {
+	    		location.href = "/bookhub/loan/return.jsp?lno=" + lno;
+	    	}
 	    }
 	    
 	    function showAddressForm() {
