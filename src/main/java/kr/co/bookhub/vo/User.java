@@ -14,15 +14,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Alias("User")
-
 public class User {
 	private String id;
 	private String password;
 	private String name;
 	private String phone;
 	private Date birth;
-	private Date created_date;
-	private Date updated_date;
-	private String deleted;
-
+	private Date createdDate;
+	private Date updatedDate;
+	private String isDeleted;
 }

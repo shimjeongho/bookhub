@@ -56,7 +56,7 @@
 	
 	// 페이지네이션
 	int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
-	Pagination pagination = new Pagination(pageNo, totalRows, 20);
+	Pagination pagination = new Pagination(pageNo, totalRows);
 	condition.put("pageNo", pageNo);
 	condition.put("offset", pagination.getOffset());
 	condition.put("rows", pagination.getRows());
@@ -65,7 +65,7 @@
 	List<Category> subCategories = categoryBooksMapper.getSubCategory(cateNo);
 	
 	// 카테고리와 페이지에 해당하는 도서 목록 가져오기
-	List<Book> books = categoryBooksMapper.getBooksByCategory(condition);
+	List<Book> books = categoryBooksMapper.getBooksByCategoryAndKeywords(condition);
 	
 %>
 <!DOCTYPE html>
@@ -82,40 +82,39 @@
 	<link href="../resources/css/styles.css" rel="stylesheet">
 </head>
 <body>
-	<%@ include file="../common/nav.jsp" %>
+	<%@ include file="../common/nav.jsp" %>	
 	
 	<!-- Search Header -->
     <header class="search-header">
         <div class="container">
 			<p class="fs-3"><%=category.getName() %></p>
             
-            <form id="category-books-form" class="row justify-content-center"
+            <form id="category-books-form"
             	method="get">
             	<input type="hidden" name="cateNo" value="<%=cateNo %>" >
             	<input type="hidden" name="page" value="<%=pageNo %>" >
             	<input type="hidden" name="sort" value="<%=sort %>" >
             	
-                <div class="col-md-8">
-                	<div class="row mb-3">
-                    	<div class="col-md-4">
-                        	<select name="subCateNo" id="sub-category" class="form-select">
-                                <option value="">전체</option>
+                <div class="col-md-12 d-flex justify-content-between">
+                   	<div class="col-md-3">
+                       	<select name="subCateNo" id="sub-category" class="form-select"
+                       		style="height: 100%;">
+                        	<option value="">전체</option>
                                 
 <%
 	if (!subCategories.isEmpty()) {
 		for (Category cate : subCategories) {
 %>
-                                <option value="<%=cate.getNo() %>" <%=cate.getNo() == subCateNo ? "selected" : "" %>><%=cate.getName() %></option>
+                        	<option value="<%=cate.getNo() %>" <%=cate.getNo() == subCateNo ? "selected" : "" %>><%=cate.getName() %></option>
 <%
 		}
 	}
 %>
-                            </select>
-                        </div>
+                    	</select>
                     </div>
-                    
-                    <div class="row justify-content-center">
-						<div class="col-md-4">
+	                    
+                    <div class="col-md-9 row justify-content-end">
+						<div class="col-md-2">
 							<div class="input-group" style="height: 100%;">
 							    <select name="searchPart" class="form-select">
 								    <option value="title" <%="title".equals(searchPart) ? "selected" : "" %>>제목</option>
@@ -126,7 +125,7 @@
 		                	</div>
 						</div>
 		                  
-						<div class="col-md-8">
+						<div class="col-md-6">
 		                    <div class="input-group">
                         		<input type="search" name="searchStr" class="form-control form-control-lg" placeholder="검색어를 입력하세요" value="<%=searchStr %>">
 		                        <button id="search-btn" class="btn btn-primary" type="button">
@@ -150,7 +149,7 @@
 <%
 	if (!searchStr.isEmpty()) {
 %>
-						<%=searchStr %> 검색결과
+						"<%=searchStr %>" 검색결과
 <%
 	}
 %>
@@ -158,6 +157,13 @@
                     </p>
                     
                     <select class="form-select" id="sort-select" style="width: auto;">
+<%
+	if (!"".equals(searchStr)) {
+%>
+                        <option value="newest" <%="accuracy".equals(sort) ? "selected" : "" %>>정확도순</option>
+<%
+	}
+%>
                         <option value="newest" <%="newest".equals(sort) ? "selected" : "" %>>최신순</option>
 	                    <option value="title" <%="title".equals(sort) ? "selected" : "" %>>제목순</option>
 	                    <option value="rating" <%="rating".equals(sort) ? "selected" : "" %>>인기순</option>
@@ -193,50 +199,57 @@
 %>   
                 </div>
 
+<%
+	if (totalRows > 0) {
+%>
 				<!-- Pagination -->
                 <nav class="mt-4">
                 	<ul id="pagination" class="pagination justify-content-center">
 <%
-	if (!pagination.isFirst()) {
+		if (!pagination.isFirst()) {
 %>
 						<li class="page-item">
-                            <a href="category-books.jsp?page=<%=pagination.getPrevPage() %>" class="page-link"
+                            <a href="?page=<%=pagination.getPrevPage() %>" class="page-link"
                                data-page-no="<%=pagination.getPrevPage() %>">이전</a>
                         </li>
 <%
-	}
+		}
 
-	int currentPage = pagination.getCurrentPage();
-	int beginPage = pagination.getBeginPage();
-	int endPage = pagination.getEndPage();
-	for (int num = beginPage; num <= endPage; num++) {
-		if (num == currentPage) {
+		int currentPage = pagination.getCurrentPage();
+		int beginPage = pagination.getBeginPage();
+		int endPage = pagination.getEndPage();
+		for (int num = beginPage; num <= endPage; num++) {
+			if (num == currentPage) {
 %>   
 						<li class="page-item active">
 	                     	<span class="page-link"><%=num %></span>
 	                  	</li>
 <%
-		} else {
+			} else {
 %>
 						<li class="page-item">
-		                	<a href="category-books.jsp?page=<%=num %>" class="page-link" 
+		                	<a href="?page=<%=num %>" class="page-link" 
 		                        data-page-no="<%=num %>"><%=num %></a>
 						</li>
 <%         
+			}
 		}
-	}
 		
-	if (!pagination.isLast()) {
+		if (!pagination.isLast()) {
 %>
 						<li class="page-item <%=pagination.isLast() ? "disabled" : "" %>">
-                            <a href="category-books.jsp?page=<%=pagination.getNextPage() %>" class="page-link"
+                            <a href="?page=<%=pagination.getNextPage() %>" class="page-link"
                                data-page-no="<%=pagination.getNextPage() %>">다음</a>
                         </li>
 <%
-	}
+		}
 %>
                     </ul>
                 </nav>
+<%
+	}
+%>
+
             </div>
         </div>
     </main>
@@ -286,6 +299,7 @@
 				return false;
 			}
 			
+			$categoryBooksForm.find("input[name=sort]").val("accuracy"); // 검색 시 정확도순으로 정렬
 			$categoryBooksForm.find("input[name=page]").val(1);			// 페이지 초기화
 			$categoryBooksForm.trigger("submit");
 			
@@ -300,6 +314,7 @@
 					return false;
 					
 				} else {
+					$categoryBooksForm.find("input[name=sort]").val("accuracy"); // 검색 시 정확도순으로 정렬
 					$categoryBooksForm.find("input[name=page]").val(1);	// 페이지 초기화
 					$categoryBooksForm.trigger("submit");
 				}

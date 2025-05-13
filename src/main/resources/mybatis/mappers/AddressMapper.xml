@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.bookhub.mapper.AddressMapper">
+	
+	<!--  
+		void insertAddress(Address address);
+	-->
+	<insert id="insertAddress" parameterType="Address">
+		insert into bookhub_address
+		(addr_no
+		, addr_zipcode
+		, addr_basic
+		, addr_detail
+		, addr_gibon
+		, addr_created_date
+		, addr_name
+		, user_id)
+		values
+		(bookhub_address_addr_no_seq.nextval
+		, #{zipcode}
+		, #{basic}
+		, #{detail}
+		, #{gibon}
+		, SYSDATE
+		, #{name}
+		, #{user.id})
+	</insert>
+	
+	<!--  
+		List<Address> getAllAddressByUserId(String id);
+	-->
+	<select id="getAllAddressByUserId" resultType="Address">
+		select
+			a.addr_no			as no
+			, a.addr_name			as name
+			, u.user_id			as "user.id"
+			, u.user_phone		as "user.phone"
+			, u.user_name		as "user.name"
+			, a.addr_basic		as basic
+			, a.addr_detail		as detail
+			, a.addr_gibon		as gibon
+			, a.addr_zipcode	as zipcode
+		from bookhub_address a, bookhub_users u
+		where u.user_id = #{id}
+		ORDER BY CASE WHEN a.addr_gibon = 'Y' THEN 0 ELSE 1 END, a.addr_no
+	</select>
+	
+	<!--  
+		Address getAddressByUserIdAndNo(String id, String no);
+	-->
+	<select id="getAddressByUserIdAndNo" resultType="Address">
+		select
+			a.addr_no			as no
+			, a.addr_name		as name
+			, u.user_id			as "user.id"
+			, u.user_phone		as "user.phone"
+			, u.user_name		as "user.name"
+			, a.addr_basic		as basic
+			, a.addr_detail		as detail
+			, a.addr_gibon		as gibon
+			, a.addr_zipcode	as zipcode
+		from bookhub_address a, bookhub_users u
+		where u.user_id = #{id}
+		And a.addr_no = #{no}
+	</select>
+	
+	<!--  
+		Address getGibonAddressByIdAndNo(String id, int no);
+	-->
+	<select id="getGibonAddressByIdAndNo" resultType="Address">
+		select
+			a.addr_no			as no
+			, a.addr_name		as name
+			, u.user_id			as "user.id"
+			, u.user_phone		as "user.phone"
+			, u.user_name		as "user.name"
+			, a.addr_basic		as basic
+			, a.addr_detail		as detail
+			, a.addr_gibon		as gibon
+			, a.addr_zipcode	as zipcode
+		from bookhub_address a, bookhub_users u
+		where u.user_id = #{id}
+		AND a.addr_gibon = 'Y'
+		AND a.addr_no != #{no}
+	</select>
+	
+	<!--  
+		Address getAddressOrderByNoById();
+	-->
+	<select id="getAddressOrderByNoById" resultType="Address">
+		select
+			a.addr_no			as no
+			, a.addr_name		as name
+			, u.user_id			as "user.id"
+			, u.user_phone		as "user.phone"
+			, u.user_name		as "user.name"
+			, a.addr_basic		as basic
+			, a.addr_detail		as detail
+			, a.addr_gibon		as gibon
+			, a.addr_zipcode	as zipcode
+		from bookhub_address a, bookhub_users u
+		where u.user_id = #{id}
+		order by a.addr_no asc
+		fetch first 1 row only
+	</select>
+	
+	<!--  
+		Address getGibonAddressByUserId(String id);
+	-->
+	<select id="getGibonAddressByUserId" resultType="Address">
+		select
+			a.addr_no			as no
+			, a.addr_name		as name
+			, u.user_id			as "user.id"
+			, u.user_phone		as "user.phone"
+			, u.user_name		as "user.name"
+			, a.addr_basic		as basic
+			, a.addr_detail		as detail
+			, a.addr_gibon		as gibon
+			, a.addr_zipcode	as zipcode
+		from bookhub_address a, bookhub_users u
+		where u.user_id = #{id}
+		AND a.addr_gibon = 'Y'
+	</select>
+	
+	<!--  
+		void updateGibonAddress(Address address);
+	-->
+	<update id="updateGibonAddress" parameterType="address">
+		update bookhub_address
+		set
+			addr_gibon = 'N'
+		where addr_zipcode = #{zipcode}
+	</update>
+	
+	<!--  
+		void updateAddressByAddress(Address address);
+	-->
+	<update id="updateAddressByAddress">
+		update bookhub_address
+		set
+			addr_zipcode = #{zipcode}
+			, addr_basic = #{basic}
+			, addr_detail = #{detail}
+			, addr_gibon = #{gibon}
+			, addr_name = #{name}
+		where addr_no = #{no}
+	</update>
+	
+	<!--  
+		void deleteAddressByNo(String no);
+	-->
+	<delete id="deleteAddressByNo" parameterType="String">
+		delete from bookhub_address
+		where addr_no = #{no}
+	</delete>
+</mapper>
