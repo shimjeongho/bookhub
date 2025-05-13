@@ -23,7 +23,7 @@
         <div class="container">
             <h1 class="display-4 mb-4">북허브에 오신 것을 환영합니다</h1>
             <p class="lead mb-4">지식과 문화가 함께하는 공간</p>
-            <a href="#" class="btn btn-light btn-lg">자료검색</a>
+            <a href="/bookhub/search/search.jsp" class="btn btn-light btn-lg">자료검색</a>
         </div>
     </section>
 
