@@ -1,3 +1,4 @@
+<%@page import="kr.co.bookhub.mapper.StockMapper"%>
 <%@page import="kr.co.bookhub.vo.Stock"%>
 <%@page import="kr.co.bookhub.mapper.LibraryMapper"%>
 <%@page import="kr.co.bookhub.vo.Library"%>
@@ -40,11 +41,14 @@
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
 	LibraryMapper libraryMapper = MybatisUtils.getMapper(LibraryMapper.class);
+	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
 	
 	// 책 정보 조회
 	Book book = bookMapper.getBookByNo(bookNo);
 	// 도서 번호를 이용하여 도서관 책 재고 조회
 	List<Stock> stocks = libraryMapper.getLibraryStocksByBookNo(bookNo);
+	// 특정 도서 번호를 전달받아 모든 도서관 재고를 체크한다
+	int availableCount = stockMapper.getBookAvailability(bookNo);
 	
 	
 	// 총 리뷰 개수 조회
@@ -56,6 +60,8 @@
 	condition.put("rows", pagination.getRows());
 	// 필터링 조건에 맞는 리뷰목록 조회
 	List<BookReview> bookReviews = bookReviewMapper.getBookReviewsByBookNo(condition);
+	// 전체 리뷰 조회
+    List<BookReview> bookReviewsAllList = bookReviewMapper.getAllBookReviewsByBookNo(condition);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -73,40 +79,8 @@
      /bookhub/src/main/webapp/book/detail.jsp-->
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="home.html">우도도서관</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">자료검색</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">이용안내</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">게시판</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">도서관소개</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="signup.html">회원가입</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <%@ include file="../common/nav.jsp" %>	
+    
     <!-- Detail Content -->
     <div class="detail-container">
         <div class="row">
@@ -146,13 +120,21 @@
                             <span class="text-muted">(<%=book.getReviewAvg() %> / <%=book.getReviewCount() %>명)</span>
                         </p>
                     </div>
+<%
+	if (availableCount > 0) {
+%>                    
                     <div class="availability">
                         <span class="badge bg-success availability-badge">대출 가능</span>
                     </div>
+<%
+	} else {
+%>
                     <div class="availability">
    						 <span class="badge bg-danger availability-badge">대출 불가능</span>
 					</div>
-                    
+<%
+	}
+%>                    
                     <div class="action-buttons">
                         <div class="mb-3">
                             <select class="form-select" id="librarySelect" name="libNo">
@@ -188,7 +170,7 @@
     int[] stars = new int[5]; // 5점, 4점, 3점, 2점, 1점 순서
    
 
-    for (BookReview review : bookReviews) {
+    for (BookReview review : bookReviewsAllList) {
         int star = review.getStar();
         if (star >= 1 && star <= 5) {
             stars[5 - star]++;
@@ -410,14 +392,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="text-center">
-                <small class="text-muted">&copy; 2024 우도도서관. All rights reserved.</small>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="../common/footer.jsp" %>
 
    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
