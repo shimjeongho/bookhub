@@ -49,5 +49,5 @@
 	
 	addressMapper.updateAddressByAddress(address);
 	
-	response.sendRedirect("mypage.jsp?tab=address");
+	response.sendRedirect("/bookhub/loan/mypage.jsp?tab=address");
 %>

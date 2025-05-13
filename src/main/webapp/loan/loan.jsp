@@ -56,7 +56,7 @@
 %>
 	<script>
 		alert("대여가 완료되었습니다.");
-		location.href = "mypage.jsp?tab=rental";
+		location.href = "/bookhub/loan/mypage.jsp?tab=rental";
 	</script>
 <%	
 	}
