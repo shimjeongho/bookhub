@@ -15,7 +15,7 @@ public class Library {
 	private int no; 
 	private String name; 
 	private String location;
-	private String logitude; // 경도
+	private String longitude; // 경도
 	private String latitude; // 위도
 	private String tel; // 도서관 전화번호
 	private String imgPath; 

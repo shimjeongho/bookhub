@@ -155,7 +155,9 @@ public class StringUtils {
 	public static double round(double value) {
 		String str = decimalFormat2.format(value);
 		return Double.valueOf(str);
-
+	}
+	
+	/**
 	 * text와 text의 최대 글자 길이를 전달 받아서, 
 	 * text의 길이를 최대 글자 정도까지만 표시하고, 그 이상이되는 글자들은 "..."으로 표시한다. 
 	 * @param text
