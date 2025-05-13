@@ -35,7 +35,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="../search.html">자료검색</a>
+                    <a class="nav-link" href="/bookhub/search/search.jsp">자료검색</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" id="boardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,6 +76,11 @@
 <%
 	}
 %>
+
+	            <li class="nav-item">
+	                <a class="nav-link" href="/bookhub/donation/donation-board.jsp">도서기부</a>
+	            </li>
+            
             </ul>
             <ul class="navbar-nav">
                 <%
