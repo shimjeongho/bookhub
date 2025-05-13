@@ -1,7 +1,6 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.google.gson.Gson"%>
-<%-- <%@page import="java.net.PasswordAuthentication"%> --%><%-- 사용되지 않으므로 제거 --%>
 <%@page import="org.apache.commons.codec.digest.DigestUtils"%>
 <%@page import="kr.co.bookhub.vo.User"%>
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
@@ -52,7 +51,6 @@
         responseData.put("message", "이름을 입력해주세요.");
         responseData.put("errorField", "fullName"); // 클라이언트 필드 ID와 일치하도록 "fullName"으로 수정
         out.print(gson.toJson(responseData));
-        out.flush();
         return;
     }
 
@@ -62,7 +60,6 @@
         responseData.put("message", "휴대폰 번호를 입력해주세요.");
         responseData.put("errorField", "phone"); // 클라이언트 필드 ID와 일치
         out.print(gson.toJson(responseData));
-        out.flush();
         return;
     }
     if (!phone.matches(phoneRegex)) {
@@ -70,7 +67,6 @@
         responseData.put("message", "올바른 휴대폰 번호 형식이 아닙니다. (예: 010-1234-5678)");
         responseData.put("errorField", "phone"); // 클라이언트 필드 ID와 일치
         out.print(gson.toJson(responseData));
-        out.flush();
         return;
     }
 
@@ -82,7 +78,6 @@
             responseData.put("message", "현재 비밀번호를 입력해주세요.");
             responseData.put("errorField", "password"); // 클라이언트의 currentPassword 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
         // 비밀번호 형식 검사
@@ -91,9 +86,8 @@
              responseData.put("message", "현재 비밀번호 형식이 올바르지 않습니다. (영문,숫자,특수문자 포함 8자 이상)");
              responseData.put("errorField", "password"); // 클라이언트 필드 ID와 일치
              out.print(gson.toJson(responseData));
-             out.flush();
              return;
-        } // <--- **누락된 닫는 중괄호 추가**
+        }
 
         // 새 비밀번호 (필수, 형식 검사) - **올바른 블록으로 이동**
         if (newPassword == null || newPassword.trim().isEmpty()) {
@@ -101,7 +95,6 @@
             responseData.put("message", "새 비밀번호를 입력해주세요.");
             responseData.put("errorField", "newPassword"); // 클라이언트 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
         // 비밀번호 형식 검사
@@ -110,7 +103,6 @@
             responseData.put("message", "새 비밀번호 형식이 올바르지 않습니다. (영문,숫자,특수문자 포함 8자 이상)");
             responseData.put("errorField", "newPassword"); // 클라이언트 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
 
@@ -120,7 +112,6 @@
             responseData.put("message", "새 비밀번호 확인을 입력해주세요.");
             responseData.put("errorField", "confirmPassword"); // 클라이언트 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
         // 비밀번호 형식 검사 (새 비밀번호와 동일한 규칙 적용)
@@ -129,7 +120,6 @@
             responseData.put("message", "새 비밀번호 확인 형식이 올바르지 않습니다. (영문,숫자,특수문자 포함 8자 이상)");
             responseData.put("errorField", "confirmPassword"); // 클라이언트 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
 
@@ -139,7 +129,6 @@
             responseData.put("message", "새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
             responseData.put("errorField", "confirmPassword"); // 에러는 확인 필드에 표시
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
 
@@ -155,7 +144,6 @@
         responseData.put("success", false);
         responseData.put("message", "사용자 정보를 찾을 수 없습니다.");
         out.print(gson.toJson(responseData));
-        out.flush();
         return;
     }
 
@@ -167,7 +155,6 @@
             responseData.put("message", "현재 비밀번호가 일치하지 않습니다.");
             responseData.put("errorField", "password"); // 클라이언트의 currentPassword 필드 ID와 일치
             out.print(gson.toJson(responseData));
-            out.flush();
             return;
         }
         // 모든 비밀번호 변경 조건 통과, 새 비밀번호로 업데이트 (해시해서)
@@ -193,6 +180,5 @@
     responseData.put("message", successMessage);
 
     out.print(gson.toJson(responseData));
-    out.flush();
 
 %>

@@ -18,7 +18,7 @@
 	session.invalidate();
 	
 	// 2. index.jsp를 재요청하는 응답을 보낸다.
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("/bookhub/index.jsp");
 %>
 
 					

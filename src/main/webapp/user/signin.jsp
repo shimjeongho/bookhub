@@ -35,16 +35,6 @@
                 <div id="passwordError" class="form-text mt-1"></div>
             </div>
 
-            <div class="login-options">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="rememberMe" name="rememeberMe">
-                    <label class="form-check-label" for="rememberMe">
-                        로그인 상태 유지
-                    </label>
-                </div>
-                <a href="#" class="text-decoration-none">비밀번호 찾기</a>
-            </div>
-
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">로그인</button>
                 <a href="signup.jsp" class="btn btn-outline-secondary">회원가입</a>

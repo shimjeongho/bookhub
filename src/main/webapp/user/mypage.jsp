@@ -378,15 +378,15 @@
                     <i class="fas fa-exclamation-triangle me-2"></i> 회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.
                 </div>
                 
-                <form>
+                <form id="delete" action="delete_user.jsp" method="post">
                     <div class="mb-3">
                         <label for="deletePassword" class="form-label">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="deletePassword" required>
+                        <input type="password" class="form-control" id="deletePassword" name="deletePassword" required>
                     </div>
                     
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" name="confirmDelete" value="agree" required>
                             <label class="form-check-label" for="confirmDelete">
                                 회원 탈퇴에 동의합니다.
                             </label>
@@ -594,8 +594,9 @@
     	                    }
     	                }
     	            },
-    	            error: function(jqXHR, textStatus, errorThrown) {
+    	            error: function(jqXHR, textStatus, earrorThrown) {
     	                console.log('ajax요청 실패', textStatus, '오류:', errorThrown);
+						console.error("서버 응답 내용:", jqXHR.responseText); // 서버가 보낸 에러 메시지 확인
     	                $updateSuccessModalLabel.text('요청 처리 오류');
     	                $updateSuccessModalMessage.text('서버와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     	                updateSuccessModal.show();
@@ -604,6 +605,14 @@
     	        console.log('ajax요청을 보냈습니다.');
     			
     		});//이벤트발생
+    		const urlParams = new URLSearchParams(window.location.search);
+    	    const deleteStatus = urlParams.get('delete_status');
+    	    // 'tab' 파라미터도 확인하여, 정확히 'delete' 탭으로 리다이렉션 되었을 때만 alert
+    	    const currentTab = urlParams.get('tab');
+
+    	    if (deleteStatus === 'password_mismatch' && currentTab === 'delete') {
+    	        alert("비밀번호가 일치하지 않습니다.");
+    	    }
     	});//페이지 준비완료
     </script>
 </body>
