@@ -1,3 +1,6 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.mapper.BookReviewMapper"%>
 <%@page import="kr.co.bookhub.vo.User"%>
 <%@page import="kr.co.bookhub.vo.BookReview"%>
@@ -12,24 +15,29 @@
 	String userId = "tempuser";
 
 	//2. 요청 파라미터값을 조회한다.
-	int bookNo = StringUtils.strToInt(request.getParameter("bno"));
-	int reviewNo = StringUtils.strToInt(request.getParameter("rno"));
-	int likes = StringUtils.strToInt(request.getParameter("like"));
+	int reviewNo = StringUtils.strToInt(request.getParameter("reviewNo"));
+	String action = request.getParameter("action");
 	
-	// 3. BookReview객체를 생성해서 필요한 정보를 담는다.
-	BookReview bookReview = new BookReview();
-	bookReview.setLikes(likes);
-	
-	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
-	Book book = bookMapper.getBookByNo(bookNo);
-	
-	User user = new User();
-	user.setId(userId);
-	
-	bookReview.setBook(book);
-	bookReview.setWriter(user);
-	
-	// 4. BookReviewMapper 객체를 획득한다.
+	// 3. BookReviewMapper 객체를 획득한다.
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
+	
+	// 4. 좋아요 증가/감소 처리
+	if("increase".equals(action)) {
+		bookReviewMapper.increaseLike(reviewNo);	
+	} else if("decrease".equals(action)) {
+		bookReviewMapper.decreaseLike(reviewNo);
+	}
+	
+	int updatedLikes = bookReviewMapper.getLikesCount(reviewNo);
+	
+	// 응답 데이터 생성	
+	Map<String, Object> responseMap = new HashMap<>();
+	responseMap.put("updatedLikes", updatedLikes);
+	
+	Gson gson = new Gson();
+	String json = gson.toJson(responseMap); 
+ 
+	// 응답 데이터 전송
+	out.write(json);
 %> 
 					
