@@ -391,6 +391,8 @@
             </div>
         </div>
     </div>
+    
+    <%@ include file="../common/book-recommend.jsp" %>
 
     <%@ include file="../common/footer.jsp" %>
 
