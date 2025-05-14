@@ -157,9 +157,15 @@
 %>
                             </select>
                         </div>
+<%
+	if (userId != null) {
+%>                        
                         <a href="bookhub/loan/loan.jsp?<%=book.getNo() %>" class="btn btn-primary me-2 disabled" id="borrowButton" >
                             <i class="fas fa-book"></i> 대여하기
                         </a>
+<%
+	}
+%>                       
 <%
 	if (userId != null) {
 %>
@@ -269,7 +275,9 @@
 
                 </div>
             </div>
-
+<%
+	if (userId != null) {
+%>
             <!-- Write Review -->
             <div class="write-review mb-4">
                 <h4>리뷰 작성하기</h4>
@@ -296,6 +304,9 @@
                     <button type="submit" class="btn btn-primary">리뷰 등록</button>
                 </form>
             </div>
+<%
+	}
+%>
 <%
 	int reviewCount = book.getReviewCount();                      		
 %>
@@ -352,7 +363,20 @@
 					    		<i class="far fa-thumbs-up"></i> 
 					    		<span id="like-count-<%=review.getNo()%>"><%=review.getLikes() %></span>
 							</button>
-                            <a href="review-delete.jsp?bno=<%=book.getNo() %>&rno=<%=review.getNo() %>" class="btn btn-outline-danger btn-sm">삭제</a>
+							<%
+								if (review.getWriter().getId().equals(loggedInUserId)) {
+							%>
+                            	<a href="review-delete.jsp?bno=<%=book.getNo() %>&rno=<%=review.getNo() %>" 
+                            	class="btn btn-outline-danger btn-sm delete-btn"
+                            	data-writer-id="<%=review.getWriter().getId() %>"
+                            	data-logged-in-id="<%=userId%>">삭제</a>
+							<%		
+								} else {
+							%>
+								<button class="btn btn-secondary btn-sm" disabled>삭제</button>
+							<%
+								}
+							%>
                         </div>
                     </div>
                 </div>
@@ -380,7 +404,21 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
     
-    	$(".like-button").click(function() {
+	    $('.delete-btn').each(function() {
+	        const writerId = $(this).data("writer-id");
+	        const loggedInId = $(this).data("logged-in-id");
+	
+	        //  작성자와 로그인한 사용자가 다르면 비활성화 처리
+	        if (writerId !== loggedInId) {
+	            $(this)
+	                .removeClass("btn-outline-danger")
+	                .addClass("btn-secondary")
+	                .attr("disabled", true)
+	                .text("삭제");
+	        }
+	    });
+	    
+    	$("#review-list").on('click', '.like-button', function() {
     		const reviewNo = $(this).attr("data-review-no");
     		const isLiked = $(this).hasClass("liked");
     		
@@ -539,7 +577,7 @@
 					}
 					
 					for (let review of reviewArr) {
-						const content = `
+						let content = `
 							<div class="review-item border-bottom py-3">
 			                    <div class="d-flex justify-content-between align-items-center mb-2">
 			                        <div>
@@ -556,13 +594,21 @@
 			                    <div class="d-flex justify-content-between align-items-center">
 			                        <small class="text-muted">작성자: \${review.writer.name}</small>
 			                        <div>
-			                            <button class="btn btn-sm btn-outline-secondary me-2">
-			                                <i class="far fa-thumbs-up"></i> \${review.likes}
-			                            </button>
-			                            <button class="btn btn-sm btn-outline-secondary">
-			                                <i class="far fa-comment"></i> 답글
-			                            </button>
-			                            <a href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-danger btn-sm">삭제</a>
+				                        <button id="like-button-\${review.no}" 
+								        	class="btn btn-sm btn-outline-secondary me-2 like-button"
+								        	data-review-no="\${review.no}">
+								    		<i class="far fa-thumbs-up"></i> 
+								    		<span id="like-count-\${review.no}">\${review.likes}</span>
+										</button>`
+						;
+						
+						if (review.writer.id == '<%=userId%>') {							
+							content += `<a href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-danger btn-sm">삭제</a>`
+						} else {
+							content += `<button href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-secondary btn-sm" disabled>삭제</b>`
+						}
+						 
+						content += `
 			                        </div>
 			                    </div>
 			                </div>
