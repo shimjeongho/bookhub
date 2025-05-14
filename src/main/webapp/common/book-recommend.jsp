@@ -10,17 +10,17 @@
 	RecommendBooksMapper recommendBooksMapper = MybatisUtils.getMapper(RecommendBooksMapper.class);
 
 	// 로그인 유저 아이디
-	String userId = (String)session.getAttribute("LOGINED_USER_ID");
+	String recommendUserId = (String)session.getAttribute("LOGINED_USER_ID");
 	
 	// 로그인 유저 대여 목록 개수 가져오기(로그인 상태가 아닐 시 0)
 	int userLoanCnt = 0;
 	
-	if (userId != null) {
-		userLoanCnt = recommendBooksMapper.getTotalLoanHistoryRows(userId);
+	if (recommendUserId != null) {
+		userLoanCnt = recommendBooksMapper.getTotalLoanHistoryRows(recommendUserId);
 	}
 	
 	// 맞춤 도서 가져오기
-	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(userId, userLoanCnt);
+	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(recommendUserId, userLoanCnt);
 
 	if (!recommendBooks.isEmpty()) {
 %>
