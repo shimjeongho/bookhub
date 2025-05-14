@@ -35,8 +35,6 @@
 		}
 	}
 	
- 
-	
 	// address 객체를 생성해서 담는다.
 	Address address = new Address();
 	address.setZipcode(zipcode);

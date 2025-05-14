@@ -19,7 +19,7 @@
 		1. 넘어온 lno 값을 가져온다.
 		2. 해당 lno에 해당하는 도서의 loan_status 값을 변경한다.
 	*/
-	
+	 
 	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	String lno = request.getParameter("lno");
 	
