@@ -118,49 +118,13 @@
     <header class="search-header">
         <div class="container">
 <%
-	if (searchContent.length() <= 0) { 
+	if (searchContent.length() > 0) { 
 %>
         	<p class="fs-3"><%=searchContent %> 검색결과 <strong><%=totalRows %></strong>개</p>
 <%
 	}
 %>
         	<div class="row justify-content-center">
-	        	<%-- <div class="col-md-2">
-				  <div class="d-flex">
-				    <div class="form-check me-3">
-				      <input class="form-check-input" type="radio" name="ai" id="standard-search" value="N" <%="N".equals(ai) ? "checked" : "" %>>
-				      <label class="form-check-label" for="standard-search">일반</label>
-				    </div>
-				    <div class="form-check">
-				      <input class="form-check-input" type="radio" name="ai" id="ai-search" value="O" <%="O".equals(ai) ? "checked" : "" %>>
-				      <label class="form-check-label" for="ai-search">AI</label>
-				    </div>
-				  </div>
-				</div>
-			
-                <div class="col-md-2">
-                    <div class="input-group" style="height: 100%;">
-                    	<select class="form-select" name="category">
-							<option value="title" <%="title".equals(category) ? "selected" : "" %>>제목</option>
-							<option value="author" <%="author".equals(category) ? "selected" : "" %>>저자</option>
-							<option value="publisher" <%="publisher".equals(category) ? "selected" : "" %>>출판사</option>
-							<option value="isbn" <%="isbn".equals(category) ? "selected" : "" %>>ISBN</option>
-						</select>
-                    </div>
-	            </div>
-						
-                <div class="col-md-5">
-                    <div class="input-group">
-                        <input type="search" 
-                        	id="search-bar"
-                        	class="form-control" 
-                        	value="<%=searchContent %>"
-                        	placeholder="검색어를 입력하세요"
-                        	name="search"
-                        	maxlength="100">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fas fa-search"></i> 검색
-                        </button> --%>
                         <div class="col-md-8">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -220,7 +184,7 @@
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
 <%
-	if (searchContent.length() <= 0) { 
+	if (searchContent.length() > 0) { 
 %>
                     <p class="m-0">"<%=search %>" 검색결과 <strong><%=books.size() %></strong>건</p>
 <%
