@@ -371,7 +371,52 @@
 %>
             </div>
         </div>
-      </div>
+
+        <!-- Related Books -->
+        <div class="mt-5">
+            <h3>관련 도서</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 1">
+                        <div class="card-body">
+                            <h5 class="card-title">관련 도서 1</h5>
+                            <p class="card-text">저자명</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 2">
+                        <div class="card-body">
+                            <h5 class="card-title">관련 도서 2</h5>
+                            <p class="card-text">저자명</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 3">
+                        <div class="card-body">
+                            <h5 class="card-title">관련 도서 3</h5>
+                            <p class="card-text">저자명</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 4">
+                        <div class="card-body">
+                            <h5 class="card-title">관련 도서 4</h5>
+                            <p class="card-text">저자명</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <%@ include file="../common/book-recommend.jsp" %>
 
     <%@ include file="../common/footer.jsp" %>
 

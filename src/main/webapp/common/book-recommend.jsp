@@ -38,14 +38,14 @@
 		                <div class="swiper-container swiper1">
 		                    <ul class="swiper-wrapper">
 <%
-		for (Book book : recommendBooks) {
+		for (Book recommendBook : recommendBooks) {
 %>
 								<li class="swiper-slide">
-		                            <a href="/bookhub/book/detail.jsp?bno=<%=book.getNo() %>" class="d-flex flex-column align-items-center gap-2">
+		                            <a href="/bookhub/book/detail.jsp?bno=<%=recommendBook.getNo() %>" class="d-flex flex-column align-items-center gap-2">
 		                                <span class="recommend_book_thumb">
-		                                	<img src="<%=book.getCoverImagePath() %>" alt="이벤트 1" class="img-fluid rounded-1">
+		                                	<img src="<%=recommendBook.getCoverImagePath() %>" alt="이벤트 1" class="img-fluid rounded-1">
 		                                </span>
-		                                <span class="small text-muted book_title"><%=book.getTitle() %></span>
+		                                <span class="small text-muted book_title"><%=recommendBook.getTitle() %></span>
 		                                <span class="btn btn-sm btn-outline-primary">보러가기</span>
 		                            </a>
 		                        </li>

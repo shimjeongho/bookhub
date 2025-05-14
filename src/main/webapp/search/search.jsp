@@ -328,6 +328,8 @@ if (totalRows > 0) {
     </main>
     </form>
     
+    <%@ include file="../common/book-recommend.jsp" %>
+    
     <!-- Footer -->
     <%@ include file="../common/footer.jsp" %> 
 
