@@ -169,7 +169,7 @@
 					, B.BOOK_REVIEW_COUNT DESC 		<!-- 리뷰수 -->
 					, B.BOOK_REVIEW_AVG DESC		<!-- 리뷰 평점 -->
 					, B.BOOK_PUB_DATE DESC			<!-- 출판일 -->
-				FETCH FIRST 10 ROWS ONLY
+				FETCH FIRST 20 ROWS ONLY
 			</when> 
 			<!-- 로그인 상태가 아니거나 대여 이력이 없을 경우 -->
 			<otherwise>
@@ -232,7 +232,7 @@
                    			B.BOOK_NO NOT IN (SELECT BOOK_NO FROM review_based)
                     	ORDER BY 
 		                    B.BOOK_PUB_DATE DESC
-		                FETCH FIRST 10 ROWS ONLY
+		                FETCH FIRST 20 ROWS ONLY
 					)
 				SELECT *
 				FROM
@@ -241,7 +241,7 @@
 						UNION
 						SELECT * FROM pub_date_based
 					)
-				FETCH FIRST 10 ROWS ONLY
+				FETCH FIRST 20 ROWS ONLY
 			</otherwise>
 		</choose>
 	</select>
