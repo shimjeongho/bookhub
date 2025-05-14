@@ -1,3 +1,6 @@
+<%@page import="kr.co.bookhub.mapper.LoanBookMapper"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.bookhub.vo.LoanHistory"%>
 <%@page import="org.apache.commons.codec.digest.DigestUtils"%>
 <%@page import="kr.co.bookhub.vo.User"%>
 <%@page import="kr.co.bookhub.mapper.UserMapper"%>
@@ -12,6 +15,20 @@
 
     // 1. 로그인 상태 확인
     String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
+    
+    // 대여, 혹은 반납신청한 책이 있을 경우에는 회원탈퇴를 하지 못하도록 함
+    LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
+    List<LoanHistory> loanBooks = loanBookMapper.getAllBookByUserId(loginedUserId);
+    if (!loanBooks.isEmpty()) {
+%>
+	<script>
+		alert("대여, 혹은 반납처리 중인 책이 있습니다.");
+		location.href = "mypage.jsp?tab=rental";
+	</script>
+<%
+		return;
+    }
+    
     if (loginedUserId == null) {
         response.sendRedirect("signin.jsp?error=auth"); // 로그인 페이지로
         return;
@@ -71,7 +88,11 @@
 
     } else {
         // 비밀번호 불일치
-        response.sendRedirect(redirectURL + "&delete_status=password_mismatch");
-        return; // 리다이렉션 후에는 더 이상 코드 실행 필요 없음
+%>
+		<script>
+			alert("비밀번호가 일치하지 않습니다.");
+			location.href = "mypage.jsp?tab=fail";
+		</script>
+<%        
     }
 %>

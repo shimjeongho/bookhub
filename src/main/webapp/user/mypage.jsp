@@ -1,5 +1,6 @@
-<%@page import="kr.co.bookhub.vo.Book"%>
+<%@page import="kr.co.bookhub.mapper.StockMapper"%>
 <%@page import="kr.co.bookhub.mapper.BookMapper"%>
+<%@page import="kr.co.bookhub.vo.Book"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.util.Pagination"%>
@@ -39,9 +40,6 @@
         return;
     }
     
-    //위시리스트
-    BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
-	List<Book> books = bookMapper.getMyWishListBooks(userId);    
 	
 	String tab = StringUtils.nullToBlank(request.getParameter("tab"));
 	
@@ -76,6 +74,10 @@
 	loancondition.put("rows", 5);
 	
 	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
+	
+	// 책 정보 조회
+	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
+	List<Book> books = bookMapper.getMyWishListBooks(userId);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -133,7 +135,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
+                <button class="nav-link <%="fail".equals(tab) ? "active" : "" %>" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
                     <i class="fas fa-user-times me-1"></i> 회원탈퇴
                 </button>
             </li>
@@ -440,6 +442,10 @@
             <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
                 <h4 class="mb-4">찜 목록</h4>
                 
+<<<<<<< HEAD
+=======
+               
+>>>>>>> develop
 <%
 	for (Book book : books) {
 %>
@@ -646,7 +652,7 @@
             </div>
             
             <!-- Delete Account Tab -->
-            <div class="tab-pane fade" id="delete" role="tabpanel" aria-labelledby="delete-tab">
+            <div class="tab-pane fade <%="fail".equals(tab) ? "show active" : "" %>" id="delete" role="tabpanel" aria-labelledby="delete-tab">
                 <h4 class="mb-4">회원 탈퇴</h4>
                 
                 <div class="alert alert-danger">

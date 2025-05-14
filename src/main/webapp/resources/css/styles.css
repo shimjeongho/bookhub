@@ -1024,8 +1024,12 @@ body {
     width: 140px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 8px 0 0 8px;
+    border-radius: 0 0 0 8px;
     transition: all 0.3s ease;
+    
+    &.hidden {
+    	right: -140px;
+    }
 }
 
 .fly_menu_inner {
@@ -1063,6 +1067,31 @@ body {
 .fly_event_banner {
     overflow: hidden;
     position: relative;
+}
+
+#fly-menu-toggle {
+	width: 20px;
+	height: 45px;
+	background-color: #fff;
+	border-radius: 8px 0 0 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: 0;
+	left: -20px;
+	cursor: pointer;
+	
+	&::after {
+		content: "";
+		width: 5px;
+		height: 100%;
+		background-color: #fff;
+		position: absolute;
+		right: -5px;
+		top: 0;
+	}
 }
 
 .recommend_title {
