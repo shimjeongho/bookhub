@@ -7,17 +7,6 @@
 <%@page import="kr.co.bookhub.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%--  
-도서 문의 입력폼에서 등록 버튼을 누르면 넘어오는 페이지로서, 등록 처리를 담당하는 페이지. 
-- 서버로부터 받는 값 : 문의도서 번호(bookNo), 사용자 아이디(세션에서 받음.), 문의 유형 번호(postCateNo)
-   				  게시글 제목(title), 게시글 내용(content), 공개 및 비공개 여부(isPublic)
-   				  공개 및 비공개 여부는 N 또는 Y로 온다.
-1. 서버로 부터 받는 값들을 전부 추출한다. 
-2. post객체를 생성하여 이 값들을 전부 set 한다. 
-3. mapper 객체를 사용가능한 상태로 만든다.
-4. post 객체에 mapper의 insert 쿼리문에 할당한다. 
-5. 초기화면으로 돌아간다.   				  
- --%>    
 <% 
 	//1. 서버에서 받은 값들을 추출한다. 
 	String userId = "123@123"; 
@@ -56,6 +45,4 @@
 	
 	//도서 문의 게시판의 초기화면으로 이동한다. + 공개여부에 대한 값도 들고 간다.
 	response.sendRedirect("post-list-1.jsp?postCateNo="+postCateNo);
-	
-
 %>

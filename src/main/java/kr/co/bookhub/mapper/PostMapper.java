@@ -3,6 +3,8 @@ package kr.co.bookhub.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.co.bookhub.vo.Book;
 import kr.co.bookhub.vo.Post;
 import kr.co.bookhub.vo.PostCategory;
@@ -104,9 +106,41 @@ public interface PostMapper {
 	public void insertPostReply(PostReply postReply);
 	
 	/**
-	 *  해당 게시글에 작성된 모든 댓글을 조회한다.
-	 * @param condition.postNo
+	 *  postNo값을 가진 특정 게시글의 부모 댓글들을 전부 가져온다.
+	 *  즉, PARENT_NO가 NULL인 것들을 가져온다.
+	 * @param condition.postNo 게시글 번호
+	 * @return 부모 댓글
+	 */
+	public List<PostReply> getParentPostReplies(Map<String, Object> condition);
+	
+	/**
+	 * postNo 값을 가진 특정 게시글의 대댓글들을 전부 가져온다. 
+	 * 즉, PARENT_NO가  IS NOT NULL인 것들을 조회한다.
+	 * @param condition
 	 * @return
 	 */
-	public List<PostReply> getPostReplies(Map<String, Object> condition);
+	public List<PostReply> getChildPostReplies(Map<String, Object> condition);
+	
+	/**
+	 *  댓글 테이블에서 새롭게 설정된 값을 업데이트 한다.
+	 * @param postReply
+	 */
+	public void updatePostReply(PostReply postReply);
+	
+	/**
+	 * postNo 값을 가진 게시글의 postReplyNo 값을 가진 댓글을 찾아서 조회 하기
+	 * 
+	 * @param postReplyNo
+	 * @param postNo
+	 * @return
+	 */
+	public PostReply getPostReply(@Param("postReplyNo") int postReplyNo, @Param("postNo") int postNo);
+	
+	/**
+	 * 부모 댓글의 총 개수를 가져온다.
+	 * 게시글의 번호로 부모 댓글의 갯수를 가져온다.
+	 * @param conditon.postNo
+	 * @return
+	 */
+	public int totalRowsParentReply(Map<String, Object> conditon);
 }

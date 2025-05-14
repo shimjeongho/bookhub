@@ -17,7 +17,7 @@
 	 	  , B.book_description			as description
 	 	  , B.book_pub_date				as pubDate
 	 	  , B.book_review_count			as reviewCount   
-	 	  , B.review_avg				as reviewAvg
+	 	  , B.book_review_avg			as reviewAvg
 	 	  , B.book_cover_image_path		as coverImagePath
 	 	  , B.book_created_date			as createdDate
 	  	  , B.book_updated_date			as updatedDate
