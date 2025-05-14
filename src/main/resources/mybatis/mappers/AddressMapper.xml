@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.bookhub.mapper.AddressMapper">
+	
+	<!--  
+		void insertAddress(Address address);
+	-->
+	<insert id="insertAddress" parameterType="Address">
+		INSERT INTO BOOKHUB_ADDRESS
+		(ADDR_NO
+		, ADDR_ZIPCODE
+		, ADDR_BASIC
+		, ADDR_DETAIL
+		, ADDR_GIBON
+		, ADDR_CREATED_DATE
+		, ADDR_NAME
+		, USER_ID)
+		VALUES
+		(BOOKHUB_ADDRESS_ADDR_NO_SEQ.NEXTVAL
+		, #{zipcode}
+		, #{basic}
+		, #{detail}
+		, #{gibon}
+		, SYSDATE
+		, #{name}
+		, #{user.id})
+	</insert>
+	
+	<!--  
+		List<Address> getAllAddressByUserId(String id);
+	-->
+	<select id="getAllAddressByUserId" resultType="Address">
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, A.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE A.USER_ID = #{id}
+		AND A.USER_ID = U.USER_ID
+		ORDER BY CASE WHEN A.ADDR_GIBON = 'Y' THEN 0 ELSE 1 END, A.ADDR_NO
+	</select>
+	
+	<!--  
+		Address getAddressByUserIdAndNo(String id, String no);
+	-->
+	<select id="getAddressByUserIdAndNo" resultType="Address">
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_NO = #{no}
+	</select>
+	
+	<!--  
+		Address getGibonAddressByIdAndNo(String id, int no);
+	-->
+	<select id="getGibonAddressByIdAndNo" resultType="Address">
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_GIBON = 'Y'
+		AND A.USER_ID = U.USER_ID
+		AND A.ADDR_NO != #{no}
+	</select>
+	
+	<!--  
+		Address getAddressOrderByNoById();
+	-->
+	<select id="getAddressOrderByNoById" resultType="Address">
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		ORDER BY A.ADDR_NO ASC
+		FETCH FIRST 1 ROW ONLY
+	</select>
+	
+	<!--  
+		Address getGibonAddressByUserId(String id);
+	-->
+	<select id="getGibonAddressByUserId" resultType="Address">
+		SELECT
+			A.ADDR_NO        AS no
+			, A.ADDR_NAME    AS name
+			, U.USER_ID      AS "user.id"
+			, U.USER_PHONE   AS "user.phone"
+			, U.USER_NAME    AS "user.name"
+			, A.ADDR_BASIC   AS basic
+			, A.ADDR_DETAIL  AS detail
+			, A.ADDR_GIBON   AS gibon
+			, A.ADDR_ZIPCODE AS zipcode
+		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
+		WHERE U.USER_ID = #{id}
+		AND A.ADDR_GIBON = 'Y'
+	</select>
+	
+	<!--  
+		void updateGibonAddress(Address address);
+	-->
+	<update id="updateGibonAddress" parameterType="address">
+		UPDATE BOOKHUB_ADDRESS
+		SET
+			ADDR_GIBON = 'N'
+		WHERE ADDR_ZIPCODE = #{zipcode}
+	</update>
+	
+	<!--  
+		void updateAddressByAddress(Address address);
+	-->
+	<update id="updateAddressByAddress">
+		UPDATE BOOKHUB_ADDRESS
+		SET
+			ADDR_ZIPCODE = #{zipcode}
+			, ADDR_BASIC = #{basic}
+			, ADDR_DETAIL = #{detail}
+			, ADDR_GIBON = #{gibon}
+			, ADDR_NAME = #{name}
+		WHERE ADDR_NO = #{no}
+	</update>
+	
+	<!--  
+		void deleteAddressByNo(String no);
+	-->
+	<delete id="deleteAddressByNo" parameterType="String">
+		DELETE FROM BOOKHUB_ADDRESS
+		WHERE ADDR_NO = #{no}
+	</delete>
+	
+</mapper>

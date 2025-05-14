@@ -6,12 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Alias("Stock")
 @Getter
 @Setter
 @NoArgsConstructor
-@Alias("Stock")
-public class Stock {
-
+public class Stock { 
 	private Library library;
 	private Book book;
 	private int stock;

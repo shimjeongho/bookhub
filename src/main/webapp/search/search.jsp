@@ -1,3 +1,5 @@
+<%@page import="org.apache.ibatis.reflection.SystemMetaObject"%>
+<%@page import="kr.co.bookhub.util.SearchAiUtils"%>
 <%@page import="kr.co.bookhub.util.Pagination"%>
 <%@page import="kr.co.bookhub.vo.Book"%>
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
@@ -30,12 +32,25 @@
 	*/
 	// 파라미터값 받아오기
 	String category = StringUtils.nullToStr(request.getParameter("category"), "title");
-	String search = StringUtils.nullToStr(request.getParameter("search"), "");
+	String searchContent = StringUtils.nullToStr(request.getParameter("search"), "");
 	int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
 	String sort = StringUtils.nullToStr(request.getParameter("sort"), "accuracy");
+	String ai = StringUtils.nullToStr(request.getParameter("ai"), "N");
+	boolean isSearchContent = false;
+	
+	// searchContent는 화면에 나올 데이터, search는 검색 로직에 사용될 데이터
+	String search = searchContent;
 	
 	// 상태를 나타내는 맵 선언(searchMapper에서 쓰임)
 	Map<String, Object> condition = new HashMap<>();
+	
+	// ai 검색을 사용할 때(ai==O), ai==x면 패스됨
+	if ("O".equals(ai)){
+		String aiSearch = SearchAiUtils.aiSearch(search);
+		search = aiSearch;
+		System.out.println("ai 검색어: " + aiSearch);
+	}
+	
 	
 	// 불용어 리스트
 	Set<String> stopwords = Set.of("은", "는", "이", "가", "을", "를", "의", "에", "도", "다", "로", "에서", "에게", "한", "하다");
@@ -53,18 +68,20 @@
 	condition.put("sort", sort);
 	condition.put("page", pageNo);
 	
-	// 1. 구현객체 획득하기
+	// 구현객체 획득하기
 	SearchMapper searchMapper = MybatisUtils.getMapper(SearchMapper.class);
 	
-	// 2. 목록 조회(만약 검색이 ""라면 books는 비어있는걸로 리턴)
+	// 목록 조회(만약 검색이 ""라면 books는 비어있는걸로 리턴)
 	List<Book> books;
+	
 	// 페이지네이션
 	int totalRows = 0;
-	if (search == null || search.trim().isEmpty()){
+	if (search == null || search.trim().isEmpty()) {
 		totalRows = 0;
 	} else {
 		totalRows = searchMapper.getTotalRows(condition);
 	}
+	
 	Pagination pagination = new Pagination(pageNo, totalRows, 10);
 	condition.put("offset", pagination.getOffset());
 	condition.put("rows", 10);
@@ -87,7 +104,7 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../css/styles.css" rel="stylesheet">
+    <link href="../resources/css/styles.css" rel="stylesheet">
 </head>
     <!-- Navigation -->
     <%@ include file="../common/nav.jsp" %> 
@@ -96,13 +113,32 @@
 		method="get"
 		action="search.jsp">
 	
-     <input type="hidden" name="page" value="1" />
+    <input type="hidden" name="page" value="1" />
      
     <!-- Search Header -->
     <header class="search-header">
         <div class="container">
-        	<p class="fs-3"><%=search %> 검색결과 <strong><%=totalRows %></strong>개</p>
+<%
+	if (!"".equals(searchContent)) { 
+%>
+        	<p class="fs-3"><%=searchContent %> 검색결과 <strong><%=totalRows %></strong>개</p>
+<%
+	}
+%>
         	<div class="row justify-content-center">
+	        	<div class="col-md-2">
+				  <div class="d-flex">
+				    <div class="form-check me-3">
+				      <input class="form-check-input" type="radio" name="ai" id="standard-search" value="N" <%="N".equals(ai) ? "checked" : "" %>>
+				      <label class="form-check-label" for="standard-search">일반</label>
+				    </div>
+				    <div class="form-check">
+				      <input class="form-check-input" type="radio" name="ai" id="ai-search" value="O" <%="O".equals(ai) ? "checked" : "" %>>
+				      <label class="form-check-label" for="ai-search">AI</label>
+				    </div>
+				  </div>
+				</div>
+			
                 <div class="col-md-2">
                     <div class="input-group" style="height: 100%;">
                     	<select class="form-select" name="category">
@@ -114,11 +150,12 @@
                     </div>
 	            </div>
 						
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="input-group">
                         <input type="search" 
+                        	id="search-bar"
                         	class="form-control" 
-                        	value="<%=search %>"
+                        	value="<%=searchContent %>"
                         	placeholder="검색어를 입력하세요"
                         	name="search"
                         	maxlength="100">
@@ -137,7 +174,13 @@
             <!-- Results -->
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
+<%
+	if (!"".equals(searchContent)) { 
+%>
                     <p class="m-0">"<%=search %>" 검색결과 <strong><%=books.size() %></strong>건</p>
+<%
+	}
+%>
                     <select class="form-select" name="sort" style="width: auto;">
                         <option value="accuracy" <%="accuracy".equals(sort) ? "selected" : "" %>>정확도</option>
                         <option value="newest" <%="newest".equals(sort) ? "selected" : "" %>>최신순</option>
@@ -147,11 +190,16 @@
                 </div>
 
                 <!-- Result Items -->
-<% if (books.size() <= 0 || books == null || books.isEmpty()) { %>
+<% 
+	if (!(books.size() <= 0 || books == null || books.isEmpty()) || totalRows == 0) { 
+		if (!"".equals(searchContent)) { 
+%>
 	<div class="search-result-item bg-white shadow-sm rounded mb-3 p-4 text-center">
     <h5 class="text-muted">책이 존재하지 않습니다.</h5>
 	</div>
-<% } else {
+<% 
+		}
+	} else {
 	for(Book book : books) { 
 	// *** 나중에 jquery이용해서 조건 바뀔때 마다 검색결과 몇건 나왔는지 수정하기 *** %>
                 <div class="search-results" style="padding: 0;">
@@ -191,9 +239,15 @@ if (totalRows > 0) {
 %>
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center" id="pagenation-search">
+<%
+	if (!pagination.isFirst()) {
+%>
                         <li class="page-item <%=pagination.isFirst() ? "disabled" : "" %>">
                             <a class="page-link" href="search.jsp?page=<%=prevPage %>" data-page-no="<%=prevPage %>">이전</a>
                         </li>
+<%
+	}
+%>
 <%
 	for (int num = beginPage; num <= endPage; num++) {
 %>
@@ -202,6 +256,8 @@ if (totalRows > 0) {
                         </li>
 <%
 	}
+
+		if (!pagination.isLast()) {
 %>
                         <li class="page-item <%=pagination.isLast() ? "disabled" : "" %>">
                             <a class="page-link" href="search.jsp?page=<%=nextPage %>" data-page-no="<%=nextPage %>">다음</a>
@@ -209,7 +265,8 @@ if (totalRows > 0) {
                     </ul>
                 </nav>
 <%
-}
+		}
+	}
 %>
             </div>
         </div>
@@ -223,6 +280,16 @@ if (totalRows > 0) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
+    
+    	$("#form-condition").submit(function() {
+    		if($("#search-bar").val() == ""){
+    			alert("검색어를 입력하시오.");
+    			$("#form-condition").focus();
+    			return false;
+    		}
+    		
+    		return true;
+    	});
     
 	 	// select박스에서 change이벤트가 발생될 때
 		// 실행될 이벤트 핸들러 등록하기

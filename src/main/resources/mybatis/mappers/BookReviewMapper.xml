@@ -80,7 +80,38 @@
 	   <!-- 
 	   		List<BookReview> getAllBookReviewsByUserId(String userId);
 	    -->
-	    
+	    <select id="getAllBookReviewsByBookNo" parameterType="map" resultType="BookReview">
+		    select
+		        R.review_no             as no,
+		        R.review_content        as content,
+		        R.review_star           as star,
+		        R.review_likes          as likes,
+		        R.review_title          as title,
+		        R.review_created_date   as createdDate,
+		        R.review_updated_date   as updatedDate,
+		        U.user_id               as "writer.id",
+		        U.user_name             as "writer.name"
+		    from
+		        bookhub_reviews R, bookhub_users U
+		    where
+		        R.book_no = #{bookNo}
+		        and R.user_id = U.user_id
+		        and R.is_deleted = 'N'
+		    <choose>
+		        <when test="sort == 'newest'">
+		            order by R.review_created_date desc
+		        </when>
+		        <when test="sort == 'oldest'">
+		            order by R.review_created_date asc
+		        </when>
+		        <when test="sort == 'star'">
+		            order by R.review_star desc
+		        </when>
+		        <when test="sort == 'likes'">
+		            order by R.review_likes desc
+		        </when>
+		    </choose>
+		</select>	
 	    <!-- 
 	    	void updateReview(int reviewNo);
 	     -->

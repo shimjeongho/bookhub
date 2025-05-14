@@ -8,19 +8,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-@Alias("LoanHistory")
-public class LoanHistory {
-
+@Alias("Donation")
+public class Donation {
 	private int no;
-	private Date loanDate;
-	private Date returnDate;
-	private Date dueDate;
-	private String loanStatus;
+	private String title;
+	private String author;
+	private String publisher;
+	private String description;
+	private Date createdDate;
+	private Date updatedDate;
+	private String isDeleted;
 	private User user;
 	private Library library;
-	private Book book;
-	private String isExtension;
 }

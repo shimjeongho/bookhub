@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.bookhub.mapper.LoanBookMapper">
+
+	<!-- 
+		List<LoanHistory> getAllBookByUserId(String id);
+	 -->
+	<select id="getAllBookByUserId" resultType="LoanHistory">
+		SELECT
+			B.BOOK_NO					AS "book.no"
+			, L.LOAN_NO					AS no
+			, B.BOOK_TITLE				AS "book.title"
+			, B.BOOK_AUTHOR				AS "book.author"
+			, B.BOOK_PUBLISHER			AS "book.publisher"
+			, B.BOOK_COVER_IMAGE_PATH	AS "book.coverImagePath"
+			, L.LOAN_DATE				AS loanDate
+			, L.DUE_DATE				AS dueDate
+			, L.LOAN_STATUS				AS loanStatus
+			, L.IS_EXTENSION			AS isExtension
+		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
+		WHERE L.USER_ID = #{id}
+		AND B.BOOK_NO = L.BOOK_NO
+	</select>
+	 
+	<!--  
+		List<LoanHistory> getSortedLoanBooksByUserId(Map<String, Object> condition);
+	 -->
+	<select id="getSortedLoanBooksByUserId" parameterType="map" resultType="LoanHistory">
+		SELECT
+			B.BOOK_NO                AS "book.no"
+			, L.LOAN_NO              AS no
+			, B.BOOK_TITLE           AS "book.title"
+			, B.BOOK_AUTHOR          AS "book.author"
+			, B.BOOK_PUBLISHER       AS "book.publisher"
+			, B.BOOK_COVER_IMAGE_PATH AS "book.coverImagePath"
+			, L.LOAN_DATE            AS loanDate
+			, L.DUE_DATE             AS dueDate
+			, L.LOAN_STATUS          AS loanStatus
+			, L.IS_EXTENSION         AS isExtension
+		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
+		WHERE L.USER_ID = #{id}
+		AND B.BOOK_NO = L.BOOK_NO
+		AND L.LOAN_STATUS IN ('L', 'D')
+		ORDER BY CASE WHEN L.LOAN_STATUS = 'D' THEN 0 ELSE 1 END, L.LOAN_DATE DESC 
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{rows} ROWS ONLY
+	</select>
+	 
+	<!--  
+		List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
+	 -->
+	<select id="getSortedReturnBooksByUserId">
+		SELECT
+			B.BOOK_NO                AS "book.no"
+			, L.LOAN_NO              AS no
+			, B.BOOK_TITLE           AS "book.title"
+			, B.BOOK_AUTHOR          AS "book.author"
+			, B.BOOK_PUBLISHER       AS "book.publisher"
+			, B.BOOK_COVER_IMAGE_PATH AS "book.coverImagePath"
+			, L.RETURN_DATE          AS returnDate
+			, L.LOAN_DATE            AS loanDate
+			, L.DUE_DATE             AS dueDate
+			, L.LOAN_STATUS          AS loanStatus
+			, L.IS_EXTENSION         AS isExtension
+		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
+		WHERE L.USER_ID = #{id}
+		AND B.BOOK_NO = L.BOOK_NO
+		AND L.LOAN_STATUS = 'P'
+		ORDER BY CASE WHEN L.LOAN_STATUS = 'D' THEN 0 ELSE 1 END, L.LOAN_DATE DESC 
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{rows} ROWS ONLY
+	</select>
+	 
+	<!--  
+		int getLoanTotalRows(String id);
+	 -->
+	<select id="getLoanTotalRows" parameterType="String">
+		SELECT
+			COUNT(*)
+		FROM
+			BOOKHUB_LOAN_HISTORIES
+		WHERE USER_ID = #{id}
+		AND LOAN_STATUS IN ('L', 'D')
+	</select>
+	 
+	<!--  
+		int getReturnTotalRows(String id);
+	 -->
+	<select id="getReturnTotalRows" parameterType="String">
+		SELECT
+			COUNT(*)
+		FROM
+			BOOKHUB_LOAN_HISTORIES
+		WHERE USER_ID = #{id}
+		AND LOAN_STATUS = 'P'
+	</select>
+	 
+	<!--  
+		void updateDelayBooksStatus(String id);
+	 -->
+	<update id="updateDelayBooksStatus" parameterType="String">
+		UPDATE BOOKHUB_LOAN_HISTORIES
+		SET LOAN_STATUS = 'D'
+		WHERE DUE_DATE &lt; SYSDATE
+		AND USER_ID = #{id}
+		AND LOAN_STATUS = 'L'
+	</update>
+	 
+	<!--  
+		List<LoanHistory> getDelayBookByUserId(String id);
+	 -->
+	<select id="getDelayBookByUserId" resultType="LoanHistory">
+		SELECT
+			B.BOOK_NO                AS "book.no"
+			, L.LOAN_NO              AS no
+			, B.BOOK_TITLE           AS "book.title"
+			, B.BOOK_AUTHOR          AS "book.author"
+			, B.BOOK_PUBLISHER       AS "book.publisher"
+			, B.BOOK_COVER_IMAGE_PATH AS "book.coverImagePath"
+			, L.LOAN_DATE            AS loanDate
+			, L.DUE_DATE             AS dueDate
+			, L.LOAN_STATUS          AS loanStatus
+			, L.IS_EXTENSION         AS isExtension
+		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
+		WHERE L.USER_ID = #{id}
+		AND B.BOOK_NO = L.BOOK_NO
+		AND L.LOAN_STATUS = 'D'
+	</select>
+	 
+	<!--  
+		LoanHistory getLoanHistoryByLoanNo(String lno);
+	 -->
+	<select id="getLoanHistoryByLoanNo" resultType="LoanHistory">
+		SELECT
+			LOAN_NO       AS no
+			, LOAN_DATE   AS loanDate
+			, RETURN_DATE AS returnDate
+			, DUE_DATE    AS due_date
+			, LOAN_STATUS AS loanStatus
+			, USER_ID     AS "user.id"
+			, LIB_NO      AS "library.no"
+			, BOOK_NO     AS "book.no"
+			, IS_EXTENSION AS isExtension
+		FROM BOOKHUB_LOAN_HISTORIES
+		WHERE LOAN_NO = #{lno}
+	</select>
+	
+	<!--  
+	LoanHistory getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
+	-->
+	<select id="getLoanHistoryByIdAndBno" resultType="LoanHistory">
+		SELECT
+			LOAN_NO        AS no			 
+			, LOAN_DATE    AS loanDate
+			, RETURN_DATE  AS returnDate
+			, DUE_DATE     AS due_date
+			, LOAN_STATUS  AS loanStatus
+			, USER_ID      AS "user.id"
+			, LIB_NO       AS "library.no"
+			, BOOK_NO      AS "book.no"
+			, IS_EXTENSION AS isExtension
+		FROM BOOKHUB_LOAN_HISTORIES
+		WHERE USER_ID = #{id}
+		AND BOOK_NO = #{bno}
+	</select>
+		 
+	<!-- 
+		void updateIsExtensionAndDueDateByLoanNo(String lno);
+	-->
+	<update id="updateIsExtensionAndDueDateByLoanNo" parameterType="String">
+		UPDATE BOOKHUB_LOAN_HISTORIES
+		SET
+			IS_EXTENSION = 'Y',
+			DUE_DATE = DUE_DATE + 14
+		WHERE
+			LOAN_NO = #{lno}
+	</update>
+		 
+	<!--  
+		void InsertLoanHistoryByBnoAndRnoAndId(String id, String lno, String bno);
+	-->
+	<insert id="InsertLoanHistoryByBnoAndRnoAndId">
+		INSERT INTO BOOKHUB_LOAN_HISTORIES
+		(LOAN_NO
+		, LOAN_DATE
+		, RETURN_DATE
+		, DUE_DATE
+		, LOAN_STATUS
+		, USER_ID
+		, LIB_NO
+		, BOOK_NO
+		, IS_EXTENSION)
+		VALUES
+		(BOOKHUB_LOAN_HISTORIES_LOAN_NO_SEQ.NEXTVAL
+		, SYSDATE
+		, NULL
+		, SYSDATE + 14
+		, 'L'
+		, #{id}
+		, #{lno}
+		, #{bno}
+		, 'N')
+	</insert>
+	
+	<!--
+		List<LoanHistory> getReturnBookByUserId(String id);
+	-->
+	<select id="getReturnBookByUserId" resultType="LoanHistory">
+		SELECT
+			B.BOOK_NO                AS "book.no"
+			, L.LOAN_NO              AS no
+			, B.BOOK_TITLE           AS "book.title"
+			, B.BOOK_AUTHOR          AS "book.author"
+			, B.BOOK_PUBLISHER       AS "book.publisher"
+			, B.BOOK_COVER_IMAGE_PATH AS "book.coverImagePath"
+			, L.LOAN_DATE            AS loanDate
+			, L.DUE_DATE             AS dueDate
+			, L.RETURN_DATE          AS returnDate
+			, L.LOAN_STATUS          AS loanStatus
+			, L.IS_EXTENSION         AS isExtension
+		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
+		WHERE L.USER_ID = #{id}
+		AND B.BOOK_NO = L.BOOK_NO
+		AND L.LOAN_STATUS = 'P'
+	</select>
+		 
+	<!-- 
+		void updateLoanStatusAndreturnDateByLoanNo(String lno);
+	-->
+	<update id="updateLoanStatusAndreturnDateByLoanNo" parameterType="String">
+		UPDATE BOOKHUB_LOAN_HISTORIES
+		SET
+			LOAN_STATUS = 'P',
+			RETURN_DATE = SYSDATE
+		WHERE
+			LOAN_NO = #{lno}
+	</update>
+	
+</mapper>

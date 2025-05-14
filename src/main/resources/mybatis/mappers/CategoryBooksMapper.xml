@@ -25,6 +25,7 @@
 		<result			column="BOOK_CREATED_DATE"		property="createdDate"/>
 		<result			column="BOOK_UPDATED_DATE"		property="updatedDate"/>
 		<result			column="BOOK_ISBN"				property="isbn"/>
+		<association 	resultMap="CategoryResultMap"	property="category" />
 	</resultMap>
 
 	<!-- 대분류 목록 가져오기
@@ -155,6 +156,8 @@
 			, B.BOOK_CREATED_DATE
 			, B.BOOK_UPDATED_DATE
 			, B.BOOK_ISBN
+			, C.CATEGORY_NO
+			, C.CATEGORY_NAME
 			, SUM(
 				<choose> <!-- 검색이 아닐 경우 즉시 0반환 -->
 					<when test="searchStr != null">
@@ -236,6 +239,8 @@
 			, B.BOOK_CREATED_DATE
 			, B.BOOK_UPDATED_DATE
 			, B.BOOK_ISBN
+			, C.CATEGORY_NO
+			, C.CATEGORY_NAME
 		HAVING
 			SUM(
 				<choose> <!-- 검색이 아닐 경우 즉시 0반환 -->

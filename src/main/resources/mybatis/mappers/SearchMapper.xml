@@ -51,7 +51,7 @@
 	        B.BOOK_DESCRIPTION 		as description,
 	        B.BOOK_PUB_DATE 		as pubDate,
 	        B.BOOK_REVIEW_COUNT 	as reviewCount,
-	        B.BOOK_REVIEW_AVG 			as reviewAvg,
+	        B.BOOK_REVIEW_AVG 		as reviewAvg,
 	        B.BOOK_COVER_IMAGE_PATH as coverImagePath,
 	        B.BOOK_CREATED_DATE 	as createdDate,
 	        B.BOOK_UPDATED_DATE 	as updatedDate,
@@ -68,7 +68,10 @@
 		                ELSE 0
 	                </when>
 	                <when test="category == 'author'">
-	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 100
+		                <foreach collection="keywords" item="kw">
+		                    WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{kw}) || '%' THEN 1
+		                </foreach>
 		                ELSE 0
 	                </when>
 	                <when test="category == 'publisher'">
@@ -110,7 +113,10 @@
 		                ELSE 0
 	                </when>
 	                <when test="category == 'author'">
-	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 1
+	                	WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{search}) || '%' THEN 100
+		                <foreach collection="keywords" item="kw">
+		                    WHEN UPPER(B.BOOK_AUTHOR) LIKE '%' || UPPER(#{kw}) || '%' THEN 1
+		                </foreach>
 		                ELSE 0
 	                </when>
 	                <when test="category == 'publisher'">

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.LibraryMapper">
+	
+	<!-- 
+		Library getLibraryByNo(int no);
+	 -->
+	 <select id="getLibraryByNo" resultType="Library">
+	 	SELECT
+	 		LIB_NO						AS no
+	 	  , LIB_NAME					AS name
+	 	  , LIB_LOCATION				AS location
+	 	  , LIB_LONGITUDE				AS longitude
+	 	  , LIB_LATITUDE				AS latitude
+	 	  , LIB_TEL						AS tel
+	 	  , LIB_IMG_PATH				AS imgPath
+	 	  , LIB_BUSINESS_HOURS			AS businessHours
+	 	FROM
+	 		BOOKHUB_LIBRARIES
+	 	WHERE
+	 		LIB_NO = #{NO}
+	 </select>
+	 
+	 <!-- 
+	 	List<Stock> getLibraryStocksByBookNo(int bookNo);
+	  -->
+	  <select id="getLibraryStocksByBookNo" parameterType="int" resultType="Stock">
+	  	SELECT
+	 		L.LIB_NO						AS "library.no"
+	 	  , L.LIB_NAME						AS "library.name"
+	 	  , LIB_LOCATION					AS "library.location"
+	 	  , LIB_LONGITUDE					AS "library.longitude"
+	 	  , LIB_LATITUDE					AS "library.latitude"
+	 	  , LIB_TEL							AS "library.tel"
+	 	  , LIB_IMG_PATH					AS "library.imgPath"
+	 	  , LIB_BUSINESS_HOURS				AS "library.businessHours"					
+	 	  , S.BOOK_STOCK					AS stock
+	 	FROM
+	 		BOOKHUB_LIBRARIES L, BOOKHUB_STOCKS S
+	 	WHERE
+	 		L.LIB_NO = S.LIB_NO
+	 		and S.book_no = #{bookNo}
+	 		
+	  </select>
+</mapper>
