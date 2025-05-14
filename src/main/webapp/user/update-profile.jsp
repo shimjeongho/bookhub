@@ -132,9 +132,7 @@
             return;
         }
 
-        // 비밀번호 변경 시도 시, 실제 DB의 현재 비밀번호와 입력된 현재 비밀번호 일치 검증
-        // 이 검증은 DB 조회가 필요하므로 유효성 검사 후 DB 처리 섹션으로 이동합니다.
-    } // <--- isPasswordChangeAttempt 블록 끝
+    } 
 
     // 4. DB 처리
     UserMapper userMapper = MybatisUtils.getMapper(UserMapper.class);
@@ -162,10 +160,10 @@
     }
 
     // 이름, 전화번호 업데이트
-    savedUser.setName(name.trim()); // 이름은 항상 업데이트, trim() 적용
-    savedUser.setPhone(phone.trim()); // 전화번호는 항상 업데이트, trim() 적용
+    savedUser.setName(name.trim()); 
+    savedUser.setPhone(phone.trim()); 
 
-    userMapper.updateUser(savedUser); // UserMapper에 updateUser 메소드가 User 객체를 파라미터로 받는다고 가정
+    userMapper.updateUser(savedUser); 
 
     // 5. 세션 정보 업데이트 (선택적이지만, 사용자 경험을 위해 권장)
     session.setAttribute("LOGINED_USER_NAME", savedUser.getName());
