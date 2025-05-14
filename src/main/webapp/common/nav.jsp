@@ -23,7 +23,7 @@
 %>
 
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="z-index: 999;">
     <div class="container">
         <a class="navbar-brand" href="/bookhub/index.jsp">
         	<img src="/bookhub/resources/images/bookhub-signature-logo.png" alt="로고" >
@@ -48,7 +48,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../library.html">도서관소개</a>
+                    <a class="nav-link" href="/bookhub/book/library.jsp">도서관소개</a>
                 </li>
                 
 <%
