@@ -1,5 +1,7 @@
 package kr.co.bookhub.mapper;
 
+import java.util.List;
+
 import kr.co.bookhub.vo.Book;
 
 public interface BookMapper {
@@ -15,4 +17,6 @@ public interface BookMapper {
 	 * @param book 업데이트된 책 정보
 	 */
 	void updateBook(Book book);
+	
+	List<Book> getMyWishListBooks(String userId);
 }

@@ -1,3 +1,6 @@
+<%@page import="kr.co.bookhub.mapper.StockMapper"%>
+<%@page import="kr.co.bookhub.mapper.BookMapper"%>
+<%@page import="kr.co.bookhub.vo.Book"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="kr.co.bookhub.util.Pagination"%>
@@ -70,6 +73,10 @@
 	loancondition.put("rows", 5);
 	
 	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
+	
+	// 책 정보 조회
+	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
+	List<Book> books = bookMapper.getMyWishListBooks(userId);
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -438,35 +445,18 @@
             <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
                 <h4 class="mb-4">찜 목록</h4>
                 
+               
+<%
+	for (Book book : books) {
+%>
                 <div class="book-item">
                     <div class="row align-items-center">
                         <div class="col-md-1">
-                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
+                            <img src="<%=book.getCoverImagePath() %>" alt="책 표지" class="book-cover">
                         </div>
                         <div class="col-md-5">
-                            <h5>실전 파이썬 머신러닝</h5>
-                            <p class="text-muted mb-0">저자: 이영희 | 출판사: AI출판사</p>
-                        </div>
-                        <div class="col-md-2">
-                            <p class="mb-0"></p>
-                        </div>
-                        <div class="col-md-2">
-                            <span class="badge bg-success status-badge">대출가능</span>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-sm btn-primary">대출하기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="book-item">
-                    <div class="row align-items-center">
-                        <div class="col-md-1">
-                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
-                        </div>
-                        <div class="col-md-5">
-                            <h5>파이썬 데이터 분석</h5>
-                            <p class="text-muted mb-0">저자: 박지민 | 출판사: 데이터출판사</p>
+                            <h5><%=book.getTitle() %></h5>
+                            <p class="text-muted mb-0">저자: <%=book.getAuthor() %> | 출판사: <%=book.getPublisher() %></p>
                         </div>
                         <div class="col-md-2">
                             <p class="mb-0"></p>
@@ -479,8 +469,10 @@
                         </div>
                     </div>
                 </div>
+<%
+	}
+%>           
             </div>
-            
             <!-- Review Tab -->
             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                 <h4 class="mb-4">내 리뷰/게시글</h4>
