@@ -39,6 +39,7 @@
         response.sendRedirect("signin.jsp?error=auth");
         return;
     }
+    
 	
 	String tab = StringUtils.nullToBlank(request.getParameter("tab"));
 	
@@ -127,11 +128,7 @@
                     <i class="fas fa-heart me-1"></i> 찜 목록
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
-                    <i class="fas fa-comment me-1"></i> 내 리뷰/게시글
-                </button>
-            </li>
+            
             <li class="nav-item" role="presentation">
                 <button class="nav-link <%="address".equals(tab) ? "active" : "" %>" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">
                     <i class="fas fa-map-marker-alt me-1"></i> 주소 관리
@@ -149,7 +146,7 @@
             <!-- Profile Tab -->
             <div class="tab-pane fade <%="".equals(tab) ? "show active" : "" %>" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <h4 class="mb-4">내 정보 수정</h4>
-                <form id="profile" action="update_profile.jsp" method="post">
+                <form id="profile" action="update-profile.jsp" method="post">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="fullName" class="form-label required">이름</label>
@@ -445,7 +442,10 @@
             <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
                 <h4 class="mb-4">찜 목록</h4>
                 
+<<<<<<< HEAD
+=======
                
+>>>>>>> develop
 <%
 	for (Book book : books) {
 %>
@@ -462,87 +462,17 @@
                             <p class="mb-0"></p>
                         </div>
                         <div class="col-md-2">
-                            <span class="badge bg-danger status-badge">대출중</span>
+                            <span class="badge bg-success status-badge">대출가능</span>
                         </div>
                         <div class="col-md-2">
-                            <button class="btn btn-sm btn-outline-secondary" disabled>대출중</button>
+                            <button class="btn btn-sm btn-primary">대출하기</button>
                         </div>
                     </div>
                 </div>
+                
 <%
 	}
-%>           
-            </div>
-            <!-- Review Tab -->
-            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                <h4 class="mb-4">내 리뷰/게시글</h4>
-                
-                <!-- Reviews -->
-                <h5 class="mb-3">도서 리뷰</h5>
-                <div class="review-item">
-                    <div class="row">
-                        <div class="col-md-1">
-                            <img src="https://via.placeholder.com/80x120" alt="책 표지" class="book-cover">
-                        </div>
-                        <div class="col-md-11">
-                            <h5>실전 파이썬 머신러닝</h5>
-                            <p class="text-muted mb-2">저자: 이영희 | 출판사: AI출판사</p>
-                            <div class="mb-2">
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                            </div>
-                            <p>머신러닝을 배우고 싶은 분들에게 추천합니다. 실습 예제가 많아 실제로 적용하기 좋습니다.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">작성일: 2024-03-15</small>
-                                <div>
-                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
-                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Posts -->
-                <h5 class="mt-4 mb-3">게시글</h5>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>제목</th>
-                                <th>작성일</th>
-                                <th>조회수</th>
-                                <th>댓글수</th>
-                                <th>관리</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>도서관 이용 시간 변경 제안</td>
-                                <td>2024-03-10</td>
-                                <td>45</td>
-                                <td>12</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
-                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>새로운 도서 구매 요청</td>
-                                <td>2024-02-28</td>
-                                <td>32</td>
-                                <td>8</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1">수정</button>
-                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+%>
             </div>
             
             <!-- Address Management Tab -->
@@ -729,7 +659,7 @@
                     <i class="fas fa-exclamation-triangle me-2"></i> 회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.
                 </div>
                 
-                <form id="delete" action="delete_user.jsp" method="post">
+                <form id="delete" action="delete-user.jsp" method="post">
                     <div class="mb-3">
                         <label for="deletePassword" class="form-label">비밀번호 확인</label>
                         <input type="password" class="form-control" id="deletePassword" name="deletePassword" required>
@@ -753,13 +683,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="text-center">
-                <small class="text-muted">&copy; 2024 우도도서관. All rights reserved.</small>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="../common/footer.jsp" %>
     
     <!-- Bootstrap Modal (업데이트 성공) -->
 	<div class="modal fade" id="updateSuccessModal" tabindex="-1" aria-labelledby="updateSuccessModalLabel" aria-hidden="true">
@@ -885,7 +809,7 @@
 	            };
 	            
 				$.ajax({
-		            url: 'update_profile.jsp',
+		            url: 'update-profile.jsp',
 		            type: 'POST',
 		            data: dataToSend,
 		            dataType: 'json',

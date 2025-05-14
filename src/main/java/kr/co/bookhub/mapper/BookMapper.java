@@ -18,5 +18,6 @@ public interface BookMapper {
 	 */
 	void updateBook(Book book);
 	
+	//세션으로 찜정보 정보 가져오기
 	List<Book> getMyWishListBooks(String userId);
 }
