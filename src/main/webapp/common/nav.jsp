@@ -14,7 +14,7 @@
 	// 도서 상위 카테고리 가져오기
 	List<Category> categories = categoryMapper.getMainCategory();
 
-  PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
+    PostMapper postMapper1 = MybatisUtils.getMapper(PostMapper.class);
 	List<PostCategory> postCategories = postMapper1.selectPostCategoryInfo(); 
   
   //네비게이션바에 이름 표시

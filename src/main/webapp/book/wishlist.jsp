@@ -8,8 +8,8 @@
     pageEncoding="UTF-8"%>
 <%
 	//1. 세션에서 로그인된 사용자의 아이디를 조회한다.
-	// String userId = (String) session.getAttribute("LOGINED_USER_ID");
-	String userId = "tempuser"; 
+ 	String userId = (String) session.getAttribute("LOGINED_USER_ID");
+	
 	
 	int bookNo = StringUtils.strToInt(request.getParameter("bookNo"));
 	//String userId = request.getParameter("userId");
