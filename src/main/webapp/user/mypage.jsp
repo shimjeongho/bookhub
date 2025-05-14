@@ -438,38 +438,43 @@
 
             </div>
             
+<<<<<<< HEAD
+ <!-- Wishlist Tab -->
+<div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+    <h4 class="mb-4">찜 목록</h4>
+
+=======
             <!-- Wishlist Tab -->
             <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
                 <h4 class="mb-4">찜 목록</h4>
                 
+>>>>>>> develop
 <%
-	for (Book book : books) {
+    String basePath = request.getContextPath() + "/book/detail.jsp?bno=";
+
+    for (Book book : books) {
+        String detailUrl = basePath + book.getNo();
 %>
-                <div class="book-item">
-                    <div class="row align-items-center">
-                        <div class="col-md-1">
-                            <img src="<%=book.getCoverImagePath() %>" alt="책 표지" class="book-cover">
-                        </div>
-                        <div class="col-md-5">
-                            <h5><%=book.getTitle() %></h5>
-                            <p class="text-muted mb-0">저자: <%=book.getAuthor() %> | 출판사: <%=book.getPublisher() %></p>
-                        </div>
-                        <div class="col-md-2">
-                            <p class="mb-0"></p>
-                        </div>
-                        <div class="col-md-2">
-                            <span class="badge bg-success status-badge">대출가능</span>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-sm btn-primary">대출하기</button>
-                        </div>
-                    </div>
+    <a href="<%= detailUrl %>" class="book-item-link" style="text-decoration: none; color: inherit;">
+        <div class="book-item">
+            <div class="row align-items-center">
+                <div class="col-md-1">
+                    <img src="<%= book.getCoverImagePath() %>" alt="책 표지" class="book-cover">
                 </div>
-                
-<%
-	}
-%>
+                <div class="col-md-5">
+                    <h5><%= book.getTitle() %></h5>
+                    <p class="text-muted mb-0">저자: <%= book.getAuthor() %> | 출판사: <%= book.getPublisher() %></p>
+                </div>
+                <div class="col-md-2">
+                    <p class="mb-0"></p>
+                </div>
             </div>
+        </div>
+    </a>
+<%
+    }
+%>
+</div>
             
             <!-- Address Management Tab -->
             <div class="tab-pane fade <%="address".equals(tab) ? "show active" : "" %>" id="address" role="tabpanel" aria-labelledby="address-tab">

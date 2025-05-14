@@ -23,6 +23,6 @@
         // id가 없거나, userMapper 획득 실패, 또는 실제로 사용자가 없는 모든 경우
         out.write("none"); 
     } else {
-        out.write("exists"); // 오타 수정: "existe" -> "exists"
+        out.write("exists"); 
     }
 %>
