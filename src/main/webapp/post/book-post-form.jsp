@@ -5,7 +5,6 @@
 <%@page import="kr.co.bookhub.mapper.PostMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%-- 도서문의 게시판 입력폼입니다. --%>
 <%
 // 세션에서 꺼내는 것으로 변경하기
 	String userId = "123@123";

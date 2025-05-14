@@ -2,7 +2,6 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
 <mapper namespace="kr.co.bookhub.mapper.PostMapper">
 
 	<resultMap type="Book" id="bookResultMap">
@@ -57,7 +56,7 @@
 			<result column="USER_BIRTH" 			property="birth"/>
 			<result column="USER_CREATED_DATE" 		property="created_date"/>
 			<result column="USER_UPDATED_DATE" 		property="updated_date"/>
-			<result column="IS_DELETED" 			property="deleted"/>
+			<result column="IS_DELETED" 			property="isDeleted"/>
 		</association>
 	</resultMap>
 	
@@ -233,59 +232,129 @@
 	 		,POST_UPDATED_DATE = SYSDATE 
 	 		,IS_DELETED = #{isDeleted} 
 	 		,IS_PUBLIC = #{isPublic} 
-	 		,USER_ID = #{user.id} 
 	 		,BOOK_NO = #{book.no} 
 	 		,LIB_NO = #{library.no} 
 	 		,POST_CATE_NO = #{postCategory.no}
 	 	WHERE 
-	 		POST_NO = #{no}
+	 		POST_NO = #{no} AND
+	 		USER_ID = #{user.id}
+	 		
 	 </update> 
 	 
-	 <!-- public void insertPostReply(PostReply postReply); --> 
+	 <!-- public void insertPostReply(PostReply postReply); 
+	 	 => 게시글의 댓글을 등록하는 쿼리--> 
 	 <insert id="insertPostReply" parameterType="PostReply">
 		INSERT INTO BOOKHUB_POST_REPLIES
 			(REPLY_NO 
 			 ,REPLY_CONTENT 
 			 ,USER_ID 
-			 ,POST_NO) 
+			 ,POST_NO
+			 ,PARENT_NO) 
 		VALUES 
 			( BOOKHUB_POST_REPLIES_REPLY_NO_SEQ.NEXTVAL
 			 ,#{content} 
 			 ,#{user.id} 
-			 ,#{post.no})
+			 ,#{post.no}
+			 ,#{postReply.no})
 	 </insert>
 	 
+	 <!-- public void updatePostReply(PostReply postReply); -->
+	 <update id="updatePostReply" parameterType="PostReply">
+	 	UPDATE BOOKHUB_POST_REPLIES
+		 	SET
+		 		 REPLY_NO = #{no}
+		 		,PARENT_NO = #{postReply.no}
+		 		,REPLY_CONTENT = #{content}
+		 		,REPLY_CREATED_DATE = #{createdDate}
+		 		,REPLY_UPDATED_DATE = SYSDATE
+		 		,IS_DELETED = #{isDeleted}
+		 		,USER_ID = #{user.id}
+		 		,POST_NO = #{post.no} 
+		 	WHERE 
+		 		REPLY_NO = #{no} AND 
+		 		USER_ID = #{user.id}
+	 </update>
+	 
+	 <!-- public PostReply getPostReply(int postReplyNo); --> 
+	 <select id="getPostReply" resultType="PostReply">
+	 	SELECT
+	 		 REPLY_NO 					AS no	 
+	 		,PARENT_NO 					AS "postReply.no"
+	 		,REPLY_CONTENT 				AS content
+	 		,REPLY_CREATED_DATE 		AS createdDate
+	 		,REPLY_UPDATED_DATE 		AS updatedDate
+	 		,IS_DELETED 				AS isDeleted
+	 		,USER_ID 					AS "user.id"
+	 		,POST_NO 					AS "post.no"
+	 	FROM 
+	 		BOOKHUB_POST_REPLIES
+	 	WHERE
+	 		REPLY_NO = #{postReplyNo} AND 
+	 		POST_NO = #{postNo}
+	 </select>
+	 
 	 <!--public List<PostReply> getPostReplies(Map<String, Object> condition);  -->
-	 <select id="getPostReplies" parameterType="map" resultType="PostReply"> 
+	 <select id="getParentPostReplies" parameterType="map" resultType="PostReply"> 
             SELECT
-                 RP1.REPLY_NO							AS no
-                ,RP1.PARENT_NO 							AS "postReply.no" 
-                ,RP1.REPLY_CONTENT 						AS content 
-                ,RP1.REPLY_CREATED_DATE 					AS createdDate 
-                ,RP1.REPLY_UPDATED_DATE 					AS updatedDate 
-                ,RP1.USER_ID 							AS "user.id" 
-                ,RP1.POST_NO 							AS "post.no" 
-                
-                ,RP2.REPLY_NO 							AS "postReply.no" 
-                ,RP2.REPLY_CONTENT 						AS "postReply.content"
-                ,RP2.REPLY_CREATED_DATE 					AS "postReply.createdDate"
-                ,RP2.REPLY_UPDATED_DATE 					AS "postReply.updatedDate"
-                ,RP2.USER_ID 							AS "postReply.user.id"
-                ,RP2.POST_NO 							AS "postReply.post.no"
-                
-                ,U.USER_NAME 							AS "user.name"
+                 RP.REPLY_NO							AS no
+                ,RP.PARENT_NO 							AS "postReply.no" 
+                ,RP.REPLY_CONTENT 						AS content 
+                ,RP.REPLY_CREATED_DATE 					AS createdDate 
+                ,RP.REPLY_UPDATED_DATE 					AS updatedDate 
+                ,RP.USER_ID 							AS "user.id" 
+                ,RP.POST_NO 							AS "post.no" 
+                ,RP.IS_DELETED							AS isDeleted
+                ,U.USER_NAME							AS "user.name"
             FROM 
-                 BOOKHUB_POST_REPLIES RP1 
-                ,BOOKHUB_POST_REPLIES RP2 
+                 BOOKHUB_POST_REPLIES RP
                 ,BOOKHUB_USERS U 
                 ,BOOKHUB_POSTS P 
             WHERE 
-                RP1.REPLY_NO = RP2.PARENT_NO(+) AND 
-                RP1.USER_ID = U.USER_ID AND
-                RP1.POST_NO = P.POST_NO AND
-                RP1.IS_DELETED = 'N' AND 
-                RP1.POST_NO = #{postNo} AND 
-                RP2.POST_NO(+) = #{postNo}
+                RP.USER_ID = U.USER_ID AND
+                RP.POST_NO = P.POST_NO AND
+                RP.POST_NO = #{postNo} AND 
+                RP.PARENT_NO IS NULL
+            offset #{offset} rows
+			fetch next #{rows} rows only            
+	 </select>
+	 
+	 <!--public List<PostReply> getChildPostReplies(Map<String, Object> condition); 
+	     자식 댓글을 조회하기 -->
+	 <select id="getChildPostReplies" parameterType="map" resultType="PostReply"> 
+            SELECT
+                 RP.REPLY_NO							AS no
+                ,RP.PARENT_NO 							AS "postReply.no" 
+                ,RP.REPLY_CONTENT 						AS content 
+                ,RP.REPLY_CREATED_DATE 					AS createdDate 
+                ,RP.REPLY_UPDATED_DATE 					AS updatedDate 
+                ,RP.USER_ID 							AS "user.id" 
+                ,RP.POST_NO 							AS "post.no" 
+                ,RP.IS_DELETED							AS isDeleted
+                ,U.USER_NAME							AS "user.name"
+            FROM 
+                 BOOKHUB_POST_REPLIES RP
+                ,BOOKHUB_USERS U 
+                ,BOOKHUB_POSTS P 
+            WHERE 
+                RP.USER_ID = U.USER_ID AND
+                RP.POST_NO = P.POST_NO AND
+                RP.PARENT_NO = #{postReplyNo} AND 
+                RP.PARENT_NO IS NOT NULL
+	 </select>
+	 
+	 <!-- public int totalRowsParentReply(Map<String, Object> conditon); -->
+	 <select id="totalRowsParentReply" parameterType="map">
+            SELECT
+            	COUNT(*)
+            FROM 
+                 BOOKHUB_POST_REPLIES RP
+                ,BOOKHUB_USERS U 
+                ,BOOKHUB_POSTS P 
+            WHERE 
+                RP.USER_ID = U.USER_ID AND
+                RP.POST_NO = P.POST_NO AND
+                RP.POST_NO = #{postNo} AND 
+                RP.PARENT_NO IS NULL	 
 	 </select>
 	 
 </mapper>
