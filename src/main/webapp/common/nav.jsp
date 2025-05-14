@@ -48,7 +48,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../library.html">북허브소개</a>
+                    <a class="nav-link" href="../library.html">도서관소개</a>
                 </li>
                 
 <%
