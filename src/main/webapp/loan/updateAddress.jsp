@@ -28,10 +28,16 @@
 	Address gibonAddress = addressMapper.getGibonAddressByIdAndNo(id, addressNo);
 	
 	// 기존 주소가 하나일 경우, 혹은 기본으로 설정된 주소가 없으면 기본을 "Y" 로 설정
-	if(allAddress.size() == 1 || gibonAddress == null) {
+	if(allAddress.size() == 1) {
 		isGibon = "Y";
 	}
 
+	// 수정하려고 하는 주소가 기본으로 설정되어 있고, gibonAddress가 null 값이 아니면
+	if ("Y".equals(isGibon) && allAddress.size() != 1) {
+		gibonAddress.setGibon("N");
+		addressMapper.updateAddressByAddress(gibonAddress);
+	}
+	
 	// 수정된 내용을 address 객체에 담는다.
 	Address address = new Address();
 	address.setNo(addressNo);
@@ -40,12 +46,6 @@
 	address.setDetail(addressDetail);
 	address.setName(addressName);
 	address.setGibon(isGibon);
-	
-	// 수정하려고 하는 주소가 기본으로 설정되어 있고, gibonAddress가 null 값이 아니면
-	if ("Y".equals(isGibon) && gibonAddress != null) {
-		gibonAddress.setGibon("N");
-		addressMapper.updateAddressByAddress(gibonAddress);
-	}
 	
 	addressMapper.updateAddressByAddress(address);
 	
