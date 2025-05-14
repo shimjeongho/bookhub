@@ -26,6 +26,10 @@
 %>
 		<!-- recommend -->
 		<section class="fly_menu_wrapper sps" id="fly_wing_banner">
+			<div id="fly-menu-toggle">
+				<i class="bi bi-chevron-right"></i>
+			</div>
+
 		    <div class="fly_menu_inner">
 		        <div class="fly_event_area">
 		        	<p class="recommend_title">추천 도서</p>
@@ -60,9 +64,11 @@
 	
 		<!-- Swiper JS -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 		<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script>
-			document.addEventListener('DOMContentLoaded', function() {
+			$(document).ready(function() {
 				const swiper1 = new Swiper(".swiper1", {
 					loop: true,
 					spaceBetween: 10,
@@ -94,7 +100,21 @@
 			            prevEl: '.swiper2-prev',
 			        },
 				}); */
+				
+				// 추천 도서 fiexd 토글 버튼
+				$("#fly-menu-toggle").click(function() {
+					$("#fly_wing_banner").toggleClass("hidden");
+					
+					const $icon = $(this).find("i");
+	
+					if ($icon.hasClass("bi-chevron-right")) {
+						$icon.removeClass("bi-chevron-right").addClass("bi-chevron-left");
+				    } else {
+					    $icon.removeClass("bi-chevron-left").addClass("bi-chevron-right");
+				    }
+				});
 			});
+			
 		</script>
 <%
 	}
