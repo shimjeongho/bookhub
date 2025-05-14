@@ -22,7 +22,7 @@
     <!-- Login Form -->
     <div class="login-container">
         <h2 class="text-center mb-4">로그인</h2>
-        <form id="loginForm" action="login_process.jsp" method="post">
+        <form id="loginForm" action="login-process.jsp" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label required">아이디(이메일)</label>
                 <input type="text" class="form-control" id="email" name="id" placeholder="example@example.com">
@@ -34,6 +34,7 @@
                 <input type="password" class="form-control" id="password" name="password">
                 <div id="passwordError" class="form-text mt-1"></div>
             </div>
+            
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">로그인</button>
@@ -132,7 +133,7 @@
                 };
                 
                 $.ajax({
-                	url:'login_process.jsp',
+                	url:'login-process.jsp',
                 	type:'POST',
                 	data:dataToSend,
                 	dataType:'json',
@@ -154,7 +155,7 @@
                 	error: function(jqXHR, textStatus, errorThrown) {
                 		console.log('ajax요청 실패',textStatus, '오류:', errorThrown)
                 		if (jqXHR.status===404) {
-                			console.error('요청한 URL을 찾을 수 없습니다 (404). login_ajax_process.jsp 파일이 정확한 위치에 있는지 확인하세요.');
+                			console.error('요청한 URL을 찾을 수 없습니다 (404). login-process.jsp 파일이 정확한 위치에 있는지 확인하세요.');
                 		}
                 	}
                 });

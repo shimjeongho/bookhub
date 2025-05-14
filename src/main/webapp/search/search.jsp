@@ -48,7 +48,6 @@
 	if ("O".equals(ai)){
 		String aiSearch = SearchAiUtils.aiSearch(search);
 		search = aiSearch;
-		System.out.println("ai 검색어: " + aiSearch);
 	}
 	
 	
@@ -119,14 +118,14 @@
     <header class="search-header">
         <div class="container">
 <%
-	if (!"".equals(searchContent)) { 
+	if (searchContent.length() <= 0) { 
 %>
         	<p class="fs-3"><%=searchContent %> 검색결과 <strong><%=totalRows %></strong>개</p>
 <%
 	}
 %>
         	<div class="row justify-content-center">
-	        	<div class="col-md-2">
+	        	<%-- <div class="col-md-2">
 				  <div class="d-flex">
 				    <div class="form-check me-3">
 				      <input class="form-check-input" type="radio" name="ai" id="standard-search" value="N" <%="N".equals(ai) ? "checked" : "" %>>
@@ -161,7 +160,53 @@
                         	maxlength="100">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i> 검색
-                        </button>
+                        </button> --%>
+                        <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row g-3 align-items-center">
+                                <!-- AI Search Radio Buttons -->
+                                <div class="col-md-3">
+                                    <div class="btn-group w-100" role="group" style="height: 38px;">
+                                        <input type="radio" class="btn-check" name="ai" id="standard-search" value="N" <%="N".equals(ai) ? "checked" : "" %>>
+                                        <label class="btn btn-outline-primary rounded-0" for="standard-search" style="border-radius: 0.375rem 0 0 0.375rem !important;">
+                                            <i class="fas fa-search me-1"></i>
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="ai" id="ai-search" value="O" <%="O".equals(ai) ? "checked" : "" %>>
+                                        <label class="btn btn-outline-primary rounded-0" for="ai-search" style="border-radius: 0 0.375rem 0.375rem 0 !important;">
+                                            <i class="fas fa-robot me-1"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Category Select -->
+                                <div class="col-md-3">
+                                    <select class="form-select" name="category" style="height: 38px;">
+                                        <option value="title" <%="title".equals(category) ? "selected" : "" %>>제목</option>
+                                        <option value="author" <%="author".equals(category) ? "selected" : "" %>>저자</option>
+                                        <option value="publisher" <%="publisher".equals(category) ? "selected" : "" %>>출판사</option>
+                                        <option value="isbn" <%="isbn".equals(category) ? "selected" : "" %>>ISBN</option>
+                                    </select>
+                                </div>
+
+                                <!-- Search Bar -->
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="search" 
+                                            id="search-bar"
+                                            class="form-control" 
+                                            value="<%=searchContent %>"
+                                            placeholder="검색어를 입력하세요"
+                                            name="search"
+                                            maxlength="100" style="height: 38px;">
+                                        <button class="btn btn-primary" type="submit" style="height: 38px;">
+                                            <i class="fas fa-search me-1"></i>검색
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -175,7 +220,7 @@
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
 <%
-	if (!"".equals(searchContent)) { 
+	if (searchContent.length() <= 0) { 
 %>
                     <p class="m-0">"<%=search %>" 검색결과 <strong><%=books.size() %></strong>건</p>
 <%
@@ -190,15 +235,25 @@
                 </div>
 
                 <!-- Result Items -->
-<% 
-	if (!(books.size() <= 0 || books == null || books.isEmpty()) || totalRows == 0) { 
-		if (!"".equals(searchContent)) { 
+                
+<%
+	if (!"".equals(searchContent)) { 
 %>
-	<div class="search-result-item bg-white shadow-sm rounded mb-3 p-4 text-center">
-    <h5 class="text-muted">책이 존재하지 않습니다.</h5>
-	</div>
+                
+<%
+	}
+%>
 <% 
-		}
+	// 첫 화면일 때(검색한 내용이 없고, 조회 결과가 0일 때)
+	if (searchContent.length() <= 0 && totalRows == 0) { 
+		
+	// 검색은 했는데 검색 내용이 없을 때(검색한 내용이 있고, 조회 결과가 0일 때)
+	} else if (searchContent.length() > 0 && totalRows == 0) {
+%>
+				<div class="search-result-item bg-white shadow-sm rounded mb-3 p-4 text-center">
+    				<h5 class="text-muted">책이 존재하지 않습니다.</h5>
+				</div>
+<% 
 	} else {
 	for(Book book : books) { 
 	// *** 나중에 jquery이용해서 조건 바뀔때 마다 검색결과 몇건 나왔는지 수정하기 *** %>

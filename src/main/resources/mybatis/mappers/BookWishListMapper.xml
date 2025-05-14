@@ -11,7 +11,7 @@
 	 -->
 	 <select id="isBookWish" parameterType="map" resultType="int">
 	    SELECT 
-	    	COUNT(1) AS count 
+	    	COUNT(1)
 	    FROM 
 	    	BOOKHUB_WISHLIST
 	    WHERE BOOK_NO = #{bookNo} 
@@ -22,7 +22,7 @@
 	<!-- 
 		void addWishList(Map<String, Object> condition);
 	 -->
-	 <insert id="addWishList" parameterType="map">
+	 <insert id="addWishList" parameterType="map" flushCache="false">
 	 	INSERT INTO BOOKHUB_WISHLIST
 	 	( BOOK_NO
 	 	, USER_ID)
@@ -34,7 +34,7 @@
 	 <!-- 
 	 	void removeWishList(Map<String, Object> condition);
 	  -->
-	  <delete id="removeWishList" parameterType="map">
+	  <delete id="removeWishList" parameterType="map" flushCache="false">
 	  	DELETE FROM 
 	  			BOOKHUB_WISHLIST
 	  		WHERE

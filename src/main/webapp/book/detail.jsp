@@ -1,3 +1,4 @@
+<%@page import="kr.co.bookhub.mapper.BookWishListMapper"%>
 <%@page import="kr.co.bookhub.mapper.StockMapper"%>
 <%@page import="kr.co.bookhub.vo.Stock"%>
 <%@page import="kr.co.bookhub.mapper.LibraryMapper"%>
@@ -16,6 +17,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+	// 로그인 유저 아이디
+	String userId = (String) session.getAttribute("LOGINED_USER_ID");
+	
 	// bno
 	int bookNo = StringUtils.strToInt(request.getParameter("bno"));
 	// 요청 파라미터 조회(페이지네이션)
@@ -28,6 +32,7 @@
 	condition.put("page", pageNo);
 	condition.put("sort", sort);
 	condition.put("bookNo", bookNo);
+	condition.put("userId", userId);
 	
 	// 리뷰 등록후 완료 알림
 	String complete = (String) session.getAttribute("complete");
@@ -42,6 +47,10 @@
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
 	LibraryMapper libraryMapper = MybatisUtils.getMapper(LibraryMapper.class);
 	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
+	BookWishListMapper bookWishListMapper = MybatisUtils.getMapper(BookWishListMapper.class);
+	
+	// 해당 도서의 찜 여부
+	int isBookWish = bookWishListMapper.isBookWish(condition);
 	
 	// 책 정보 조회
 	Book book = bookMapper.getBookByNo(bookNo);
@@ -137,8 +146,8 @@
 %>                    
                     <div class="action-buttons">
                         <div class="mb-3">
-                            <select class="form-select" id="librarySelect" name="libNo">
-                                <option value="">도서관을 선택하세요</option>
+                            <select class="form-select" id="librarySelect" name="libNo" data-book-no="<%=bookNo%>">
+                                <option value="" selected="selected" disabled="disabled">도서관을 선택하세요</option>
 <%
 	for  (Stock stock : stocks) {
 %>
@@ -148,12 +157,22 @@
 %>
                             </select>
                         </div>
-                        <button class="btn btn-primary me-2" id="borrowButton" disabled>
+                        <a href="bookhub/loan/loan.jsp?<%=book.getNo() %>" class="btn btn-primary me-2 disabled" id="borrowButton" >
                             <i class="fas fa-book"></i> 대여하기
-                        </button>
-                        <button id="wishlistBtn" class="btn btn-outline-secondary" data-book-no="<%=book.getNo()%>">
+                        </a>
+<%
+	if (userId != null) {
+%>
+						<button 
+                        	id="wishlist-btn" 
+                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>" 
+                        	data-book-no="<%=book.getNo()%>"
+                        	data-book-wish="<%=isBookWish %>">
                             <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
                         </button>
+<%
+	}
+%>
                     </div>
                 </div>
             </div>
@@ -277,10 +296,15 @@
                     <button type="submit" class="btn btn-primary">리뷰 등록</button>
                 </form>
             </div>
-
+<%
+	int reviewCount = book.getReviewCount();                      		
+%>
+<%
+	if (reviewCount > 0) {
+%>
             <!-- Review List -->
             <div class="review-list" id="review-list">
-                <h4>최신 리뷰 (<%=StringUtils.commaWithNumber(book.getReviewCount()) %> 개)</h4>
+                <h4> 리뷰 (<%=StringUtils.commaWithNumber(book.getReviewCount()) %> 개)</h4>
 			     <form id="form-filter" method="get" action="detail.jsp">
 			       <input type="hidden" name="page" value="1">
 			       <input type="hidden" name="nextPage" value="<%=pagination.getNextPage()%>">
@@ -295,6 +319,9 @@
 			                </select>
 			            </div>
 			      </form>
+<%
+	}
+%>			      
 <%
 	for (BookReview review : bookReviews) {
 %>   
@@ -325,9 +352,6 @@
 					    		<i class="far fa-thumbs-up"></i> 
 					    		<span id="like-count-<%=review.getNo()%>"><%=review.getLikes() %></span>
 							</button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="far fa-comment"></i> 답글
-                            </button>
                             <a href="review-delete.jsp?bno=<%=book.getNo() %>&rno=<%=review.getNo() %>" class="btn btn-outline-danger btn-sm">삭제</a>
                         </div>
                     </div>
@@ -432,41 +456,34 @@
     	})
     
     	// 찜 하기 버튼으로 비동기 통신
-    	$("#wishlistBtn").click(function() {
-    		const bookNo = $("input[name=bno]").val();
+    	$("#wishlist-btn").click(function() {
+    		console.log("찜 버튼 클릭 이벤트 실행");
+    		const $btn = $(this);
+    		const bookNo = $(this).attr("data-book-no");
+    		const isBookWish= $(this).attr("data-book-wish");
     		
-    		// 이미 비활성화 상태면 종료
-    		if ($(this).hasClass('disabled')) return;
-    		
-    		// 중복클릭 방지
-    	    $(this).addClass('disabled');
-    	    
     		$.ajax({
     			method: "get",
     			url: "wishlist.jsp",
-    			dataType: "json",
+    			datatype: "text",
     			data: {
-    				bookNo
+    				bookNo: bookNo,
+    				isBookWish: isBookWish
     			},
     			success: function(response) {
-                    console.log(response); //응답 확인
-
-                    if (response.isWished) {
-                        $("#wishlistBtn").removeClass("btn-outline-secondary").addClass("btn-danger");
-                        $("#wishlistText").text("찜 해제");
-                    } else {
-                        $("#wishlistBtn").removeClass("btn-danger").addClass("btn-outline-secondary");
-                        $("#wishlistText").text("찜하기");
-                    }
-                },
-                error: function() {
-                    alert("오류가 발생했습니다. 다시 시도해주세요.");
-                },
-                // 다시 활성화
-                complete: function() {
-                    $("#wishlistBtn").removeClass('disabled');
-                }
-    		})
+    				console.log("wishlist success", response);
+    				if(response == "0") {
+    					console.log("wishlist response == 0", response);
+    					$btn.removeClass("btn-danger").addClass("btn-outline-secondary");
+    					$btn.attr("data-book-wish", "0");
+    				} else if (response == "1") {
+    					console.log("wishlist response != 0", response);
+    					$btn.removeClass("btn-outline-secondary").addClass("btn-danger");
+    					$btn.attr("data-book-wish", "1");
+    				}
+				}
+    		});
+    		
 		})
     
     	// 폼 제출 시 유효성 검사
@@ -507,14 +524,15 @@
 	    	$("#form-filter input[name=page]").val(1);
 			$("#form-filter").trigger("submit");
 	    });
-   
-		document.getElementById('librarySelect').addEventListener('change', function() {
-			const borrowButton = document.getElementById('borrowButton');
-		    const selectedOption = this.options[this.selectedIndex];
-		    const hasStock = selectedOption.text.includes('재고: 0권') === false;
-		    borrowButton.disabled = !this.value || !hasStock;
-		});
-		
+	    
+	    $("#librarySelect").change(function() {
+	    	let libNo = $(this).val();
+	    	let bookNo = $(this).attr("data-book-no");
+	    	
+	    	$("#borrowButton").attr("href", `/bookhub/loan/loan.jsp?bno=\${bookNo}&lno=\${libNo}`)
+	    					  .removeClass("disabled")
+	    	
+	    });
 
 		
 		// 별점 표시

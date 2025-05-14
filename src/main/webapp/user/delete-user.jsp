@@ -83,7 +83,7 @@
         session.invalidate();
 
         // 성공 시 메인 페이지 또는 로그인 페이지로 리다이렉션
-        response.sendRedirect("delete_success.jsp"); // 성공 메시지 포함
+        response.sendRedirect("delete-success.jsp"); // 성공 메시지 포함
         return; // 리다이렉션 후에는 더 이상 코드 실행 필요 없음
 
     } else {

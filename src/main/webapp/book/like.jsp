@@ -12,7 +12,7 @@
     pageEncoding="UTF-8"%>
 <%
 	//1. 세션에서 로그인된 사용자의 아이디를 조회한다.
-	String userId = "tempuser";
+	String userId = (String) session.getAttribute("LOGINED_USER_ID");
 
 	//2. 요청 파라미터값을 조회한다.
 	int reviewNo = StringUtils.strToInt(request.getParameter("reviewNo"));
