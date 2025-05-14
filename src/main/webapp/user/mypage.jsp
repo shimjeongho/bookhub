@@ -131,7 +131,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
+                <button class="nav-link <%="fail".equals(tab) ? "active" : "" %>" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
                     <i class="fas fa-user-times me-1"></i> 회원탈퇴
                 </button>
             </li>
@@ -730,7 +730,7 @@
             </div>
             
             <!-- Delete Account Tab -->
-            <div class="tab-pane fade" id="delete" role="tabpanel" aria-labelledby="delete-tab">
+            <div class="tab-pane fade <%="fail".equals(tab) ? "show active" : "" %>" id="delete" role="tabpanel" aria-labelledby="delete-tab">
                 <h4 class="mb-4">회원 탈퇴</h4>
                 
                 <div class="alert alert-danger">
