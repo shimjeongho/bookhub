@@ -23,4 +23,5 @@ public class User {
 	private Date createdDate;
 	private Date updatedDate;
 	private String isDeleted;
+	private String role;
 }

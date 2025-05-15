@@ -20,6 +20,7 @@
   //네비게이션바에 이름 표시
   String loggedInUserId = (String)session.getAttribute("LOGINED_USER_ID");
   String loggedInUserName = (String)session.getAttribute("LOGINED_USER_NAME");
+  String loggedInUserRole = (String)session.getAttribute("LOGINED_USER_ROLE");
 %>
 
 <!-- Navigation -->
@@ -82,6 +83,22 @@
             <ul class="navbar-nav">
                 <%
                 	if (loggedInUserId != null) {
+                %>
+                <%
+                		if ("ADMIN".equals(loggedInUserRole)) {
+                %>
+                		<li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="adminMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                관리
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminMenuDropdown">
+                                <li><a class="dropdown-item" href="/bookhub/user/admin-userManagement.jsp">회원 관리</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/bookhub/user/admin-dashboard.jsp">관리자 홈</a></li>
+                            </ul>
+                        </li>
+                <%
+                		}	//관리자 확인 제어문 끝
                 %>
                 	<li class="nav-item">
                 		<a class="nav-link" href="/bookhub/user/mypage.jsp">

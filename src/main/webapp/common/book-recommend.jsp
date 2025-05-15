@@ -13,11 +13,7 @@
 	String recommendUserId = (String)session.getAttribute("LOGINED_USER_ID");
 	
 	// 로그인 유저 대여 목록 개수 가져오기(로그인 상태가 아닐 시 0)
-	int userLoanCnt = 0;
-	
-	if (recommendUserId != null) {
-		userLoanCnt = recommendBooksMapper.getTotalLoanHistoryRows(recommendUserId);
-	}
+	int userLoanCnt = recommendUserId != null ? recommendBooksMapper.getTotalLoanHistoryRows(recommendUserId) : 0;
 	
 	// 맞춤 도서 가져오기
 	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(recommendUserId, userLoanCnt);
@@ -25,7 +21,7 @@
 	if (!recommendBooks.isEmpty()) {
 %>
 		<!-- recommend -->
-		<section class="fly_menu_wrapper sps" id="fly_wing_banner">
+		<section class="fly_menu_wrapper sps hidden d-none" id="fly_wing_banner">
 			<div id="fly-menu-toggle">
 				<i class="bi bi-chevron-right"></i>
 			</div>
@@ -41,11 +37,13 @@
 		for (Book recommendBook : recommendBooks) {
 %>
 								<li class="swiper-slide">
-		                            <a href="/bookhub/book/detail.jsp?bno=<%=recommendBook.getNo() %>" class="d-flex flex-column align-items-center gap-2">
+		                            <a href="/bookhub/book/detail.jsp?bno=<%=recommendBook.getNo() %>" class="d-flex flex-column justify-content-space-between align-items-center gap-2">
 		                                <span class="recommend_book_thumb">
 		                                	<img src="<%=recommendBook.getCoverImagePath() %>" alt="이벤트 1" class="img-fluid rounded-1">
 		                                </span>
+		                                
 		                                <span class="small text-muted book_title"><%=recommendBook.getTitle() %></span>
+		                                <small class="bg-info text-white p-1"><%=recommendBook.getRecommendBy() %></small>
 		                                <span class="btn btn-sm btn-outline-primary">보러가기</span>
 		                            </a>
 		                        </li>
@@ -69,6 +67,9 @@
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script>
 			$(document).ready(function() {
+				console.log("<%=recommendUserId %>");
+				console.log("<%=userLoanCnt %>");
+				
 				const swiper1 = new Swiper(".swiper1", {
 					loop: true,
 					spaceBetween: 10,
@@ -81,25 +82,11 @@
 			            nextEl: '.swiper1-next',
 			            prevEl: '.swiper1-prev',
 			        },
-			        /* autoplay: {
+			        autoplay: {
 				        delay: 3000,
 				        disableOnInteraction: false,
-			    	} */
+			    	}
 				});
-				
-				/* const swiper2 = new Swiper(".swiper2", {
-					loop: true,
-					spaceBetween: 10,
-					pagination: {
-			            el: '.swiper2-pagination',
-			            type: 'fraction',
-			            clickable: true
-			        },
-			        navigation: {
-			            nextEl: '.swiper2-next',
-			            prevEl: '.swiper2-prev',
-			        },
-				}); */
 				
 				// 추천 도서 fiexd 토글 버튼
 				$("#fly-menu-toggle").click(function() {
@@ -112,6 +99,11 @@
 				    } else {
 					    $icon.removeClass("bi-chevron-left").addClass("bi-chevron-right");
 				    }
+				});
+				
+				// swiper가 적용되면서 레이아웃 정리가 필요하여 숨김 상태에서 시작
+				$("#fly_wing_banner").removeClass("d-none").show(function () {
+				    $(this).removeClass("hidden");
 				});
 			});
 			
