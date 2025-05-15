@@ -75,6 +75,7 @@
 	
 	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
 	
+	
 	// 책 정보 조회
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
 	List<Book> books = bookMapper.getMyWishListBooks(userId);
@@ -384,9 +385,22 @@
                             <p class="mb-0">대여일: <%=StringUtils.simpleDate(sortedreturnbook.getLoanDate()) %></p>
                             <p class="mb-0">반납일: <%=StringUtils.simpleDate(sortedreturnbook.getDueDate()) %></p>
                         </div>
+<%
+	if ("P".equals(sortedreturnbook.getLoanStatus())) {
+%>                        
                         <div class="col-md-2">
-                            <span class="badge bg-success status-badge">반납처리중</span>
+                            <span class="badge bg-info status-badge">반납처리중</span>
                         </div>
+<%
+	} else {
+%>  
+						<div class="col-md-2">
+                            <span class="badge bg-success status-badge">반납완료</span>
+                        </div>
+
+<%
+	}
+%>                      
                         <div class="col-md-2">
                             <span class="text-muted">반납신청: <%=StringUtils.simpleDate(sortedreturnbook.getReturnDate())%></span>
                         </div>

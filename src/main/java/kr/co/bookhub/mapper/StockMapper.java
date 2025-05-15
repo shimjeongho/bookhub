@@ -11,7 +11,7 @@ public interface StockMapper {
 	 */
 	void updateStock(@Param("bno") String bno, @Param("lno") String lno);
 	
-	void updateBookStock(@Param("bno") String bno, @Param("lno") String lno);
+	void updateBookStock(@Param("bno") String bno, @Param("libNo") String libNo);
 	
 	/**
 	 * 책번호와 도서관 번호를 받아서 해당 도서의 수량이 몇개인지 받아온다.
