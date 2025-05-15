@@ -266,4 +266,53 @@
 			LOAN_NO = #{lno}
 	</update>
 	
+	
+	 <!-- 
+        [임시] List<LoanHistory> tempGetAllPendingReturns();
+        (이 쿼리는 나중에 반드시 검토 및 수정되어야 합니다.)
+        모든 사용자의 '반납 처리 중'(LOAN_STATUS = 'P')인 대출 기록 목록을 반환한다.
+        LoanHistory VO의 중첩된 User, Book 객체에 필요한 최소 정보를 매핑한다.
+     -->
+    <!-- 
+        [임시] List<LoanHistory> tempGetAllPendingReturns();
+        (이 쿼리는 나중에 반드시 검토 및 수정되어야 합니다.)
+        모든 사용자의 '반납 처리 중'(LOAN_STATUS = 'P')인 대출 기록 목록을 반환한다.
+        LoanHistory VO의 중첩된 User, Book, Library 객체에 필요한 최소 정보를 매핑한다.
+     -->
+    <select id="tempGetAllPendingReturns" resultType="LoanHistory">
+        SELECT
+            L.LOAN_NO                   AS no,
+            L.LOAN_DATE                 AS loanDate,
+            L.RETURN_DATE               AS returnDate,
+            L.DUE_DATE                  AS dueDate,
+            L.LOAN_STATUS               AS loanStatus,
+            L.IS_EXTENSION              AS isExtension,
+            
+            U.USER_ID                   AS "user.id",
+            U.USER_NAME                 AS "user.name",
+            
+            B.BOOK_NO                   AS "book.no",
+            B.BOOK_TITLE                AS "book.title",
+            B.BOOK_AUTHOR               AS "book.author",
+            B.BOOK_PUBLISHER            AS "book.publisher",
+            B.BOOK_COVER_IMAGE_PATH     AS "book.coverImagePath",
+            
+            LIB.LIB_NO                  AS "library.no",     -- Library 객체의 no 필드에 매핑
+            LIB.LIB_NAME                AS "library.name"    -- 필요하다면 도서관 이름도 추가 (Library VO에 name 필드 있음)
+        FROM
+            BOOKHUB_LOAN_HISTORIES L
+        INNER JOIN
+            BOOKHUB_USERS U ON L.USER_ID = U.USER_ID
+        INNER JOIN
+            BOOKHUB_BOOKS B ON L.BOOK_NO = B.BOOK_NO
+        INNER JOIN                                        -- Library 테이블과 JOIN 추가
+            BOOKHUB_LIBRARIES LIB ON L.LIB_NO = LIB.LIB_NO -- L.LIB_NO 컬럼을 사용한다고 가정
+        WHERE
+            L.LOAN_STATUS = 'P'
+        ORDER BY
+            L.RETURN_DATE ASC, L.LOAN_NO ASC
+    </select>
+
+	
+	
 </mapper>

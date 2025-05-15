@@ -43,7 +43,19 @@
                 </div>
             </div>
             
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">도서 반납 관리</h5>
+                        <p class="card-text">사용자가 반납 신청한 도서 목록을 확인하고, 최종 반납 완료 처리를 합니다.</p>
+                        <a href="admin-bookManagement.jsp" class="btn btn-primary">반납 관리 바로가기</a>
+                    </div>
+                </div>
+            </div>
+            
         </div>
+        
+        
     </div>
    
    <!-- Bootstrap JS and jquery -->

@@ -99,4 +99,14 @@ public interface LoanBookMapper {
 	 */
 	void updateLoanStatusAndreturnDateByLoanNo(String lno);
 	
+	
+	
+	  // --- 임시로 추가할 메소드 ---
+    /**
+     * [임시] 모든 사용자의 '반납 처리 중'(LOAN_STATUS = 'P')인 대출 기록 목록을 반환한다.
+     * (이 메소드는 나중에 반드시 검토 및 수정되어야 합니다.)
+     * @return 'P' 상태인 모든 대출 기록 목록
+     */
+    List<LoanHistory> tempGetAllPendingReturns(); // 새로운 임시 메소드
+	
 }
