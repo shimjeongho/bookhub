@@ -429,6 +429,7 @@ a:hover {
 }
 
 .book_post_title {
+	margin: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;	

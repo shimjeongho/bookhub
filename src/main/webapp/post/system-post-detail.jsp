@@ -16,7 +16,7 @@
 	
 	//단일의 게시글을 조회.
 	PostMapper mapper = MybatisUtils.getMapper(PostMapper.class);
-	Post post = mapper.selectPostBypostNo(postNo); 
+	Post post = mapper.getSystemPostByPostNo(postNo); 
 
 	//map 객체 생성
 	Map<String,Object> condition = new HashMap<>(); 
@@ -46,7 +46,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 문의 상세 - 북허브</title>
+    <title>기타 시스템 문의 상세 - 북허브</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -68,15 +68,11 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="card-title mb-0">도서 문의</h4>
-                         <!--    <div>
-                                <span class="badge bg-primary me-2">공개</span>
-                                <span class="badge bg-secondary">답변대기</span>
-                            </div> -->
+                            <h4 class="card-title mb-0">기타시스템 문의</h4>
                         </div>
-                        <div class="text-muted mb-2">
+<%--                         <div class="text-muted mb-2">
                             <small><i class="fas fa-book me-1"></i> 문의 도서: <%= post.getBook().getTitle() %></small>
-                        </div>
+                        </div> --%>
                         <h2 class="mb-3"><%= post.getTitle() %></h2>
                         <div class="d-flex justify-content-between align-items-center text-muted mb-3">
                             <div>
@@ -90,7 +86,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="mb-4">
+<%--                         <div class="mb-4">
                             <h5 class="mb-3">문의 도서</h5>
                             <div class="book-info p-3 bg-light rounded">
                                 <div class="row">
@@ -105,7 +101,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --%>
                         <div class="mb-4">
                             <h5 class="mb-3">문의 내용</h5>
                             <div class="post-content p-3 bg-light rounded">
@@ -117,10 +113,10 @@
                             <div>
 <% if(userId != null && userId.equals(post.getUser().getId())) { %>       
 <!-- 세션에서 꺼낸 아이디가 존재하고, 해당 게시글의 유저와 동일한 유저일 경우, 수정 삭제 기능을 구현할 수 있다. -->                 
-                                <a href="book-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
+                                <a href="system-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
                                     <i class="fas fa-edit me-1"></i> 수정
                                 </a>
-                                <a href="book-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
+                                <a href="system-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
                                 id="del-post-btn">
                                     <i class="fas fa-trash me-1"></i> 삭제
                                 </a>
@@ -152,7 +148,6 @@
 	                           <input type="hidden" name="postCateNo" value="<%= postCateNo %>"> 
 	                           <input type="hidden" name="postNo" value="<%= postNo %>"> 
 	                           <input type="hidden" name="pageNo" value="<%= pageNo %>">
-	                       	   <input type="hidden" name="userId" data-user-id="<%=userId %>">
 	                            
 	                           <div class="d-flex justify-content-end">
 	                               <button type="submit" class="btn btn-primary <%= userId == null ? "disabled": "" %>">댓글 등록</button>
@@ -274,7 +269,7 @@
 
                 <!-- Navigation Buttons -->
                 <div class="d-flex justify-content-between mb-5">
-                    <a href="post-list-1.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
+                    <a href="post-list-3.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
                         <i class="fas fa-arrow-left me-1"></i> 목록으로
                     </a>
                    <!--  <div>
@@ -532,19 +527,12 @@
 	    	
 	    	 // 댓글 등록 할 때
 	    	$("#reply-add").submit(function () {
-	    		const replyContent = $("textarea[name=replyContent]").val(); 
-	    		const userId = $("input[name='userId']").attr("data-user-id");
+	    		const replyContent = $("textarea[name=replyContent]").val();
 	    		
 	    		if(!replyContent.trim() || replyContent.trim() === "") {
 	    			alert("댓글을 입력해주세요.");
 	    			return false;
 	    		}
-	    		if(userId == null) {
-	    			alert("로그인 후 이용해주세요");
-	    			return false;
-	    		}
-	    		
-	    		return true;
 			});
 		});
     	   
