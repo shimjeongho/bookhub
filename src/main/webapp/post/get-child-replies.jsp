@@ -7,7 +7,7 @@
 <%@page import="kr.co.bookhub.util.MybatisUtils"%>
 <%@page import="kr.co.bookhub.mapper.PostMapper"%>
 <%@page import="kr.co.bookhub.util.StringUtils"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="application/json; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
 	int postReplyNo = StringUtils.strToInt(request.getParameter("postReplyNo"));

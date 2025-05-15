@@ -259,7 +259,7 @@
 
 %>   
 						<button type="button"
-                                class="btn btn-outline-secondary disabled"
+                                class="btn btn-outline-secondary d-none"
                                 id="more-parent-reply"
                                 data-post-no="<%=postNo %>"
                                 data-page-no="<%=currentPageNo %>" 
@@ -389,8 +389,8 @@
     					data : {postReplyNo : postReplyNo},
     					dataType : "json",
     					success: function(childReplies) {
+							let $div = $childContainer.empty();
 							for(let reply of childReplies) {
-								let $div = $childContainer.empty();
 								let content = `
 										<div>
 		                                	<span class="fw-bold">&nbsp;&nbsp;&nbsp;&nbsp;\${reply.user.name}</span>
