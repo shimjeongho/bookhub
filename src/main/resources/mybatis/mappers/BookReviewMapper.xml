@@ -18,7 +18,7 @@
 	 	, user_id
 	 	, book_no)
 	 	values
-	 	(BOOKSTORE_REVIEWS_SEQ.nextval
+	 	(BOOKHUB_REVIEWS_REVIEW_NO_SEQ.nextval
 	 	, #{content}
 	 	, #{star}
 	 	, #{title}
