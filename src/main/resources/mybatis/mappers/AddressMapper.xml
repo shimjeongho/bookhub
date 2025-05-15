@@ -125,6 +125,7 @@
 			, A.ADDR_ZIPCODE AS zipcode
 		FROM BOOKHUB_ADDRESS A, BOOKHUB_USERS U
 		WHERE U.USER_ID = #{id}
+        AND U.USER_ID = A.USER_ID
 		AND A.ADDR_GIBON = 'Y'
 	</select>
 	

@@ -114,12 +114,18 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%="rental".equals(tab) ? "active" : "" %>" id="rental-tab" data-bs-toggle="tab" data-bs-target="#rental" type="button" role="tab" aria-controls="rental" aria-selected="false">
+                <button class="nav-link <%="rental".equals(tab) ? "active" : "" %>" 
+                	id="rental-tab" data-bs-toggle="tab" data-bs-target="#rental" 
+                	type="button" role="tab" aria-controls="rental" aria-selected="false" 
+                	onclick="updateQueryString('rental')">
                     <i class="fas fa-book me-1"></i> 대여 내역
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%="return".equals(tab) ? "active" : "" %>" id="return-tab" data-bs-toggle="tab" data-bs-target="#return" type="button" role="tab" aria-controls="return" aria-selected="false">
+                <button class="nav-link <%="return".equals(tab) ? "active" : "" %>" 
+                	id="return-tab" data-bs-toggle="tab" data-bs-target="#return" 
+                	type="button" role="tab" aria-controls="return" aria-selected="false"
+                	onclick="updateQueryString('return')">
                     <i class="fas fa-undo me-1"></i> 반납 내역
                 </button>
             </li>
@@ -130,12 +136,18 @@
             </li>
             
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%="address".equals(tab) ? "active" : "" %>" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">
+                <button class="nav-link <%="address".equals(tab) ? "active" : "" %>" 
+                	id="address-tab" data-bs-toggle="tab" data-bs-target="#address" 
+                	type="button" role="tab" aria-controls="address" aria-selected="false"
+                	onclick="updateQueryString('address')">
                     <i class="fas fa-map-marker-alt me-1"></i> 주소 관리
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%="fail".equals(tab) ? "active" : "" %>" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab" aria-controls="delete" aria-selected="false">
+                <button class="nav-link <%="fail".equals(tab) ? "active" : "" %>" 
+                	id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" 
+                	role="tab" aria-controls="delete" aria-selected="false"
+                	onclick="updateQueryString('accountDelete')">
                     <i class="fas fa-user-times me-1"></i> 회원탈퇴
                 </button>
             </li>
@@ -189,7 +201,8 @@
             
             <!-- Rental Tab -->
             <div class="tab-pane fade <%="rental".equals(tab) ? "show active" : "" %>" id="rental" role="tabpanel" aria-labelledby="rental-tab">
-                <h4 class="mb-4">대여 내역</h4>
+                <h4 class="mb-4">대여 내역</h4>               
+                
 <%
 	if (sortedloanbooks.isEmpty()) {
 %>                
@@ -256,7 +269,7 @@
                         </div>
 <%
 		} else if(sortedloanbook.getIsExtension().equals("N")) {
-%>  
+%>
                         <div class="col-md-2 text-center">
                             <span class="badge bg-primary status-badge">대여중</span><br/>
                         </div>
@@ -264,7 +277,7 @@
                         		<button class="btn btn-sm btn-outline-primary mb-2"
                         			onclick="confirmReturn('<%=sortedloanbook.getNo() %>')">반납하기</button>
                             	<button class="btn btn-sm btn-outline-primary" 
-                            		onclick="confirmExtension('<%=sortedloanbook.getNo() %>')">연장하기</button>
+                            		onclick="confirmExtension('<%=sortedloanbook.getNo() %>', '<%=loanPagination.getCurrentPage() %>')">연장하기</button>
                         </div>
 <%
 		}
@@ -888,6 +901,16 @@
 	    document.addEventListener('DOMContentLoaded', function() {
 	        // Initialize any necessary event listeners
 	    });
+		
+	    function updateQueryString(tabName) {
+	        const url = new URL(window.location.href);
+	        if (tabName) {
+	            url.searchParams.set("tab", tabName);
+	        } else {
+	            url.searchParams.delete("tab");
+	        }
+	        history.replaceState(null, "", url);
+	    }
 	    
 	    $("#addressAddForm").submit(function() {
 	    	if($("#zipcode-field").val() == "") {
@@ -967,10 +990,10 @@
 	    	}
 	    }
 	    
-	    function confirmExtension(lno) {
+	    function confirmExtension(lno, pageNum) {
 	    	var result = confirm("해당 도서를 연장하시겠습니까?");
 	    	if (result) {
-	    		location.href = "/bookhub/loan/extension.jsp?lno=" + lno;
+	    		location.href = "/bookhub/loan/extension.jsp?lno=" + lno + "&page=" + pageNum;
 	    	}
 	    }
 	    
