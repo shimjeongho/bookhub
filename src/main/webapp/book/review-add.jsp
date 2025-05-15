@@ -23,12 +23,15 @@
 	bookReview.setContent(content);
 	bookReview.setStar(star);
 	
+	// BookMapper 가져오기
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
 	Book book = bookMapper.getBookByNo(bookNo);
 	
+	// User 객체 생성해서 UserId 담기
 	User user = new User();
 	user.setId(userId);
 	
+	// BookReview객체에 book, user 정보 담기
 	bookReview.setBook(book);
 	bookReview.setWriter(user);
 	
@@ -49,7 +52,7 @@
 	double avg = ((double) totalPoint / reviewCount);
 	double roundedAvg = StringUtils.round(avg);
 	
-	// 리뷰 평균평점 가져오기		
+	// 리뷰 평균평점 담기		
 	book.setReviewAvg(roundedAvg);
 	
 	// 7. 변경된 도서정보를 테이블에 반영시킨다.

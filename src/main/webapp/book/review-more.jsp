@@ -12,6 +12,7 @@
     pageEncoding="UTF-8"%>
     
 <%
+	// 요청 파라미터값을 조회한다.
 	int bookNo = StringUtils.strToInt(request.getParameter("bookNo"));
 	int pageNo = StringUtils.strToInt(request.getParameter("page"));
 	int totalRows = StringUtils.strToInt(request.getParameter("totalRows"));
@@ -30,8 +31,10 @@
 	condition.put("offset", pagination.getOffset());
 	condition.put("rows", pagination.getRows());
 	
+	// BookReviewMapper 객체를 획득한다.
 	BookReviewMapper bookReviewMapper = MybatisUtils.getMapper(BookReviewMapper.class);
 	
+	// 도서의 리뷰 목록 조회
 	List<BookReview> bookReviews = bookReviewMapper.getBookReviewsByBookNo(condition);
 	
 	Gson gson = new GsonBuilder()

@@ -9,9 +9,9 @@ import kr.co.bookhub.vo.Stock;
 public interface LibraryMapper {
 
 	/**
-	 * 
+	 * 도서관 정보 조회
 	 * @param condition
-	 * @return
+	 * @return 도서관 테이블의 정보 조회
 	 */
 	List<Library> getLibrary();
 	

@@ -11,6 +11,7 @@
 	//1. 세션에서 로그인된 사용자의 아이디를 조회한다.
 	String userId = (String) session.getAttribute("LOGINED_USER_ID");
 	
+	//2. 요청 파라미터값을 조회한다.
 	int bookNo = StringUtils.strToInt(request.getParameter("bookNo"));
 	int isBookWish = StringUtils.strToInt(request.getParameter("isBookWish"));
 	
@@ -20,12 +21,13 @@
 	condition.put("userId", userId);
 	condition.put("isBookWish", isBookWish);
 	
-	// mapper 가져오기	
+	// BookWishListMapper 객체 획득	
 	BookWishListMapper bookWishListMapper = MybatisUtils.getMapper(BookWishListMapper.class);
 	
 	// 처리 여부
 	String updated;
 	
+	// 삭제 : 0, 추가 : 1
 	if (isBookWish > 0) {
 		bookWishListMapper.removeWishList(condition);
 		updated = "0";
@@ -34,6 +36,8 @@
 		updated = "1";
 	}
 	
+	// out은 jsp의 내장객체(JspWriter 객체)가 저장되어 있는 변수다.
+	// JspWriter의 writer(데이터) 메소드를 실행하면 데이터가 브라우저로 보내진다.
 	out.write(updated);
 %>
 

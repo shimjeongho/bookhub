@@ -58,6 +58,8 @@
 	List<Stock> stocks = libraryMapper.getLibraryStocksByBookNo(bookNo);
 	// 특정 도서 번호를 전달받아 모든 도서관 재고를 체크한다
 	int availableCount = stockMapper.getBookAvailability(bookNo);
+	// library getter
+	Library lib = new Library();
 	
 	
 	// 총 리뷰 개수 조회
@@ -160,7 +162,7 @@
 <%
 	if (userId != null) {
 %>                        
-                        <a href="bookhub/loan/loan.jsp?<%=book.getNo() %>" class="btn btn-primary me-2 disabled" id="borrowButton" >
+                        <a href="bookhub/loan/loan.jsp?bno=<%=book.getNo() %>&lno=<%=lib.getNo() %>" class="btn btn-primary me-2 disabled" id="borrowButton" >
                             <i class="fas fa-book"></i> 대여하기
                         </a>
 <%
@@ -177,7 +179,9 @@
 %>
 						<button 
                         	id="wishlist-btn" 
-                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>">
+                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>"
+                        	data-book-no="<%=bookNo %>"
+                        	data-book-wish="<%=isBookWish%>">
                             <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
                         </button>
 <%
@@ -405,49 +409,6 @@
 %>
             </div>
         </div>
-
-        <!-- Related Books -->
-        <div class="mt-5">
-            <h3>관련 도서</h3>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 1">
-                        <div class="card-body">
-                            <h5 class="card-title">관련 도서 1</h5>
-                            <p class="card-text">저자명</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 2">
-                        <div class="card-body">
-                            <h5 class="card-title">관련 도서 2</h5>
-                            <p class="card-text">저자명</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 3">
-                        <div class="card-body">
-                            <h5 class="card-title">관련 도서 3</h5>
-                            <p class="card-text">저자명</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/150x200" class="card-img-top" alt="관련 도서 4">
-                        <div class="card-body">
-                            <h5 class="card-title">관련 도서 4</h5>
-                            <p class="card-text">저자명</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     
     <%@ include file="../common/book-recommend.jsp" %>
@@ -489,7 +450,6 @@
     
     	// 찜 하기 버튼으로 비동기 통신
     	$("#wishlist-btn").click(function() {
-    		console.log("찜 버튼 클릭 이벤트 실행");
     		const $btn = $(this);
     		const bookNo = $(this).attr("data-book-no");
     		const isBookWish= $(this).attr("data-book-wish");
@@ -503,13 +463,10 @@
     				isBookWish: isBookWish
     			},
     			success: function(response) {
-    					console.log("dd")
     				if(response == "0") {
-    					console.log("dd")
     					$btn.removeClass("btn-danger").addClass("btn-outline-secondary");
     					$btn.attr("data-book-wish", "0");
     				} else if (response == "1") {
-    					console.log("dd")
     					$btn.removeClass("btn-outline-secondary").addClass("btn-danger");
     					$btn.attr("data-book-wish", "1");
     				}
@@ -552,11 +509,13 @@
 	}
 %>
     
+    	// 정렬 기능
 	    $("select[name='sort']").change (function() {
 	    	$("#form-filter input[name=page]").val(1);
 			$("#form-filter").trigger("submit");
 	    });
 	    
+    	// 도서관 선택
 	    $("#librarySelect").change(function() {
 	    	let libNo = $(this).val();
 	    	let bookNo = $(this).attr("data-book-no");
