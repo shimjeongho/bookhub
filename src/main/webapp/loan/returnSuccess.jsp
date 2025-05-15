@@ -1,0 +1,33 @@
+<%@page import="kr.co.bookhub.mapper.StockMapper"%>
+<%@page import="kr.co.bookhub.mapper.AddressMapper"%>
+<%@page import="kr.co.bookhub.vo.Address"%>
+<%@page import="jakarta.websocket.SendResult"%>
+<%@page import="kr.co.bookhub.vo.LoanHistory"%>
+<%@page import="java.util.Date"%>
+<%@page import="kr.co.bookhub.util.StringUtils"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.bookhub.util.MybatisUtils"%>
+<%@page import="kr.co.bookhub.mapper.LoanBookMapper"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>    
+<%
+	/*
+		/bookhub/loan/returnSuccess.jsp?bno=xx&lno=xx
+	*/
+	String lno = request.getParameter("lno");
+	String bno = request.getParameter("bno");
+	
+	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
+	
+	loanBookMapper.updateReturnBook(lno);
+	
+	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
+	
+	stockMapper.updateBookStock(bno, lno);
+	
+	response.sendRedirect("/bookhub/user/admin-confirmReturn.jsp");
+%>
+
+
+
+

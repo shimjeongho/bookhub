@@ -23,6 +23,8 @@ public interface LoanBookMapper {
 	
 	List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
 	
+	List<LoanHistory> getAllReturnBooks();
+	
 	
 	/**
 	 * 모든 행의 갯수를 조회한다.
@@ -44,6 +46,8 @@ public interface LoanBookMapper {
 	 * @param id
 	 */
 	void updateDelayBooksStatus(String id);
+	
+	void updateReturnBook(String lno);
 	
 	/**
 	 * 사용자 아이디를 통해 해당 유저가 빌린 책 중에 연체중인 도서의 목록을 반환한다.

@@ -18,6 +18,18 @@
 	</update>
 	
 	<!--  
+		void updateBookStock(@Param("bno") String bno, @Param("lno") String lno);
+	-->
+	<update id="updateBookStock" parameterType="String">
+		UPDATE BOOKHUB_STOCKS
+		SET 
+		    BOOK_STOCK = BOOK_STOCK + 1
+		WHERE
+		    BOOK_NO = #{bno}
+		AND LIB_NO = #{lno}
+	</update>
+	
+	<!--  
 		int getBookStockCount(String bno, String lno); 
 	-->
 	<select id="getBookStockCount" parameterType="String">

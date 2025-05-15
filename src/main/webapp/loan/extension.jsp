@@ -27,6 +27,7 @@
 	
 	String id = (String) session.getAttribute("LOGINED_USER_ID");
 	String lno = request.getParameter("lno");
+	String pageNo = request.getParameter("page");
 	
 	LoanBookMapper loanbookmapper = MybatisUtils.getMapper(LoanBookMapper.class);
 	
@@ -35,5 +36,5 @@
 %>
 	<script>
 		alert("연장이 완료되었습니다.")
-		location.href = "/bookhub/user/mypage.jsp?tab=rental#loan-"+ "<%=lno %>";
+		location.href = "/bookhub/user/mypage.jsp?tab=rental&page=<%=pageNo %>#loan-<%=lno %>";
 	</script>

@@ -73,6 +73,24 @@
 		OFFSET #{offset} ROWS
 		FETCH NEXT #{rows} ROWS ONLY
 	</select>
+	
+	<!--  
+		List<LoanHistory> getAllReturnBooks();
+	-->
+	<select id="getAllReturnBooks" resultType="LoanHistory">
+		SELECT
+		    LOAN_NO
+		    , LOAN_DATE
+		    , RETURN_DATE
+		    , DUE_DATE
+		    , LOAN_STATUS
+		    , USER_ID
+		    , LIB_NO
+		    , BOOK_NO
+		    , IS_EXTENSION
+		FROM BOOKHUB_LOAN_HISTORIES
+		WHERE LOAN_STATUS = 'P'
+	</select>
 	 
 	<!--  
 		int getLoanTotalRows(String id);
@@ -107,6 +125,15 @@
 		WHERE DUE_DATE &lt; SYSDATE
 		AND USER_ID = #{id}
 		AND LOAN_STATUS = 'L'
+	</update>
+	
+	<!-- 
+		void updateReturnBook(String lno);
+	 -->
+	<update id="updateReturnBook" parameterType="String">
+		UPDATE BOOKHUB_LOAN_HISTORIES
+		    SET LOAN_STATUS = 'R'
+		    WHERE LOAN_NO = #{lno}
 	</update>
 	 
 	<!--  

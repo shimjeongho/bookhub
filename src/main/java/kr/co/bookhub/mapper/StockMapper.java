@@ -11,6 +11,8 @@ public interface StockMapper {
 	 */
 	void updateStock(@Param("bno") String bno, @Param("lno") String lno);
 	
+	void updateBookStock(@Param("bno") String bno, @Param("lno") String lno);
+	
 	/**
 	 * 책번호와 도서관 번호를 받아서 해당 도서의 수량이 몇개인지 받아온다.
 	 * @param bno
@@ -25,4 +27,7 @@ public interface StockMapper {
 	 * @return 특정 도서 번호의 대한 모든 도서관 재고 체크
 	 */
 	int getBookAvailability(int bookNo); 	
+	
+	
+	
 }
