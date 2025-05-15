@@ -6,9 +6,9 @@
 <mapper namespace="kr.co.bookhub.mapper.LibraryMapper">
 	
 	<!-- 
-		Library getLibraryByNo(int no);
+		List<Library> getLibrary(Map<String, Object> condition);
 	 -->
-	 <select id="getLibraryByNo" resultType="Library">
+	 <select id="getLibrary" resultType="Library">
 	 	SELECT
 	 		LIB_NO						AS no
 	 	  , LIB_NAME					AS name
@@ -20,8 +20,6 @@
 	 	  , LIB_BUSINESS_HOURS			AS businessHours
 	 	FROM
 	 		BOOKHUB_LIBRARIES
-	 	WHERE
-	 		LIB_NO = #{NO}
 	 </select>
 	 
 	 <!-- 
