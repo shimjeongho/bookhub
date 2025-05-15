@@ -52,7 +52,7 @@
 	<!--  
 		List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
 	 -->
-	<select id="getSortedReturnBooksByUserId">
+	<select id="getSortedReturnBooksByUserId" parameterType="map" resultType="LoanHistory">
 		SELECT
 			B.BOOK_NO                AS "book.no"
 			, L.LOAN_NO              AS no
@@ -113,7 +113,7 @@
 		FROM
 			BOOKHUB_LOAN_HISTORIES
 		WHERE USER_ID = #{id}
-		AND LOAN_STATUS = 'P'
+		AND LOAN_STATUS IN ('P', 'R')
 	</select>
 	 
 	<!--  
