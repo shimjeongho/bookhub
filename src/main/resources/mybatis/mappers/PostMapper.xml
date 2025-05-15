@@ -326,6 +326,8 @@
                 RP.POST_NO = P.POST_NO AND
                 RP.POST_NO = #{postNo} AND 
                 RP.PARENT_NO IS NULL
+            ORDER BY 
+            	RP.REPLY_CREATED_DATE DESC
             offset #{offset} rows
 			fetch next #{rows} rows only            
 	 </select>
@@ -352,6 +354,8 @@
                 RP.POST_NO = P.POST_NO AND
                 RP.PARENT_NO = #{postReplyNo} AND 
                 RP.PARENT_NO IS NOT NULL
+            ORDER BY 
+            	RP.REPLY_CREATED_DATE DESC
 	 </select>
 	 
 	 <!-- public int totalRowsParentReply(Map<String, Object> conditon); -->
