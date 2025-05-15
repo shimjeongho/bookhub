@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.bookhub.vo.Book;
+import kr.co.bookhub.vo.Library;
 import kr.co.bookhub.vo.Post;
 import kr.co.bookhub.vo.PostCategory;
 import kr.co.bookhub.vo.PostReply;
@@ -143,4 +144,56 @@ public interface PostMapper {
 	 * @return
 	 */
 	public int totalRowsParentReply(Map<String, Object> conditon);
+	
+	/**
+	 * 도서관 문의 게시판에 작성된 모든 게시글들을 조회한다.
+	 * @param condition
+	 * @return
+	 */
+	public List<Post> getLibPosts(Map<String, Object> condition);
+	
+	/**
+	 * 게시글 번호를 가지고 단일의 도서관 문의 게시글을 조회한다.
+	 * @param postNo
+	 * @return
+	 */
+	public Post getLibPostBypostNo(int postNo);
+	
+	/**
+	 * DB에 저장된 도서관 정보를 조회한다.
+	 * @return
+	 */
+	public List<Library> getLibraries();
+	
+	/**
+	 * 도서관 문의 게시글을 등록한다.
+	 * @param post
+	 */
+	public void insertLibPost(Post post);
+	
+	/**
+	 * 기타 시스템 문의 게시글에 등록한다.
+	 * @param post
+	 */
+	public void insertSystemPost(Post post);
+	
+	/**
+	 * 기타 시스템 문의 게시판의 모든 게시글을 가져온다.
+	 * @param condition
+	 */
+	public List<Post> getSystemPost(Map<String, Object> condition);
+	
+	/**
+	 * 게시글 번호를 받아, 기타 시스템 문의 게시글을 조회한다.
+	 * @param postNo
+	 * @return
+	 */
+	public Post getSystemPostByPostNo(int postNo);
+	
+	/**
+	 * 게시글을 받아와, 접속 할 때마다 조회 수 증가 기능을 구현한다.
+	 * @param post
+	 */
+	public void updatePostViewCnt(Post post);
+	
 }

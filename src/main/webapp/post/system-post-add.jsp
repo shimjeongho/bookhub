@@ -8,15 +8,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% 
-	//1. 서버에서 받은 값들을 추출한다. 
+	//서버에서 받은 값 추출
 	String userId = (String)session.getAttribute("LOGINED_USER_ID"); 
-	int bookNo = StringUtils.strToInt(request.getParameter("bookNo")); 
 	int postCateNo = StringUtils.strToInt(request.getParameter("postCateNo"));
 	String title = request.getParameter("title"); 
 	String content = request.getParameter("content");
 	String isPublic = request.getParameter("isPublic"); 
 	
-	//2.Post 객체 생성하기 
+	//Post 객체 생성 
 	Post post = new Post();
 	
 	//3.Post 객체에 set하기
@@ -28,21 +27,18 @@
 	// User, Book, PostCategory 객체들을 생성하고 각 객체에 set 한 다음 
 	// Post 객체에 할당. 
 	User user = new User(); 
-	Book book = new Book(); 
 	PostCategory category = new PostCategory();
 	
 	user.setId(userId);
-	book.setNo(bookNo);
 	category.setNo(postCateNo); 
 	
 	post.setUser(user);
-	post.setBook(book);
 	post.setPostCategory(category);
 	
 	//4.mapper 사용가능하게 해서 post 객체 + insert 쿼리문 실행 
 	PostMapper mapper = MybatisUtils.getMapper(PostMapper.class);
-	mapper.insertBookPost(post);
+	mapper.insertSystemPost(post);
 	
 	//도서 문의 게시판의 초기화면으로 이동한다. + 공개여부에 대한 값도 들고 간다.
-	response.sendRedirect("post-list-1.jsp?postCateNo="+postCateNo);
+	response.sendRedirect("post-list-3.jsp?postCateNo="+postCateNo);
 %>

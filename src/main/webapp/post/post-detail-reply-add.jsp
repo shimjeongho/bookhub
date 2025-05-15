@@ -15,9 +15,9 @@
 
 <%	
 	// 서버에서 요청 받은 값을 가져온다.
-	String userId = "123@123"; // 세션으로 바꿀 예정
+	String userId = (String)session.getAttribute("LOGINED_USER_ID"); // 세션으로 바꿀 예정
 	String pageNo = request.getParameter("pageNo");
-	String postCateNo = request.getParameter("postCateNo");
+	int postCateNo = StringUtils.strToInt(request.getParameter("postCateNo"));
 	int postNo = StringUtils.strToInt(request.getParameter("postNo"));
 	String replyContent = request.getParameter("replyContent");
 	String postReplyNoParam = request.getParameter("postReplyNo");	
@@ -49,5 +49,22 @@
 	mapper.insertPostReply(postReply);
 	
 	//돌아간다.
-	response.sendRedirect("book-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	/* if(postCateNo == 1) { 
+		response.sendRedirect("book-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	} else if(postCateNo == 2) {
+		response.sendRedirect("lib-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	} else { 
+		response.sendRedirect("system-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	} */
+	
+	 if(postCateNo == 1) { 
+		response.sendRedirect("book-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	 }
+	if(postCateNo == 2) {
+		response.sendRedirect("lib-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	}
+	if(postCateNo == 3) {
+		response.sendRedirect("system-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
+	}
+	
 %>

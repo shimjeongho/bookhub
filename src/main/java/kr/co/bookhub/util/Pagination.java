@@ -13,7 +13,7 @@ public class Pagination {
    private int offset;			// 페이지별 데이터를 가져올 첫번째 행의 인덱스
    private int totalRows;		// 총 데이터 개수
    private int totalPages;		// 총 페이지 개수
-   private int totalBlocks;		// 총 페에지 블럭 개수
+   private int totalBlocks;		// 총 페이지 블럭 개수
    private int currentBlock;	// 현재 페이지의 블럭
    private int beginPage;		// 현재 블럭의 시작 페이지
    private int endPage;			// 현재 블럭의 마지막 페이지

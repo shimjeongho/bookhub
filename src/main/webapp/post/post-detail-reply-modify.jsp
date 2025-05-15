@@ -4,13 +4,9 @@
 <%@page import="kr.co.bookhub.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> 
-<%-- 댓글에서 수정 버튼을 누르고 등록을 했을 경우, 처리되는 화면이다. 
-	- 서버에서 받는 값: postNo - 게시물 번호, pageNo - 페이지 번호, postCateNo - 문의 유형 번호
-	               , 사용자 아이디(세션), 댓글 내용. 
- --%>
 <% 
 	// 서버에서 값을 추출한다. 
-	String userid = "123@123"; // 세션으로 바꿀 예정
+	String userid = (String)session.getAttribute("LOGINED_USER_ID"); // 세션으로 바꿀 예정
 	String pageNo = request.getParameter("pageNo");
 	String postCateNo = request.getParameter("postCateNo");
 	String replyModifyContent = request.getParameter("replyModifyContent");
@@ -33,5 +29,4 @@
 	
 	
 	response.sendRedirect("book-post-detail.jsp?postCateNo=" + postCateNo + "&pageNo=" + pageNo + "&postNo=" + postNo);
-	
 %>

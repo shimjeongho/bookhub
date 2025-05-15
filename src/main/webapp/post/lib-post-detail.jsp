@@ -16,7 +16,7 @@
 	
 	//단일의 게시글을 조회.
 	PostMapper mapper = MybatisUtils.getMapper(PostMapper.class);
-	Post post = mapper.selectPostBypostNo(postNo); 
+	Post post = mapper.getLibPostBypostNo(postNo); 
 
 	//map 객체 생성
 	Map<String,Object> condition = new HashMap<>(); 
@@ -46,7 +46,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 문의 상세 - 북허브</title>
+    <title>도서관 문의 상세 - 북허브</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -75,7 +75,7 @@
                             </div> -->
                         </div>
                         <div class="text-muted mb-2">
-                            <small><i class="fas fa-book me-1"></i> 문의 도서: <%= post.getBook().getTitle() %></small>
+                            <small><i class="fas fa-book me-1"></i> 문의 도서관: <%= post.getLibrary().getName() %></small>
                         </div>
                         <h2 class="mb-3"><%= post.getTitle() %></h2>
                         <div class="d-flex justify-content-between align-items-center text-muted mb-3">
@@ -91,17 +91,17 @@
                         </div>
                         <hr>
                         <div class="mb-4">
-                            <h5 class="mb-3">문의 도서</h5>
+                            <h5 class="mb-3">문의 도서관</h5>
                             <div class="book-info p-3 bg-light rounded">
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <img src="<%= post.getBook().getCoverImagePath() %>" alt="책 표지" class="img-fluid">
+                                        <img src="<%=post.getLibrary().getImgPath() %>" alt="도서관 소개 표지" class="img-fluid">
                                     </div>
                                     <div class="col-md-10">
-                                        <h5><%= post.getBook().getTitle() %></h5>
-                                        <p class="text-muted mb-2">저자: <%= post.getBook().getAuthor() %></p>
-                                        <p class="text-muted mb-2">출판사: <%= post.getBook().getPublisher() %>
-                                        <p class="text-muted mb-2">발행일자: <%= post.getBook().getPubDate() %></p>
+                                        <h5><%= post.getLibrary().getName() %></h5>
+                                        <p class="text-muted mb-2">주소: <%= post.getLibrary().getLocation() %></p>
+                                        <p class="text-muted mb-2">전화번호: <%= post.getLibrary().getTel() %>
+                                        <p class="text-muted mb-2">운영시간: <%= post.getLibrary().getBusinessHours() %></p>
                                     </div>
                                 </div>
                             </div>
@@ -117,10 +117,10 @@
                             <div>
 <% if(userId != null && userId.equals(post.getUser().getId())) { %>       
 <!-- 세션에서 꺼낸 아이디가 존재하고, 해당 게시글의 유저와 동일한 유저일 경우, 수정 삭제 기능을 구현할 수 있다. -->                 
-                                <a href="book-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
+                                <a href="lib-post-modify-form.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-primary me-2">
                                     <i class="fas fa-edit me-1"></i> 수정
                                 </a>
-                                <a href="book-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
+                                <a href="lib-post-delete.jsp?postCateNo=<%= postCateNo %>&postNo=<%= postNo %>" class="btn btn-outline-secondary"
                                 id="del-post-btn">
                                     <i class="fas fa-trash me-1"></i> 삭제
                                 </a>
@@ -152,7 +152,6 @@
 	                           <input type="hidden" name="postCateNo" value="<%= postCateNo %>"> 
 	                           <input type="hidden" name="postNo" value="<%= postNo %>"> 
 	                           <input type="hidden" name="pageNo" value="<%= pageNo %>">
-	                       	   <input type="hidden" name="userId" data-user-id="<%=userId %>">
 	                            
 	                           <div class="d-flex justify-content-end">
 	                               <button type="submit" class="btn btn-primary <%= userId == null ? "disabled": "" %>">댓글 등록</button>
@@ -245,36 +244,22 @@
 	                                
 	                            </div> 
 	                        </div>
-                        
 <%
 	}
 %>  
-						</div>											
-<%
- 	if(totalRowsParentReply > pnt.getRows()) {
-%>
+						</div>
 						<button type="button"
-                                class="btn btn-outline-secondary"
+                                class="btn btn-outline-secondary <%=totalRowsParentReply > pnt.getRows() ? "": "disabled" %>"
                                 id="more-parent-reply"
                                 data-post-no="<%=postNo %>"
                                 data-page-no="<%=currentPageNo %>" 
-                                data-total-pages="<%=pnt.getTotalPages()  %>">더보기</button>  
-<%
- 	}
-
-%>   
-						<button type="button"
-                                class="btn btn-outline-secondary disabled"
-                                id="more-parent-reply"
-                                data-post-no="<%=postNo %>"
-                                data-page-no="<%=currentPageNo %>" 
-                                data-total-pages="<%=pnt.getTotalPages()  %>">더보기</button>  
+                                data-total-pages="<%=pnt.getTotalPages()  %>">더보기</button>               
                     </div>
                 </div>
 
                 <!-- Navigation Buttons -->
                 <div class="d-flex justify-content-between mb-5">
-                    <a href="post-list-1.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
+                    <a href="post-list-2.jsp?postCateNo=<%= postCateNo %>&pageNo=<%=pageNo %>" class="btn btn-outline-secondary"> 
                         <i class="fas fa-arrow-left me-1"></i> 목록으로
                     </a>
                    <!--  <div>
@@ -427,7 +412,6 @@
 					const dataTotalPages = parseInt($(this).attr("data-total-pages"));
 					console.log("currentPageNo",currentPageNo)
 					console.log("dataTotalPages",dataTotalPages)
-					console.log("totalRowsParentReply:", totalRowsParentReply)
 					
 					if(currentPageNo === dataTotalPages) {
 						$moreBtn.addClass("d-none");
@@ -532,19 +516,12 @@
 	    	
 	    	 // 댓글 등록 할 때
 	    	$("#reply-add").submit(function () {
-	    		const replyContent = $("textarea[name=replyContent]").val(); 
-	    		const userId = $("input[name='userId']").attr("data-user-id");
+	    		const replyContent = $("textarea[name=replyContent]").val();
 	    		
 	    		if(!replyContent.trim() || replyContent.trim() === "") {
 	    			alert("댓글을 입력해주세요.");
 	    			return false;
 	    		}
-	    		if(userId == null) {
-	    			alert("로그인 후 이용해주세요");
-	    			return false;
-	    		}
-	    		
-	    		return true;
 			});
 		});
     	   

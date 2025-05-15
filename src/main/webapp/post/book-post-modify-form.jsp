@@ -6,14 +6,13 @@
 <%@page import="kr.co.bookhub.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%-- 게시글 상세페이지에서, postNo를 넘겨 받아서, 그 값으로 해당 게시글의 모든 정보를 가져온다.--%>
 <%
 	String postCateNo = request.getParameter("postCateNo");
 	int postNo = StringUtils.strToInt(request.getParameter("postNo"));
 	PostMapper selectPost = MybatisUtils.getMapper(PostMapper.class);
 	Post post = selectPost.selectPostBypostNo(postNo);
 	
-	String userId = "123@123"; 
+	String userId = (String)session.getAttribute("LOGINED_USER_ID"); 
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	List<Book>books = postMapper.userLoanBookSearch(userId);
 %>    

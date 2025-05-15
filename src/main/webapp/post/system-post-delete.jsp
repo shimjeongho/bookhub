@@ -10,11 +10,11 @@
 	
 	PostMapper selectPost2 = MybatisUtils.getMapper(PostMapper.class); 
 	
-	Post post = selectPost2.selectPostBypostNo(postNo);
+	Post post = selectPost2.getSystemPostByPostNo(postNo);
 	
 	post.setIsDeleted("Y"); 
 	
 	selectPost2.updatePost(post);
 	
-	response.sendRedirect("/bookhub/post/post-list-1.jsp?postCateNo=" + postCateNo);
+	response.sendRedirect("/bookhub/post/post-list-3.jsp?postCateNo=" + postCateNo);
 %>

@@ -7,7 +7,7 @@
 	pageEncoding="UTF-8"%>
 <%
 // 세션에서 꺼내는 것으로 변경하기
-	String userId = "123@123";
+	String userId = (String)session.getAttribute("LOGINED_USER_ID");
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	List<Book> books = postMapper.userLoanBookSearch(userId);
 

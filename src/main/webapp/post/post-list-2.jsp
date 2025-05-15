@@ -5,67 +5,45 @@
 <%@page import="kr.co.bookhub.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <%
-	//일단 mapper를 사용가능한 상태로 만든다. 
 	PostMapper selectPost = MybatisUtils.getMapper(PostMapper.class);
 
-	//메인 페이지에서 postCateNo 값을 서버로 부터 전달 받음.
-	//이 값을 통해, 게시판의 유형별로 게시글을 조회할 수 있음. 그리고 글쓰기 버튼에 갈 때도 전달해야됨.
 	int postCateNo = StringUtils.strToInt(request.getParameter("postCateNo"));
-
-	// 페이지 번호 블록을 누르면 아래 pageNo값이 서버로 보내지게 되고, 우리는 그 값을 다시 받아와서 추출한다.
 	int pageNo = StringUtils.strToInt(request.getParameter("pageNo"), 1);
-
-	// 검색 유형과 검색어를 추출하는데 null인 경우, "" 공백으로 추출한다. 
-	// 왜냐하면 무조건 존재하는 것은 아니기 때문에, 그래서 아래에서 공백이 아닌 경우에만 map 객체에 할당되도록 하여, 
-	// 공백은 그냥 공백인 체로 내비두는 것이다. 
 	String searchType = StringUtils.nullToBlank(request.getParameter("searchType"));
 	String searchKeyword = StringUtils.nullToBlank(request.getParameter("searchKeyword"));
-	
-	//반면 솔트는 디폴트로 정렬되어 있어야 하기 때문에, null인 경우 newest로 하도록 한다.
 	String sort = StringUtils.nullToStr(request.getParameter("sort"), "newest");
 	
 	
 	String userId = (String)session.getAttribute("LOGINED_USER_ID"); 
-	//String userId = null;
 	
-
-	//map 객체를 생성한다.
-	Map<String, Object> conditon = new HashMap<>();
-
-	//map 객체에 서버로 부터 요청 받은 값을 할당한다. 
-	//- postCateNo, searchType, searchTypeKeyword,pageNo
-	conditon.put("postCateNo", postCateNo);
+	Map<String, Object> condition = new HashMap<>();
+	condition.put("postCateNo", postCateNo);
 
 	if (!searchType.isEmpty() && !searchKeyword.isEmpty()) {
-		conditon.put("searchType", searchType);
-		conditon.put("searchKeyword", searchKeyword);
+		condition.put("searchType", searchType);
+		condition.put("searchKeyword", searchKeyword);
 	}
 
-	conditon.put("pageNo", pageNo);
-	
-	conditon.put("sort",sort != null ? sort : "newest");
+	condition.put("pageNo", pageNo);
+	condition.put("sort",sort != null ? sort : "newest");
 
-	// 전체 데이터 개수를 조회한다. 
-	int totalRows = selectPost.getTotalRows(conditon);
+	int totalRows = selectPost.getTotalRows(condition);
 
-	// 페이지 네이션 객체 생성하여 페이징 처리에 필요한 값 생성. 
 	Pagination pnt = new Pagination(pageNo, totalRows);
 
-	//offset값과 rows 값을 map 객체에 할당
-	conditon.put("offset", pnt.getOffset());
-	conditon.put("rows", pnt.getRows());
+	condition.put("offset", pnt.getOffset());
+	condition.put("rows", pnt.getRows());
 	
 	// 전체 게시글을 조회하는 메소드를 호출한다.
-	List<Post> posts = selectPost.getPosts(conditon);
+	List<Post> posts = selectPost.getLibPosts(condition);
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>도서 문의 게시판 - 북허브</title>
+<title>도서관 문의 게시판 - 북허브</title>
 <!-- Bootstrap CSS -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -88,7 +66,7 @@
 			<div class="card-body">
 			    <div class="row align-items-center">
 			        <div class="col-md-3">
-			            <h4 class="card-title mb-0">도서 문의 게시판</h4>
+			            <h4 class="card-title mb-0">도서관 문의 게시판</h4>
 			        </div>
 			        <div class="col-md-9">
 			            <div class="d-flex justify-content-end align-items-center gap-2">
@@ -118,8 +96,8 @@
 			                    </button>
 			                </form>			                
 			                <a id="write-btn" 
-			                   href="book-post-form.jsp?postCateNo=<%=postCateNo %>" 
-			                   class="btn btn-primary btn-sm <%= userId == null ? "disabled" : ""%>">
+			                   href="lib-post-form.jsp?postCateNo=<%=postCateNo %>" 
+			                   class="btn btn-primary btn-sm <%=userId == null ? "disabled" : ""%>">
 			                    <i class="fas fa-pen"></i> 글쓰기
 			                </a>
 			            </div>
@@ -146,7 +124,7 @@
 							<tr>
 								<th scope="col" class="text-center" >번호</th>
 								<th scope="col">제목</th>
-								<th scope="col" class="text-center">문의도서</th>
+								<th scope="col" class="text-center">문의도서관</th>
 								<th scope="col" class="text-center" >작성자</th>
 								<th scope="col" class="text-center" >작성일</th>
 								<th scope="col" class="text-center" >조회</th>
@@ -161,12 +139,12 @@
 							<tr id="post-list-info">
 								<td class="text-center"><%=post.getNo()%></td>
 								<td><a
-									href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+									href="/bookhub/post/lib-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
 									class="post-title"><%=post.getTitle()%></a> <!-- 요청할 파라미터가 여러 개인 경우 '?'가 아닌 '&'로 붙힌다. -->
 								</td>
-								<td class="text-center"><p class="book_post_title"><%=post.getBook().getTitle()%></p></td>
+								<td class="text-center"><p class="book_post_title"><%=post.getLibrary().getName()%></p></td>
 								<td class="text-center"><%=post.getUser().getName()%></td>
-								<td class="text-center"><%=StringUtils.simpleDate((post.getCreatedDate())) %></td>
+								<td class="text-center"><%=StringUtils.simpleDate((post.getCreatedDate()))%></td>
 								<td class="text-center"><%=post.getViewCnt()%></td>
 							</tr>
 <%
@@ -178,14 +156,14 @@
 			if (userId != null && userId.equals(post.getUser().getId())) {
 %>
 								<td>
-								<a href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+								<a href="/bookhub/post/lib-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
 								   class="post-title">비공개 게시글입니다.</a> 
 								</td>
 <% 
 			}else  {
 %>
 								<td>
-								<a href="/bookhub/post/book-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
+								<a href="/bookhub/post/lib-post-detail.jsp?postCateNo=<%=postCateNo%>&postNo=<%=post.getNo()%>&pageNo=<%=pageNo%>"
 								   class="post-title-disabled text-secondary">비공개 게시글입니다.</a> 
 								</td>
 <%
