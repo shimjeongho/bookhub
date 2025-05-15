@@ -33,6 +33,7 @@
 	String userId = (String)session.getAttribute("LOGINED_USER_ID");
     String userName = (String)session.getAttribute("LOGINED_USER_NAME");
     String userPhone = (String)session.getAttribute("LOGINED_USER_PHONE");
+    String userRole = (String)session.getAttribute("LOGINED_USER_ROLE");
 
     if (userId == null) {
         // 로그인되지 않은 경우 처리
@@ -103,10 +104,19 @@
         <div class="profile-section text-center">
             <h3><%= userName %>님</h3>
             <p class="text-muted"><%= userId %></p>
-            <p>회원 등급: <span class="badge bg-primary">일반회원</span></p>
-        </div> 
-
-        <!-- Tabs Navigation -->
+<%
+	if ("ADMIN".equals(userRole)) {
+%>
+            <p>회원 등급: <span class="badge bg-danger">관리자</span></p>
+<%
+	} else {
+%>        
+			<p>회원 등급: <span class="badge bg-primary">일반회원</span></p>
+<%
+	}
+%>
+        </div>
+		<!-- Tabs Navigation -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link <%="".equals(tab) ? "active" : "" %> " id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">

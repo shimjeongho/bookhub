@@ -266,14 +266,6 @@
 		WHERE
 			LOAN_NO = #{lno}
 	</update>
-	
-	
-	 <!-- 
-        [임시] List<LoanHistory> tempGetAllPendingReturns();
-        (이 쿼리는 나중에 반드시 검토 및 수정되어야 합니다.)
-        모든 사용자의 '반납 처리 중'(LOAN_STATUS = 'P')인 대출 기록 목록을 반환한다.
-        LoanHistory VO의 중첩된 User, Book 객체에 필요한 최소 정보를 매핑한다.
-     -->
     <!-- 
         [임시] List<LoanHistory> tempGetAllPendingReturns();
         (이 쿼리는 나중에 반드시 검토 및 수정되어야 합니다.)
@@ -313,7 +305,4 @@
         ORDER BY
             L.RETURN_DATE ASC, L.LOAN_NO ASC
     </select>
-
-	
-	
 </mapper>

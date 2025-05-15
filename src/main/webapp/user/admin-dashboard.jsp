@@ -27,7 +27,7 @@
 <body>
 	<%@ include file="../common/nav.jsp" %>
 	
-	<div class="container mt-5">
+	<div class="container mt-5 min-vh-100">
         <h1>관리자 대시보드</h1>
         <p>환영합니다, <%= loggedInUserName %>님!</p>
         <hr>

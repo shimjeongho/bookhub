@@ -93,6 +93,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminMenuDropdown">
                                 <li><a class="dropdown-item" href="/bookhub/user/admin-userManagement.jsp">회원 관리</a></li>
+                                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/user/admin-bookManagement.jsp">도서 반납 관리</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/bookhub/user/admin-dashboard.jsp">관리자 홈</a></li>
                             </ul>
