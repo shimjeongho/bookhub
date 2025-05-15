@@ -25,7 +25,11 @@
 	 <!-- 
 	 	List<Stock> getLibraryStocksByBookNo(int bookNo);
 	  -->
-	  <select id="getLibraryStocksByBookNo" parameterType="int" resultType="Stock">
+	  <select id="getLibraryStocksByBookNo" 
+	  	parameterType="int" 
+	  	resultType="Stock"
+	  	useCache="false"
+	  	flushCache="true">
 	  	SELECT
 	 		L.LIB_NO						AS "library.no"
 	 	  , L.LIB_NAME						AS "library.name"
