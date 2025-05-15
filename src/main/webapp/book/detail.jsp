@@ -164,6 +164,12 @@
                             <i class="fas fa-book"></i> 대여하기
                         </a>
 <%
+	} else {
+%>
+						<button " class="btn btn-primary me-2 disabled">
+                            <i class="fas fa-book"></i> 대여하기
+						</button>
+<%
 	}
 %>                       
 <%
@@ -171,11 +177,15 @@
 %>
 						<button 
                         	id="wishlist-btn" 
-                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>" 
-                        	data-book-no="<%=book.getNo()%>"
-                        	data-book-wish="<%=isBookWish %>">
+                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>">
                             <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
                         </button>
+<%
+	} else {
+%>
+						<button class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
+						</button>
 <%
 	}
 %>
@@ -449,20 +459,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
     
-	    $('.delete-btn').each(function() {
-	        const writerId = $(this).data("writer-id");
-	        const loggedInId = $(this).data("logged-in-id");
-	
-	        //  작성자와 로그인한 사용자가 다르면 비활성화 처리
-	        if (writerId !== loggedInId) {
-	            $(this)
-	                .removeClass("btn-outline-danger")
-	                .addClass("btn-secondary")
-	                .attr("disabled", true)
-	                .text("삭제");
-	        }
-	    });
-	    
     	$("#review-list").on('click', '.like-button', function() {
     		const reviewNo = $(this).attr("data-review-no");
     		const isLiked = $(this).hasClass("liked");
@@ -476,7 +472,6 @@
     				action: isLiked ? "decrease" : "increase"
     			},
     			success: function(response) {
-    				console.log(response); //응답 확인
    				// 좋아요 개수 업데이트
 	   	            $(`#like-count-\${reviewNo}`).text(response.updatedLikes);
 	
@@ -487,7 +482,6 @@
 	   	            }
 	   	        },
 	   	        error: function(xhr, status, error) {
-	   	            console.log(xhr.responseText);
 	   	            alert("오류가 발생했습니다.");
 	    	        }
     		})
@@ -509,13 +503,13 @@
     				isBookWish: isBookWish
     			},
     			success: function(response) {
-    				console.log("wishlist success", response);
+    					console.log("dd")
     				if(response == "0") {
-    					console.log("wishlist response == 0", response);
+    					console.log("dd")
     					$btn.removeClass("btn-danger").addClass("btn-outline-secondary");
     					$btn.attr("data-book-wish", "0");
     				} else if (response == "1") {
-    					console.log("wishlist response != 0", response);
+    					console.log("dd")
     					$btn.removeClass("btn-outline-secondary").addClass("btn-danger");
     					$btn.attr("data-book-wish", "1");
     				}
@@ -599,10 +593,6 @@
 			const totalRows = $("input[name=totalRows]").val();
 			const sort = $("select[name=sort]").val();
 			
-			console.log("bookNo: ", bookNo);
-			console.log("page: ", page);
-			console.log("totalRows: ", totalRows);
-			
 
 			$.ajax({
 				method: "get",
@@ -661,9 +651,6 @@
 						
 						$("#review-list").append(content);
 					}
-					 // 페이지 값 증가시키기
-		            page++;
-		            $("input[name=nextPage]").val(page);
 		            
 		            
 		         	// "더보기" 버튼 위치 조정

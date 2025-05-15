@@ -48,7 +48,8 @@
 	int reviewCount = book.getReviewCount();
 	double avg = ((double) totalPoint / reviewCount);
 	double roundedAvg = StringUtils.round(avg);
-			
+	
+	// 리뷰 평균평점 가져오기		
 	book.setReviewAvg(roundedAvg);
 	
 	// 7. 변경된 도서정보를 테이블에 반영시킨다.

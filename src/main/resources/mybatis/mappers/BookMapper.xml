@@ -39,7 +39,7 @@
 	  		bookhub_books
 	  	set
 	  		book_review_count	= #{reviewCount}
-	  	  , book_review_avg = #{reviewAvg}
+	  	  , book_review_avg 	= #{reviewAvg}
 	  	  , book_updated_date	= sysdate
 	  	where
 	  		book_no = #{no}
@@ -49,13 +49,16 @@
         List<Book> getMyWishListBooks(String id);
       -->
       <select id="getMyWishListBooks" parameterType="string" resultType="Book" useCache="false" flushCache="true">
-         select b.book_no                    as no
+         select
+        	   b.book_no                    	as no
              , b.book_cover_image_path          as coverImagePath
-             , b.book_title                  as title
-             , b.book_author                  as author
-             , b.book_publisher               as publisher
-         from bookhub_wishlist a, bookhub_books b
-         where a.book_no = b.book_no
-         and a.user_id = #{userId}
+             , b.book_title                  	as title
+             , b.book_author                 	as author
+             , b.book_publisher               	as publisher
+         from 
+         		bookhub_wishlist a, bookhub_books b
+         where 
+        		a.book_no = b.book_no
+         and 	a.user_id = #{userId}
       </select>   
 </mapper>
