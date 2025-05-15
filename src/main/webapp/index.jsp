@@ -13,14 +13,14 @@
 	String userId = (String)session.getAttribute("LOGINED_USER_ID");
 	
 	// 로그인 유저 대여 목록 개수 가져오기(로그인 상태가 아닐 시 0)
-	int userLoanCnt = 0;
+	int userLoanAndWishlistCnt = 0;
 	
 	if (userId != null) {
-		userLoanCnt = recommendBooksMapper.getTotalLoanHistoryRows(userId);
+		userLoanAndWishlistCnt = recommendBooksMapper.getTotalLoanHistoryAndWishlistRows(userId);
 	}
 	
 	// 맞춤 도서 가져오기
-	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(userId, userLoanCnt);
+	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(userId, userLoanAndWishlistCnt);
 	
 	// 최신 출시된 20개 도서 조회
 	List<Book> recentBooks = indexPageMapper.getBooksForIndexPage();
