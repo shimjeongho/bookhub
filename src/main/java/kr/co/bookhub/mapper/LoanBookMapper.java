@@ -23,6 +23,10 @@ public interface LoanBookMapper {
 	
 	List<LoanHistory> getSortedReturnBooksByUserId(Map<String, Object> condition);
 	
+	/**
+	 * P 상태인 책 조회
+	 * @return
+	 */
 	List<LoanHistory> getAllReturnBooks();
 	
 	

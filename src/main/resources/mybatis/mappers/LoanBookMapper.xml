@@ -68,7 +68,7 @@
 		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
 		WHERE L.USER_ID = #{id}
 		AND B.BOOK_NO = L.BOOK_NO
-		AND L.LOAN_STATUS = ('R', 'P')
+		AND L.LOAN_STATUS IN ('R', 'P')
 		ORDER BY CASE WHEN L.LOAN_STATUS = 'P' THEN 0 ELSE 1 END, L.LOAN_DATE DESC 
 		OFFSET #{offset} ROWS
 		FETCH NEXT #{rows} ROWS ONLY
@@ -119,7 +119,7 @@
 	<!--  
 		void updateDelayBooksStatus(String id);
 	 -->
-	<update id="updateDelayBooksStatus" parameterType="String">
+	<update id="updateDelayBooksStatus">
 		UPDATE BOOKHUB_LOAN_HISTORIES
 		SET LOAN_STATUS = 'D'
 		WHERE DUE_DATE &lt; SYSDATE
@@ -130,7 +130,7 @@
 	<!-- 
 		void updateReturnBook(String loanNo);
 	 -->
-	<update id="updateReturnBook" parameterType="String">
+	<update id="updateReturnBook">
 		UPDATE BOOKHUB_LOAN_HISTORIES
 		    SET LOAN_STATUS = 'R'
 		    WHERE LOAN_NO = #{loanNo}
@@ -197,7 +197,7 @@
 	<!-- 
 		void updateIsExtensionAndDueDateByLoanNo(String lno);
 	-->
-	<update id="updateIsExtensionAndDueDateByLoanNo" parameterType="String">
+	<update id="updateIsExtensionAndDueDateByLoanNo">
 		UPDATE BOOKHUB_LOAN_HISTORIES
 		SET
 			IS_EXTENSION = 'Y',
@@ -257,7 +257,7 @@
 	<!-- 
 		void updateLoanStatusAndreturnDateByLoanNo(String lno);
 	-->
-	<update id="updateLoanStatusAndreturnDateByLoanNo" parameterType="String">
+	<update id="updateLoanStatusAndreturnDateByLoanNo">
 		UPDATE BOOKHUB_LOAN_HISTORIES
 		SET
 			LOAN_STATUS = 'P',
