@@ -12,18 +12,19 @@
     pageEncoding="UTF-8"%>    
 <%
 	/*
-		/bookhub/loan/returnSuccess.jsp?bno=xx&lno=xx
+	/bookhub/loan/returnSuccess.jsp?bno=xx&lno=xx
 	*/
-	String lno = request.getParameter("lno");
+	String libno = request.getParameter("libNo"); // 도서관번호
 	String bno = request.getParameter("bno");
+	String loanNo = request.getParameter("loanNo");
 	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
 	
-	loanBookMapper.updateReturnBook(lno);
+	loanBookMapper.updateReturnBook(loanNo);
 	
 	StockMapper stockMapper = MybatisUtils.getMapper(StockMapper.class);
 	
-	stockMapper.updateBookStock(bno, lno);
+	stockMapper.updateBookStock(bno, libno);
 	
 	response.sendRedirect("/bookhub/user/admin-confirmReturn.jsp");
 %>

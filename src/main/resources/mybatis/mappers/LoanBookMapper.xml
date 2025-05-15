@@ -68,8 +68,8 @@
 		FROM BOOKHUB_BOOKS B, BOOKHUB_LOAN_HISTORIES L
 		WHERE L.USER_ID = #{id}
 		AND B.BOOK_NO = L.BOOK_NO
-		AND L.LOAN_STATUS = 'P'
-		ORDER BY CASE WHEN L.LOAN_STATUS = 'D' THEN 0 ELSE 1 END, L.LOAN_DATE DESC 
+		AND L.LOAN_STATUS = ('R', 'P')
+		ORDER BY CASE WHEN L.LOAN_STATUS = 'P' THEN 0 ELSE 1 END, L.LOAN_DATE DESC 
 		OFFSET #{offset} ROWS
 		FETCH NEXT #{rows} ROWS ONLY
 	</select>
@@ -128,12 +128,12 @@
 	</update>
 	
 	<!-- 
-		void updateReturnBook(String lno);
+		void updateReturnBook(String loanNo);
 	 -->
 	<update id="updateReturnBook" parameterType="String">
 		UPDATE BOOKHUB_LOAN_HISTORIES
 		    SET LOAN_STATUS = 'R'
-		    WHERE LOAN_NO = #{lno}
+		    WHERE LOAN_NO = #{loanNo}
 	</update>
 	 
 	<!--  
