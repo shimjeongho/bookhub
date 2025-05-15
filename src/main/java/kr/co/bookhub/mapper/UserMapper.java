@@ -1,5 +1,7 @@
 package kr.co.bookhub.mapper;
 
+import java.util.List;
+
 import kr.co.bookhub.vo.User;
 
 //User정보를 담은 Mapper
@@ -26,7 +28,13 @@ public interface UserMapper {
 	void updateUser(User user);
 	
 	
-	
 	void deleteUser(String id);
+	
+	
+	List<User> getAllUsers(); // 전체 사용자 목록을 가져오는 메소드
+	
+	void restoreUser(String id);
+	
+	User getUserByIdForAdmin(String id); //y값도 같이 조회
 		
 }

@@ -28,7 +28,7 @@
 	user.setName(name);
 	user.setPhone(phone);
 	user.setBirth(birth);
-	
+	user.setRole("USER");
 	//4. UserMapper 객체의 insertUser메소드를 호출하여 데이터베이스에 저장
 	usermapper.insertUser(user);
 	
