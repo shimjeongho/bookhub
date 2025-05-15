@@ -62,7 +62,7 @@ a:hover {
 	padding: 1rem 0;
 	position: sticky;
 	top: 0;
-	z-index: 1;
+	z-index: 3;
 }
 
 .navbar-brand {
@@ -1188,4 +1188,91 @@ body {
 .swiper-pagination-fraction {
 	font-size: 0.75em;
 	padding-top: 0.5em;
+}
+
+/* Latest Books Carousel Styles */
+.latest-books {
+    background-color: #f8f9fa;
+    
+    .card-title {
+    	display: -webkit-box;
+		-webkit-line-clamp: 2;       /* 표시할 줄 수 */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+    }
+    
+    .text-muted {
+    	display: -webkit-box;
+		-webkit-line-clamp: 1;       /* 표시할 줄 수 */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+    }
+    
+    .card-body {
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: space-between;
+    }
+}
+
+.latest-books .card {
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.latest-books .card:hover {
+    transform: translateY(-5px);
+}
+
+.latest-books .card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+.latest-books .carousel-control-prev,
+.latest-books .carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+}
+
+.latest-books .carousel-control-prev-icon,
+.latest-books .carousel-control-next-icon {
+    background-color: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 50%;
+}
+
+/* Donation Books Card Styles */
+.donation-card {
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.donation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.donation-card .card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.donation-card .book-info {
+    color: var(--text-color);
+}
+
+.donation-card .book-info p {
+    font-size: 0.9rem;
+}
+
+.donation-card .book-info i {
+    color: var(--primary-color);
+    width: 20px;
 }

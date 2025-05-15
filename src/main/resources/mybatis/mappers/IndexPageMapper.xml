@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.bookhub.mapper.IndexPageMapper">
+	
+	   <!-- 
+	   	List<Book> getBooksForIndexPage();
+	   -->
+	   <select id="getBooksForIndexPage" resultType="Book">
+	   		SELECT 
+			    B.BOOK_NO 				as no,
+		        B.BOOK_TITLE 			as title,
+		        B.BOOK_AUTHOR 			as author,
+		        B.BOOK_PUBLISHER 		as publisher,
+		        B.BOOK_DESCRIPTION 		as description,
+		        B.BOOK_PUB_DATE 		as pubDate,
+		        B.BOOK_REVIEW_COUNT 	as reviewCount,
+		        B.BOOK_REVIEW_AVG 		as reviewAvg,
+		        B.BOOK_COVER_IMAGE_PATH as coverImagePath,
+		        B.BOOK_CREATED_DATE 	as createdDate,
+		        B.BOOK_UPDATED_DATE  	as updatedDate,
+		        B.BOOK_ISBN 			as isbn,
+		        B.CATEGORY_NO 			as "category.no"
+			FROM BOOKHUB_BOOKS B
+			ORDER BY BOOK_PUB_DATE DESC
+			OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY
+	   </select>
+	   
+	   <!--  
+	   	List<Book> getDonationBooksForIndexPage();
+	   -->
+	   <select id="getDonationBooksForIndexPage" resultType="Donation">
+	   		SELECT
+			    DONATION_NO						as no
+			    , DONATION_BOOK_TITLE			as title
+			    , DONATION_BOOK_AUTHOR			as author
+			    , DONATION_BOOK_PUBLISHER		as publisher
+			    , DONATION_BOOK_DESCRIPTION		as description
+			    , DONATION_CREATED_DATE			as createdDate
+			    , DONATION_UPDATED_DATE			as updatedDate
+			    , IS_DELETED					as isDeleted
+			    , USER_ID						as "user.id"
+			    , LIB_NO						as "library.no"
+			FROM BOOKHUB_DONATION_BOOKS
+			ORDER BY updatedDate DESC
+			OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY
+	   </select>
+	   
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,11 +9,11 @@ import kr.co.bookhub.vo.Stock;
 public interface LibraryMapper {
 
 	/**
-	 * 도서관 정보 조회
-	 * @param no 도서관 번호
-	 * @return 도서관 정보
+	 * 
+	 * @param condition
+	 * @return
 	 */
-	Library getLibraryByNo(int no);
+	List<Library> getLibrary();
 	
 	/**
 	 * 도서 번호를 이용하여 도서관 책 재고 조회

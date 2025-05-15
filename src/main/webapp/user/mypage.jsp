@@ -441,8 +441,6 @@
  <!-- Wishlist Tab -->
 <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
     <h4 class="mb-4">찜 목록</h4>
-
-
 <%
     String basePath = request.getContextPath() + "/book/detail.jsp?bno=";
 
