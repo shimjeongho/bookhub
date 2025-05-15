@@ -157,8 +157,8 @@
         function confirmBookReturn(lno, bno, libNo, bookTitle) {
             const title = bookTitle || "해당 도서";
             if (confirm("도서 '" + title + "' (대출번호: " + lno + ")의 반납을 완료 처리하시겠습니까?")) {
-                let targetUrl = "admin-confirmReturn.jsp";
-                targetUrl += "?lno=" + encodeURIComponent(lno);
+                let targetUrl = "/bookhub/loan/returnSuccess.jsp";
+                targetUrl += "?loanNo=" + encodeURIComponent(lno);
                 targetUrl += "&bno=" + encodeURIComponent(bno);
                 targetUrl += "&libNo=" + encodeURIComponent(libNo);
                 location.href = targetUrl;

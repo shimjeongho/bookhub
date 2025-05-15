@@ -176,7 +176,7 @@
 	</select>
 	
 	<!--  
-	LoanHistory getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
+	List<LoanHistory> getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
 	-->
 	<select id="getLoanHistoryByIdAndBno" resultType="LoanHistory">
 		SELECT
@@ -191,6 +191,7 @@
 			, IS_EXTENSION AS isExtension
 		FROM BOOKHUB_LOAN_HISTORIES
 		WHERE USER_ID = #{id}
+		AND LOAN_STATUS IN ('L','D','P')
 		AND BOOK_NO = #{bno}
 	</select>
 		 

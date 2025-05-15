@@ -72,7 +72,7 @@ public interface LoanBookMapper {
 	 * @param bno
 	 * @return
 	 */
-	LoanHistory getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
+	List<LoanHistory> getLoanHistoryByIdAndBno(@Param("id") String id, @Param("bno") String bno);
 	
 	/**
 	 * 대여번호(LoanNo)를 통해 대여내역테이블에서 대여상태, 반납일을 업데이트한다.
