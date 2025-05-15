@@ -27,5 +27,6 @@ public class Book {
  	private Date updatedDate; 
  	private String isbn; 
  	private Category category;
+ 	private transient String recommendBy; // 추천 내용
   
 }
