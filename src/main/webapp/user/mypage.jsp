@@ -61,7 +61,7 @@
 	Pagination loanPagination = new Pagination(loanPageNo, loanTotalRows, 5);	
 	loancondition.put("id", userId);
     loancondition.put("offset", loanPagination.getOffset());
-	loancondition.put("rows", 5);
+	loancondition.put("rows", loanPagination.getRows());
 	
 	List<LoanHistory> sortedloanbooks = loanBookMapper.getSortedLoanBooksByUserId(loancondition);
 	
@@ -72,9 +72,11 @@
 	Pagination returnPagination = new Pagination(returnPageNo, returnTotalRows, 5);
 	returncondition.put("id", userId);
 	loancondition.put("offset", returnPagination.getOffset());
-	loancondition.put("rows", 5);
+	loancondition.put("rows", returnPagination.getRows());
 	
 	List<LoanHistory> sortedreturnbooks = loanBookMapper.getSortedReturnBooksByUserId(loancondition);
+	
+	System.out.println(sortedreturnbooks);
 	
 	// 책 정보 조회
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
@@ -469,7 +471,6 @@
 <%
    }
 %>
-
 
             </div>
             
