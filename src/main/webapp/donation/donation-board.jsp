@@ -10,6 +10,8 @@
 <%
 	int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
 	
+	String loggedInUserIdDonation = (String)session.getAttribute("LOGINED_USER_ID");
+
 	//DonationMapper 구현객체 획득
 	DonationMapper donationMapper = MybatisUtils.getMapper(DonationMapper.class);
 	
@@ -57,21 +59,16 @@
                     </div>
                     <div class="col-md-6">
                         <div class="d-flex justify-content-end gap-2">
-                            <!-- 옵션 및 검색 부분이다. 시간 남으면 할 예정 - 한지완
-                            <div class="input-group" style="max-width: 300px;">
-                                <select class="form-select" style="max-width: 100px;">
-                                    <option selected>제목</option>
-                                    <option>내용</option>
-                                    <option>작성자</option>
-                                </select>
-                                <input type="text" class="form-control" placeholder="검색어를 입력하세요">
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div> -->
+<%
+	// 로그인 안 했을 때
+	if (!(loggedInUserIdDonation == null || loggedInUserIdDonation.trim().isEmpty())) {
+%>
                             <a href="donation-form.jsp" class="btn btn-primary">
                                 <i class="fas fa-pen"></i> 기부하기
                             </a>
+<%
+	}
+%>
                         </div>
                     </div>
                 </div>
@@ -106,14 +103,13 @@
 							            role="button"
 							            aria-expanded="false"
 							            aria-controls="collapseDesc<%=no%>"
-							            class="text-dark text-decoration-none fw-semibold"
-							        >
+							            class="text-dark text-decoration-none fw-semibold">
 							            <%=donation.getTitle() %>
 							        </a>
 							    </td>
 							    <td class="text-center"><%=donation.getUser().getId() %></td>
 							    <td class="text-center"><%=StringUtils.simpleDate(donation.getUpdatedDate()) %></td>
-							    <td class="text-center"><%=libraries.get(donation.getLibrary().getNo()).getName() %></td>
+							    <td class="text-center"><%=libraries.get(donation.getLibrary().getNo()-1).getName() %></td>
 							</tr>
 							<tr class="collapse-row">
 							    <td colspan="5" class="p-0 border-0">
