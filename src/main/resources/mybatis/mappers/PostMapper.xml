@@ -114,6 +114,7 @@
 	 	from
 	 		BOOKHUB_BOOKS b , BOOKHUB_LOAN_HISTORIES l, BOOKHUB_USERS u
 	 	where 
+	 		l.LOAN_STATUS = 'L' AND
 	 		b.BOOK_NO = l.BOOK_NO and 
 	 		u.USER_ID = l.USER_ID and 
 	 		u.USER_ID = #{userId}
