@@ -26,7 +26,7 @@
 	
 	stockMapper.updateBookStock(bno, libno);
 	
-	response.sendRedirect("/bookhub/user/admin-confirmReturn.jsp");
+	response.sendRedirect("/bookhub/user/admin-bookManagement.jsp");
 %>
 
 
