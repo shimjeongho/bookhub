@@ -129,7 +129,7 @@
 	     -->
 	    <select id="getTotalReviewScore" parameterType="int" resultType="int">
 		 select 
-		 		sum(review_star)		as totalStar
+		 		nvl(sum(review_star), 0)		as totalStar
 		 from
 		 		bookhub_reviews
 	     where 	book_no = #{bookNo}
