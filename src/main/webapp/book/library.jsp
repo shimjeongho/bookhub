@@ -109,7 +109,10 @@
                          <div class="card library-card" style="height: 540px !important;">
                              <div class="card-body">
                                  <h5 class="card-title mb-3">위치 정보</h5>
-                                 <div id="libraryMap-<%=library.getNo() %>" data-lat="<%=library.getLatitude() %>" data-lng="<%=library.getLongitude() %>"></div>
+                                 	<div id="libraryMap-<%=library.getNo() %>" data-lat="<%=library.getLatitude() %>" data-lng="<%=library.getLongitude() %>"></div>
+	                                 <div  >
+	                                	 <img alt="card-img" src="/bookhub/resources/images/bookhub-signature-logo.png" style="height: 160px !important;">
+	                                 </div>
                              </div>
                          </div>
                      </div>

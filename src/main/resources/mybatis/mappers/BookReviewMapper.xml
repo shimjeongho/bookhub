@@ -120,7 +120,8 @@
    		 	 bookhub_reviews
    		 set
    		 	is_deleted	=	'Y'
-   		 where review_no = #{reviewNo}
+   		 where 
+   		 	review_no = #{reviewNo}
 		</update>
 	    
 	    <!-- 
@@ -130,9 +131,9 @@
 		 select 
 		 		sum(review_star)		as totalStar
 		 from
-		 	bookhub_reviews
-	     where book_no = #{bookNo}
-	     and is_deleted	=	'N'
+		 		bookhub_reviews
+	     where 	book_no = #{bookNo}
+	     and 	is_deleted	=	'N'
 		</select>
 	    
 	    <!-- 

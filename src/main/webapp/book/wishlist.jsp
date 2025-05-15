@@ -20,7 +20,7 @@
 	condition.put("userId", userId);
 	condition.put("isBookWish", isBookWish);
 	
-	// mapper 가져오기
+	// mapper 가져오기	
 	BookWishListMapper bookWishListMapper = MybatisUtils.getMapper(BookWishListMapper.class);
 	
 	// 처리 여부

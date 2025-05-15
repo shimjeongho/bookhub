@@ -503,10 +503,13 @@
     				isBookWish: isBookWish
     			},
     			success: function(response) {
+    					console.log("dd")
     				if(response == "0") {
+    					console.log("dd")
     					$btn.removeClass("btn-danger").addClass("btn-outline-secondary");
     					$btn.attr("data-book-wish", "0");
     				} else if (response == "1") {
+    					console.log("dd")
     					$btn.removeClass("btn-outline-secondary").addClass("btn-danger");
     					$btn.attr("data-book-wish", "1");
     				}
