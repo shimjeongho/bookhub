@@ -13,10 +13,10 @@
 	String recommendUserId = (String)session.getAttribute("LOGINED_USER_ID");
 	
 	// 로그인 유저 대여 목록 개수 가져오기(로그인 상태가 아닐 시 0)
-	int userLoanCnt = recommendUserId != null ? recommendBooksMapper.getTotalLoanHistoryRows(recommendUserId) : 0;
+	int userLoanAndWishlistCnt = recommendUserId != null ? recommendBooksMapper.getTotalLoanHistoryAndWishlistRows(recommendUserId) : 0;
 	
 	// 맞춤 도서 가져오기
-	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(recommendUserId, userLoanCnt);
+	List<Book> recommendBooks = recommendBooksMapper.getRecommendBooksByUserId(recommendUserId, userLoanAndWishlistCnt);
 
 	if (!recommendBooks.isEmpty()) {
 %>
@@ -68,7 +68,7 @@
 		<script>
 			$(document).ready(function() {
 				console.log("<%=recommendUserId %>");
-				console.log("<%=userLoanCnt %>");
+				console.log("<%=userLoanAndWishlistCnt %>");
 				
 				const swiper1 = new Swiper(".swiper1", {
 					loop: true,

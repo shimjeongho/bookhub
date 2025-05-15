@@ -29,28 +29,27 @@
 		<association 	resultMap="CategoryResultMap"	property="category" />
 	</resultMap>
 	
-	 <!-- 로그인 유저의 대여 목록 개수 조회
+	 <!-- 로그인 유저의 대여/찜 도서 목록 개수 조회
 	 * @param userId 로그인 유저 아이디
 	 * @return 대여 목록 개수
 	int getTotalLoanHistoryRows(String userId) -->
-	<select id="getTotalLoanHistoryRows" resultType="int" useCache="false" flushCache="true">
+	<select id="getTotalLoanHistoryAndWishlistRows" resultType="int" useCache="false" flushCache="true">
 		SELECT 
-			COUNT(*)
+			(SELECT COUNT(*) FROM BOOKHUB_LOAN_HISTORIES WHERE USER_ID = #{userId})
+			+ (SELECT COUNT(*) FROM BOOKHUB_WISHLIST WHERE USER_ID = #{userId}) AS TOTAL_COUNT
 		FROM 
-			BOOKHUB_LOAN_HISTORIES
-		WHERE
-			USER_ID = #{userId}
+			DUAL
 	</select>
 
-	 <!-- 로그인 유저의 대여 도서 정보로 맞춤 도서 목록 가져오기
+	 <!-- 로그인 유저의 대여/찜 도서 정보로 맞춤 도서 목록 가져오기
 	 * @param userId 로그인 유저 아이디
-	 * @param userLoanCnt 로그인 유저가 대여한 도서 개수
+	 * @param userLoanAndWishlistCnt 로그인 유저가 대여/찜한 도서 개수
 	 * @return 맞춤 도서 목록
-	List<Book> getRecommendBooksByUserId(String userId, int userLoanCnt) -->
+	List<Book> getRecommendBooksByUserId(String userId, int userLoanAndWishlistCnt) -->
 	<select id="getRecommendBooksByUserId" resultMap="BookResultMap">
 		<choose>
 			<!-- 로그인 유저의 대여 이력 여부 -->
-			<when test="userLoanCnt > 0">
+			<when test="userLoanAndWishlistCnt > 0">
 				WITH 
 					<!-- 내가 대여한 도서와 찜 목록 도서 번호 목록 -->
 					my_loan_and_wishlist_books AS ( 
