@@ -132,7 +132,7 @@
 	<!--  
 		void updateGibonAddress(Address address);
 	-->
-	<update id="updateGibonAddress" parameterType="address">
+	<update id="updateGibonAddress">
 		UPDATE BOOKHUB_ADDRESS
 		SET
 			ADDR_GIBON = 'N'

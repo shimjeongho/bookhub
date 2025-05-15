@@ -8,7 +8,7 @@
 	<!--  
 		void updateStock(String bno, String lno);
 	-->
-	<update id="updateStock" parameterType="String">
+	<update id="updateStock">
 		UPDATE BOOKHUB_STOCKS
 		SET
 			BOOK_STOCK = BOOK_STOCK - 1
@@ -20,7 +20,7 @@
 	<!--  
 		void updateBookStock(@Param("bno") String bno, @Param("libNo") String libNo);
 	-->
-	<update id="updateBookStock" parameterType="String">
+	<update id="updateBookStock">
 		UPDATE BOOKHUB_STOCKS
 		SET 
 		    BOOK_STOCK = BOOK_STOCK + 1
@@ -33,7 +33,7 @@
 		int getBookStockCount(String bno, String lno); 
 	-->
 	<select id="getBookStockCount" parameterType="String">
-		SELECT SUM(BOOK_STOCK)
+		SELECT BOOK_STOCK
 		FROM BOOKHUB_STOCKS
 		WHERE BOOK_NO = #{bno}
 		AND LIB_NO = #{lno}

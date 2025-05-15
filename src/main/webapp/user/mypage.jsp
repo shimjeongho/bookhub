@@ -387,15 +387,18 @@
 <%
 	if ("P".equals(sortedreturnbook.getLoanStatus())) {
 %>                       
-                        <div class="col-md-2">
-						    <span class="badge status-processing">반납처리중</span>
-						</div>
+                        <div class="col-md-2 text-center">
+                            <span class="badge bg-warning status-badge">반납처리중</span><br/>
+                        </div>
+<%
+	} else {
+%>                        
+						<div class="col-md-2 text-center">
+                            <span class="badge bg-success status-badge">반납완료</span><br/>
+                        </div>
 <%
 	}
-%>                        
-						<div class="col-md-2">
-						    <span class="badge status-completed">반납완료</span>
-						</div>
+%>						
                         <div class="col-md-2">
                             <span class="text-muted">반납신청: <%=StringUtils.simpleDate(sortedreturnbook.getReturnDate())%></span>
                         </div>
