@@ -35,7 +35,7 @@
 <body>
     <%@ include file="../common/nav.jsp" %>
 
-    <div class="container mt-5">
+    <div class="container mt-5 min-vh-100" >
         <h1>회원 관리</h1>
         <hr>
 

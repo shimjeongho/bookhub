@@ -32,7 +32,7 @@
     <title>도서 반납 관리 - 북허브</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<%=request.getContextPath()%>/resources/css/styles.css" rel="stylesheet">
+    <link href="../resources/css/styles.css" rel="stylesheet">
     <style>
         .table th, .table td {
             vertical-align: middle !important; /* 모든 셀 수직 가운데 정렬 */
@@ -64,7 +64,7 @@
 <body>
     <%@ include file="../common/nav.jsp" %>
 
-    <div class="container mt-5">
+    <div class="container mt-5 min-vh-100">
         <h1>도서 반납 관리 <span class="badge bg-warning text-dark">반납 처리 중</span></h1>
         <p class="text-muted">사용자가 반납 신청한 도서 목록입니다. 실제 도서 수령 후 '반납 완료 처리'를 진행해주세요.</p>
         <div class="mb-3 text-info small">
@@ -157,8 +157,8 @@
         function confirmBookReturn(lno, bno, libNo, bookTitle) {
             const title = bookTitle || "해당 도서";
             if (confirm("도서 '" + title + "' (대출번호: " + lno + ")의 반납을 완료 처리하시겠습니까?")) {
-                let targetUrl = "/bookhub/loan/returnSuccess.jsp";
-                targetUrl += "?loanNo=" + encodeURIComponent(lno);
+                let targetUrl = "admin-confirmReturn.jsp";
+                targetUrl += "?lno=" + encodeURIComponent(lno);
                 targetUrl += "&bno=" + encodeURIComponent(bno);
                 targetUrl += "&libNo=" + encodeURIComponent(libNo);
                 location.href = targetUrl;
