@@ -14,7 +14,8 @@
 			
 	*/
 	
-	String loginedUserId = "zxcv@zxcv";
+	// String loginedUserId = "";
+	
 
 	// DonationMapper 구현객체 획득
 	DonationMapper donationMapper = MybatisUtils.getMapper(DonationMapper.class);
@@ -127,8 +128,8 @@
 	            return;
 	        }
 	
-	        if (description.length > 100) {
-	            alert('도서 요약 설명은 100자 이내로 입력해주세요.');
+	        if (description.length > 200) {
+	            alert('도서 요약 설명은 200자 이내로 입력해주세요.');
 	            e.preventDefault();
 	            return;
 	        }

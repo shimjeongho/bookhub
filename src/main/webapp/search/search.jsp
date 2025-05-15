@@ -179,7 +179,7 @@
 
     <!-- Search Results -->
     <main class="container py-4">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center min-vh-100">
             <!-- Results -->
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -199,14 +199,6 @@
                 </div>
 
                 <!-- Result Items -->
-                
-<%
-	if (!"".equals(searchContent)) { 
-%>
-                
-<%
-	}
-%>
 <% 
 	// 첫 화면일 때(검색한 내용이 없고, 조회 결과가 0일 때)
 	if (searchContent.length() <= 0 && totalRows == 0) { 
@@ -304,7 +296,7 @@ if (totalRows > 0) {
     
     	$("#form-condition").submit(function() {
     		if($("#search-bar").val() == ""){
-    			alert("검색어를 입력하시오.");
+    			alert("검색어를 입력해주세요.");
     			$("#form-condition").focus();
     			return false;
     		}

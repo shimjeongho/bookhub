@@ -1,3 +1,5 @@
+<%@page import="kr.co.bookhub.vo.Library"%>
+<%@page import="kr.co.bookhub.mapper.DonationMapper"%>
 <%@page import="kr.co.bookhub.mapper.RecommendBooksMapper"%>
 <%@page import="kr.co.bookhub.vo.Donation"%>
 <%@page import="kr.co.bookhub.mapper.IndexPageMapper"%>
@@ -27,6 +29,12 @@
 	
 	// 최신 기증된 20개 도서 조회
 	List<Donation> donationBooks = indexPageMapper.getDonationBooksForIndexPage();
+	
+	// DonationMapper 구현객체 획득
+		DonationMapper donationMapper = MybatisUtils.getMapper(DonationMapper.class);
+		
+	// 도서관 리스트 조회
+	List<Library> libraries = donationMapper.getAllLibrary();
 %>
 <!DOCTYPE html>
 <html>
@@ -51,8 +59,6 @@
         <div class="container">
             <h1 class="display-4 mb-4">북허브에 오신 것을 환영합니다</h1>
             <p class="lead mb-4">지식과 문화가 함께하는 공간</p>
-            <!-- <a href="/bookhub/search/search.jsp" class="btn btn-light btn-lg">자료검색</a> -->
-            <!-- ##### 자료 검색 시작 ##### -->
             <!-- Search Header -->
             <form id="form-condition"
 				method="get"
@@ -125,10 +131,11 @@
                 <div class="carousel-inner">
                     <% 
                     int booksPerSlide = 4;
+                    // totalSlides = 5; 책은 20개만 가져오기로함
                     int totalSlides = (int) Math.ceil(recentBooks.size() / (double) booksPerSlide);
                     
                     for(int i = 0; i < totalSlides; i++) {
-                        int startIdx = i * booksPerSlide;
+                        int startIdx = i * booksPerSlide;	// 
                         int endIdx = Math.min(startIdx + booksPerSlide, recentBooks.size());
                     %>
                         <div class="carousel-item <%= i == 0 ? "active" : "" %>">
@@ -137,7 +144,7 @@
                                     Book book = recentBooks.get(j);
                                 %>
                                     <div class="col-md-3">
-                                        <div class="card h-100">
+                                        <div onclick="location.href ='book/detail.jsp?bno=<%=book.getNo() %>'" class="card h-100" >
                                             <img src="<%= book.getCoverImagePath() %>" class="card-img-top" alt="<%= book.getTitle() %>">
                                             <div class="card-body">
                                                 <h5 class="card-title"><%= book.getTitle() %></h5>
@@ -185,7 +192,7 @@
 	                                Book book = recommendBooks.get(j);
 	                            %>
 	                                <div class="col-md-3">
-	                                    <div class="card h-100">
+	                                    <div onclick="location.href ='book/detail.jsp?bno=<%=book.getNo() %>'" class="card h-100">
 	                                        <img src="<%= book.getCoverImagePath() %>" class="card-img-top" alt="<%= book.getTitle() %>">
 	                                        <div class="card-body">
 	                                            <h5 class="card-title"><%= book.getTitle() %></h5>
@@ -233,7 +240,7 @@
                                     Donation donation = donationBooks.get(j);
                                 %>
                                     <div class="col-md-3">
-                                        <div class="card h-100 donation-card">
+                                        <div onclick="location.href ='donation/donation-board.jsp'" class="card h-100 donation-card">
                                             <div class="card-body">
                                                 <h5 class="card-title text-center mb-3"><%= donation.getTitle() %></h5>
                                                 <div class="book-info">
@@ -245,9 +252,13 @@
                                                         <i class="fas fa-building me-2"></i>
                                                         <span>출판사: <%= donation.getPublisher() %></span>
                                                     </p>
-                                                    <p class="mb-0">
+                                                    <p class="mb-2">
                                                         <i class="fas fa-gift me-2"></i>
                                                         <span>기증자: <%= donation.getUser().getId() %></span>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <i class="fas fa-book me-2"></i>
+                                                        <span><%= libraries.get(donation.getLibrary().getNo()-1).getName() %></span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -274,5 +285,18 @@
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript">
+    
+    	$("#form-condition").submit(function() {
+    		if($("#search-bar").val() == ""){
+    			alert("검색어를 입력해주세요.");
+    			$("#form-condition").focus();
+    			return false;
+    		}
+    		
+    		return true;
+    	});
+    
+    </script>
 </body>
 </html>

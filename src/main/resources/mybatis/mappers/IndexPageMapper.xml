@@ -44,7 +44,7 @@
 			    , USER_ID						as "user.id"
 			    , LIB_NO						as "library.no"
 			FROM BOOKHUB_DONATION_BOOKS
-			ORDER BY updatedDate DESC
+			ORDER BY no DESC
 			OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY
 	   </select>
 	   
