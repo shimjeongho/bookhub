@@ -16,50 +16,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <title>도서관 상세 정보</title>
     <link href="../resources/css/styles.css" rel="stylesheet">
-    <style>
-        /* 카드 기본 스타일 */
-        .library-card {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin: 20px 0;
-            transition: all 0.3s ease;
-        }
-        
-        /* 호버 효과 */
-        .library-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        /* 카드 이미지 */
-        .card-img-top {
-            height: 250px;
-            object-fit: cover;
-        }
-        
-        /* 정보 아이템 스타일 */
-        .info-item {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .info-icon {
-            width: 30px;
-            color: #0d6efd;
-            margin-right: 10px;
-        }
-        
-        /* 반응형 그리드 여백 조정 */
-        .library-grid {
-            padding: 20px;
-        }
-        
-        /* 지도 컨테이너 */
-        [id^=libraryMap] {
-            height: 300px;
-            border-radius: 0.375rem;
-        }
-    </style>
 </head>
 <body>
     <%@ include file="../common/nav.jsp" %>
@@ -71,51 +27,49 @@
              for (Library library : libraries) {
          %> 
                      <!-- 도서관 정보 카드 -->
-                     <div class="col-lg-8 mb-4">
+                     <div class="col-lg-6 mb-4">
                          <div class="card library-card">
                              <!-- 도서관 이미지 -->
                              <img src="<%=library.getImgPath()%>" class="card-img-top" alt="도서관 전경">
                              
-                             <div class="card-body">
-                                 <h3 class="card-title mb-4"><%=library.getName()%></h3>
+                             <div class="card-body d-flex">
+                             	<div class="col-7">
+                             		<h3 class="card-title mb-4"><%=library.getName()%></h3>
                                  
-                                 <div class="info-item">
-                                     <i class="fas fa-map-marker-alt info-icon"></i>
-                                     <div>
-                                         <strong>주소</strong><br>
-                                         <%=library.getLocation()%>
-                                     </div>
-                                 </div>
-                                 
-                                 <div class="info-item">
-                                     <i class="fas fa-clock info-icon"></i>
-                                     <div>
-                                         <strong>운영시간</strong><br>
-                                         <%=library.getBusinessHours()%>
-                                     </div>
-                                 </div>
-                                 
-                                 <div class="info-item">
-                                     <i class="fas fa-phone info-icon"></i>
-                                     <div>
-                                         <strong>전화번호</strong><br>
-                                         <%=library.getTel()%>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="col-lg-4 mb-4">
-                         <div class="card library-card" style="height: 540px !important;">
-                             <div class="card-body">
-                                 <h5 class="card-title mb-3">위치 정보</h5>
-                                 	<div id="libraryMap-<%=library.getNo() %>" data-lat="<%=library.getLatitude() %>" data-lng="<%=library.getLongitude() %>"></div>
-	                                 <div  >
-	                                	 <img alt="card-img" src="/bookhub/resources/images/bookhub-signature-logo.png" style="height: 160px !important;">
+	                                 <div class="info-item">
+	                                     <i class="fas fa-map-marker-alt info-icon"></i>
+	                                     <div>
+	                                         <strong>주소</strong><br>
+	                                         <%=library.getLocation()%>
+	                                     </div>
 	                                 </div>
-                             </div>
-                         </div>
-                     </div>
+	                                 
+	                                 <div class="info-item">
+	                                     <i class="fas fa-clock info-icon"></i>
+	                                     <div>
+	                                         <strong>운영시간</strong><br>
+	                                         <%=library.getBusinessHours()%>
+	                                     </div>
+	                                 </div>
+	                                 
+	                                 <div class="info-item">
+	                                     <i class="fas fa-phone info-icon"></i>
+	                                     <div>
+	                                         <strong>전화번호</strong><br>
+	                                         <%=library.getTel()%>
+	                                     </div>
+	                                 </div>
+                             	</div>
+                                 
+                                 
+								<div class="col-5">
+									<div class="d-flex flex-column gap-3">
+										<div id="libraryMap-<%=library.getNo() %>" data-lat="<%=library.getLatitude() %>" data-lng="<%=library.getLongitude() %>"></div>
+		                            </div>
+		                        </div>
+							</div>
+						</div>
+                     </div>	
                      
                      <!-- 지도 영역 -->
          <%

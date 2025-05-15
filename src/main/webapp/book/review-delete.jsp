@@ -19,9 +19,11 @@
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
 	Book book = bookMapper.getBookByNo(bookNo);
 	
+	// User 객체 생성해서 UserId 담기
 	User user = new User();
 	user.setId(userId);
 	
+	// BookReview객체 새로 생성해서 book, user 정보 담기
 	BookReview bookReview = new BookReview();
 	bookReview.setBook(book);
 	bookReview.setWriter(user);
@@ -35,19 +37,23 @@
 	// 6. 도서정보의 리뷰갯수를 1감소시킨다.
 	book.setReviewCount(book.getReviewCount() - 1);
 	
-	// 리뷰 평균평점
+	// 리뷰 모든 평점 조회
 	int totalPoint = bookReviewMapper.getTotalReviewScore(bookNo);
 	
+	// 리뷰 평균평점
 	int reviewCount = book.getReviewCount();
 	double avg = ((double) totalPoint / reviewCount);
 	double roundedAvg = StringUtils.round(avg);
-			
+	
+	// 리뷰 평균 평점 담기
 	book.setReviewAvg(roundedAvg);
 	
 	// 7. 변경된 도서정보를 테이블에 반영시킨다.
 	bookMapper.updateBook(book);
 	
+	// 세션에 add complete 담기
 	session.setAttribute("complete", "delete");
+	// 8. detail.jsp를 재요청하는 응답보내기
 	response.sendRedirect("detail.jsp?bno=" + bookNo);
 %>
 					
