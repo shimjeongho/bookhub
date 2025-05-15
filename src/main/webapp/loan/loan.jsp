@@ -23,8 +23,8 @@
 	
 	
 	LoanBookMapper loanBookMapper = MybatisUtils.getMapper(LoanBookMapper.class);
-	
-	if (loanBookMapper.getLoanHistoryByIdAndBno(id, bno) != null) {
+	List<LoanHistory> loanAndReturnbooks = loanBookMapper.getLoanHistoryByIdAndBno(id, bno);
+	if (!loanAndReturnbooks.isEmpty()) {
 %>
 	<script>
 		alert("이미 대여 중이거나 반납 신청한 도서입니다.");
