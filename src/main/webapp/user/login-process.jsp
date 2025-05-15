@@ -33,11 +33,18 @@
 		if (secretPassword.equals(savedUser.getPassword())) {
 			responseData.put("success", true);
             responseData.put("message", "로그인에 성공했습니다!");
-            responseData.put("redirectUrl", "/bookhub/index.jsp");
+            
+            String redirectUrl = "/bookhub/index.jsp";
+            if ("ADMIN".equals(savedUser.getRole())) {
+            	redirectUrl = "/bookhub/user/admin-dashboard.jsp";
+            }
+            responseData.put("redirectUrl", redirectUrl);
+            
             
             session.setAttribute("LOGINED_USER_ID", savedUser.getId());
             session.setAttribute("LOGINED_USER_NAME", savedUser.getName());
             session.setAttribute("LOGINED_USER_PHONE", savedUser.getPhone());
+            session.setAttribute("LOGINED_USER_ROLE", savedUser.getRole());
 		} else {
 			responseData.put("success", false);
 			responseData.put("message", "아이디또는 비밀번호가 올바르지 않습니다.");
@@ -45,7 +52,6 @@
  	}
  	
  	String jsonResponse = gson.toJson(responseData);
-    System.out.println("   > 보낼 JSON 응답: " + jsonResponse);
     
     out.print(jsonResponse);
 %>

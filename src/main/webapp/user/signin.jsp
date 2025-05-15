@@ -62,13 +62,7 @@
 	</div>
 
     <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="text-center">
-                <small class="text-muted">&copy; 2025 북허브. All rights reserved.</small>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="../common/footer.jsp" %>
 
     <!-- Bootstrap JS and jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

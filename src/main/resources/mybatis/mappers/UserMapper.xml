@@ -9,9 +9,9 @@
 	 -->
 	<insert id="insertUser" parameterType="User">
 		insert into bookhub_users
-		(user_id, user_password, user_name, user_phone, user_birth)
+		(user_id, user_password, user_name, user_phone, user_birth ,user_role)
 		values
-		(#{id}, #{password}, #{name}, #{phone}, #{birth})
+		(#{id}, #{password}, #{name}, #{phone}, #{birth}, #{role, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="getUserById" parameterType="string" resultType="User">
@@ -23,7 +23,8 @@
             user_birth      as birth,
             user_created_date    as createdDate,
             user_updated_date    as updatedDate,
-            is_deleted      as isDeleted
+            is_deleted      as isDeleted,
+            user_role		as role
         from
         	bookhub_users
         where
@@ -33,26 +34,68 @@
 	</select>
 	
 	<update id="updateUser" parameterType="kr.co.bookhub.vo.User">
-	update bookhub_users
-	set
-		user_password = #{password},
-		user_name = #{name},
-		user_phone = #{phone},
-		user_updated_date = SYSDATE  
-	where
-		user_id = #{id}
-	and
-		is_deleted = 'N'
+		update bookhub_users
+		set
+			user_password = #{password},
+			user_name = #{name},
+			user_phone = #{phone},
+			user_updated_date = SYSDATE  
+		where
+			user_id = #{id}
+		and
+			is_deleted = 'N'
 	</update>
 	
 	<update id="deleteUser" parameterType="string">
-	update bookhub_users
-	set
-		is_deleted='Y',
-		user_updated_date = SYSDATE
-	where
-		user_id = #{id}
-	and
-		is_deleted = 'N'
+		update bookhub_users
+		set
+			is_deleted='Y',
+			user_updated_date = SYSDATE
+		where
+			user_id = #{id}
+		and
+			is_deleted = 'N'
 	</update>
+	
+	<select id="getAllUsers" resultType="User">
+	    SELECT
+	        user_id             AS id,
+	        user_name           AS name,
+	        user_phone          AS phone,
+	        user_role           AS role,
+	        user_created_date   AS createdDate,
+	        is_deleted          AS isDeleted
+	    FROM
+	        bookhub_users
+	    ORDER BY
+	        user_created_date DESC
+	</select>
+	
+	<update id="restoreUser" parameterType="string">
+	    UPDATE bookhub_users
+	    SET
+	        is_deleted = 'N',
+	        user_updated_date = SYSDATE
+	    WHERE
+	        user_id = #{id}
+	    AND
+	        is_deleted = 'Y' <!-- 이미 탈퇴된 사용자만 복구 대상으로 함 -->
+	</update>
+	
+	<select id="getUserByIdForAdmin" parameterType="string" resultType="User">
+	    SELECT
+	        user_id             AS id,
+	        user_password       AS password,
+	        user_name           AS name,
+	        user_phone          AS phone,
+	        user_birth          AS birth,
+	        user_created_date   AS createdDate,
+	        user_updated_date   AS updatedDate,
+	        is_deleted          AS isDeleted,
+	        user_role           AS role
+	    FROM
+	        bookhub_users
+	    WHERE
+	        user_id = #{id}
+	</select>
 </mapper>
