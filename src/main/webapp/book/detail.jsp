@@ -162,13 +162,13 @@
 <%
 	if (userId != null) {
 %>                        
-                        <a href="bookhub/loan/loan.jsp?bno=<%=book.getNo() %>&lno=<%=lib.getNo() %>" class="btn btn-primary me-2 disabled" id="borrowButton" >
+                        <a href="bookhub/loan/loan.jsp?bno=<%=book.getNo() %>&lno=<%=lib.getNo() %>" class="btn btn-outline-primary me-2 disabled" id="borrowButton" >
                             <i class="fas fa-book"></i> 대여하기
                         </a>
 <%
 	} else {
 %>
-						<button " class="btn btn-primary me-2 disabled">
+						<button " class="btn btn-outline-secondary me-2 disabled">
                             <i class="fas fa-book"></i> 대여하기
 						</button>
 <%
@@ -179,7 +179,7 @@
 %>
 						<button 
                         	id="wishlist-btn" 
-                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-secondary"  %>"
+                        	class="btn <%=isBookWish == 1 ? "btn-danger" : "btn-outline-danger"  %>"
                         	data-book-no="<%=bookNo %>"
                         	data-book-wish="<%=isBookWish%>">
                             <i class="fas fa-heart"></i> <span id="wishlistText">찜하기</span>
@@ -372,7 +372,7 @@
                         <small class="text-muted">작성자: <%=review.getWriter().getName() %></small>
                         <div>
                             <button id="like-button-<%=review.getNo()%>" 
-					        	class="btn btn-sm btn-outline-secondary me-2 like-button"
+					        	class="btn btn-sm btn-outline-primary me-2 like-button"
 					        	data-review-no="<%=review.getNo()%>">
 					    		<i class="far fa-thumbs-up"></i> 
 					    		<span id="like-count-<%=review.getNo()%>"><%=review.getLikes() %></span>
@@ -387,7 +387,7 @@
 							<%		
 								} else {
 							%>
-								<button class="btn btn-secondary btn-sm" disabled>삭제</button>
+								<button class="btn btn-outline-secondary btn-sm" disabled>삭제</button>
 							<%
 								}
 							%>
@@ -464,10 +464,10 @@
     			},
     			success: function(response) {
     				if(response == "0") {
-    					$btn.removeClass("btn-danger").addClass("btn-outline-secondary");
+    					$btn.removeClass("btn-danger").addClass("btn-outline-danger");
     					$btn.attr("data-book-wish", "0");
     				} else if (response == "1") {
-    					$btn.removeClass("btn-outline-secondary").addClass("btn-danger");
+    					$btn.removeClass("btn-outline-danger").addClass("btn-danger");
     					$btn.attr("data-book-wish", "1");
     				}
 				}
@@ -521,7 +521,8 @@
 	    	let bookNo = $(this).attr("data-book-no");
 	    	
 	    	$("#borrowButton").attr("href", `/bookhub/loan/loan.jsp?bno=\${bookNo}&lno=\${libNo}`)
-	    					  .removeClass("disabled")
+	    					  .removeClass("btn-outline-primary me-2 disabled")
+	    					  .addClass("btn-primary me-2")
 	    	
 	    });
 
@@ -589,7 +590,7 @@
 			                        <small class="text-muted">작성자: \${review.writer.name}</small>
 			                        <div>
 				                        <button id="like-button-\${review.no}" 
-								        	class="btn btn-sm btn-outline-secondary me-2 like-button"
+								        	class="btn btn-sm btn-outline-primary me-2 like-button"
 								        	data-review-no="\${review.no}">
 								    		<i class="far fa-thumbs-up"></i> 
 								    		<span id="like-count-\${review.no}">\${review.likes}</span>
@@ -599,7 +600,7 @@
 						if (review.writer.id == '<%=userId%>') {							
 							content += `<a href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-danger btn-sm">삭제</a>`
 						} else {
-							content += `<button href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-secondary btn-sm" disabled>삭제</b>`
+							content += `<button href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-secondary btn-sm" disabled>삭제</b>`
 						}
 						 
 						content += `

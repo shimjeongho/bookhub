@@ -40,7 +40,7 @@
         }
         .truncate-text {
             display: inline-block;
-            max-width: 200px;  /* 도서명 최대 너비 조정 (더 줄여도 됨) */
+            max-width: 180px;  /* 도서명 최대 너비 조정 (기존 200px에서 약간 줄임) */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -68,7 +68,7 @@
         <h1>도서 반납 관리 <span class="badge bg-warning text-dark">반납 처리 중</span></h1>
         <p class="text-muted">사용자가 반납 신청한 도서 목록입니다. 실제 도서 수령 후 '반납 완료 처리'를 진행해주세요.</p>
         <div class="mb-3 text-info small">
-            <i class="fas fa-info-circle"></i> 
+            <i class="fas fa-info-circle"></i>
         </div>
         <hr>
 
@@ -85,24 +85,25 @@
         <% } %>
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle table-bordered w-100"> 
+            <table class="table table-hover align-middle table-bordered w-100">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col" style="width: 7%;">대출번호</th>
-                        <th scope="col" style="width: 7%;">도서번호</th>
-                        <th scope="col" style="width: 23%;">도서명</th>
+                        <th scope="col" style="width: 8%;">대출번호</th>
+                        <th scope="col" style="width: 8%;">도서번호</th>
+                        <th scope="col" style="width: 20%;">도서명</th>
                         <th scope="col" style="width: 10%;">도서관명</th>
-                        <th scope="col" style="width: 15%;">사용자ID</th>
-                        <th scope="col" style="width: 10%;">대출일</th>
-                        <th scope="col" style="width: 10%;">반납예정일</th>
+                        <th scope="col" style="width: 14%;">사용자ID</th>
+                        <th scope="col" style="width: 10%;">사용자명</th>
+                        <th scope="col" style="width: 11%;">대출일</th>
+                        <th scope="col" style="width: 11%;">반납예정일</th>
                         <th scope="col" style="width: 10%;">반납신청일</th>
-                        <th scope="col" style="width: 8%; text-align: center;">관리</th>
+                        <th scope="col" style="width: 10%; text-align: center;">관리</th>
                     </tr>
                 </thead>
                 <tbody>
                 <% if (pendingReturns == null || pendingReturns.isEmpty()) { %>
                     <tr>
-                        <td colspan="9" class="text-center py-4"> 
+                        <td colspan="10" class="text-center py-4"> 
                             <p class="mb-0 text-muted">현재 반납 처리 중인 도서가 없습니다.</p>
                         </td>
                     </tr>
@@ -119,6 +120,8 @@
 
                         String bookTitle = (book != null && book.getTitle() != null) ? book.getTitle() : "정보 없음";
                         String userId = (user != null && user.getId() != null) ? user.getId() : "정보 없음";
+                        // User 객체에서 사용자 이름 가져오기 (User VO에 getName() 또는 getUserName() 등이 있다고 가정)
+                        String userName = (user != null && user.getName() != null) ? user.getName() : "정보 없음"; // 사용자명 가져오기
                         String loanDateStr = (loan.getLoanDate() != null) ? sdf.format(loan.getLoanDate()) : "-";
                         String dueDateStr = (loan.getDueDate() != null) ? sdf.format(loan.getDueDate()) : "-";
                         String returnDateStr = (loan.getReturnDate() != null) ? sdf.format(loan.getReturnDate()) : "-";
@@ -133,10 +136,11 @@
                         </td>
                         <td><%= libraryName %></td>
                         <td><%= userId %></td>
+                        <td><%= userName %></td> 
                         <td class="text-center-data"><%= loanDateStr %></td>
                         <td class="text-center-data"><%= dueDateStr %></td>
                         <td class="text-center-data"><%= returnDateStr %></td>
-                        <td class="text-center"> 
+                        <td class="text-center">
                             <button type="button" class="btn btn-primary btn-return-process"
                                 onclick="confirmBookReturn('<%= lnoStr %>', '<%= bnoStr %>', '<%= libNoStr %>', '<%= bookTitleForJs %>')">
                                 반납처리
