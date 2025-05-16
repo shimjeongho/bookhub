@@ -10,13 +10,10 @@
 <%
 	//1. 세션에서 로그인된 사용자의 아이디를 조회한다.
 	 String userId = (String) session.getAttribute("LOGINED_USER_ID");
-	System.out.println("userId: " + userId);
 
 	//2. 요청 파라미터값을 조회한다.
 	int bookNo = StringUtils.strToInt(request.getParameter("bno"));
 	int reviewNo = StringUtils.strToInt(request.getParameter("rno"));
-	System.out.println("bookNo: " + bookNo);
-	System.out.println("reviewNo: " + reviewNo);
 	
 	// 3. BookReview객체를 생성해서 필요한 정보를 담는다.
 	BookMapper bookMapper = MybatisUtils.getMapper(BookMapper.class);
@@ -42,14 +39,11 @@
 	
 	// 리뷰 모든 평점 조회
 	int totalPoint = bookReviewMapper.getTotalReviewScore(bookNo);
-	System.out.println("totalPoint: " + totalPoint);
 	
 	// 리뷰 평균평점
 	int reviewCount = book.getReviewCount();
 	double avg = ((double) totalPoint / reviewCount);
 	double roundedAvg = StringUtils.round(totalPoint != 0 ? avg : 0);
-	
-	System.out.println("roundedAvg: " + roundedAvg);
 	
 	// 리뷰 평균 평점 담기
 	book.setReviewAvg(roundedAvg);
