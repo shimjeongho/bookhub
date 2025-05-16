@@ -131,7 +131,7 @@
                 <div class="carousel-inner">
                     <% 
                     int booksPerSlide = 4;
-                    // totalSlides = 5; 책은 20개만 가져오기로함
+                    // totalSlides = 5; //책은 20개만 가져오기로함
                     int totalSlides = (int) Math.ceil(recentBooks.size() / (double) booksPerSlide);
                     
                     for(int i = 0; i < totalSlides; i++) {
@@ -144,7 +144,7 @@
                                     Book book = recentBooks.get(j);
                                 %>
                                     <div class="col-md-3">
-                                        <div onclick="location.href ='book/detail.jsp?bno=<%=book.getNo() %>'" class="card h-100" >
+                                        <a class="card h-100" href="book/detail.jsp?bno=<%=book.getNo() %>">
                                             <img src="<%= book.getCoverImagePath() %>" class="card-img-top" alt="<%= book.getTitle() %>">
                                             <div class="card-body">
                                                 <h5 class="card-title"><%= book.getTitle() %></h5>
@@ -153,7 +153,7 @@
                                                     <small class="text-muted">출판사: <%= book.getPublisher() %></small>
                                                 </p>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 <% } %>
                             </div>
@@ -192,7 +192,7 @@
 	                                Book book = recommendBooks.get(j);
 	                            %>
 	                                <div class="col-md-3">
-	                                    <div onclick="location.href ='book/detail.jsp?bno=<%=book.getNo() %>'" class="card h-100">
+	                                    <a class="card h-100" href="book/detail.jsp?bno=<%=book.getNo() %>">
 	                                        <img src="<%= book.getCoverImagePath() %>" class="card-img-top" alt="<%= book.getTitle() %>">
 	                                        <div class="card-body">
 	                                            <h5 class="card-title"><%= book.getTitle() %></h5>
@@ -201,7 +201,7 @@
 	                                                <small class="text-muted">출판사: <%= book.getPublisher() %></small>
 	                                            </p>
 	                                        </div>
-	                                    </div>
+	                                    </a>
 	                                </div>
 	                            <% } %>
 	                        </div>
@@ -240,7 +240,7 @@
                                     Donation donation = donationBooks.get(j);
                                 %>
                                     <div class="col-md-3">
-                                        <div onclick="location.href ='donation/donation-board.jsp'" class="card h-100 donation-card">
+                                        <a class="card h-100 donation-card" href="donation/donation-board.jsp">
                                             <div class="card-body">
                                                 <h5 class="card-title text-center mb-3"><%= donation.getTitle() %></h5>
                                                 <div class="book-info">
@@ -262,7 +262,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 <% } %>
                             </div>
