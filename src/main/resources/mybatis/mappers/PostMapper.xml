@@ -97,7 +97,7 @@
 	 
 	 <!-- public List<Book> userLoanBookSearch(String userId); 
 	 	=> 사용자가 대여한 도서들을 조회 - 사용자 아이디 필요. --> 
-	 <select id="userLoanBookSearch" resultMap="bookResultMap">
+	 <select id="userLoanBookSearch" resultMap="bookResultMap" flushCache="true">
 	 	select
 	 		 b.BOOK_NO
 	 		,b.BOOK_TITLE 
