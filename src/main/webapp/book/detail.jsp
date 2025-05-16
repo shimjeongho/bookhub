@@ -168,7 +168,7 @@
 <%
 	} else {
 %>
-						<button " class="btn btn-primary me-2 disabled">
+						<button " class="btn btn-outline-primary me-2 disabled">
                             <i class="fas fa-book"></i> 대여하기
 						</button>
 <%
@@ -387,7 +387,7 @@
 							<%		
 								} else {
 							%>
-								<button class="btn btn-secondary btn-sm" disabled>삭제</button>
+								<button class="btn btn-outline-secondary btn-sm" disabled>삭제</button>
 							<%
 								}
 							%>
@@ -599,7 +599,7 @@
 						if (review.writer.id == '<%=userId%>') {							
 							content += `<a href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-danger btn-sm">삭제</a>`
 						} else {
-							content += `<button href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-secondary btn-sm" disabled>삭제</b>`
+							content += `<button href="review-delete.jsp?bno=\${bookNo}&rno=\${review.no}" class="btn btn-outline-secondary btn-sm" disabled>삭제</b>`
 						}
 						 
 						content += `
